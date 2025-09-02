@@ -34153,17 +34153,18 @@ var Validators = {
       sox_integration,
       sox_transaction_timestamp,
       sox_transaction_id,
-      sox_data
+      content
     } = value;
+    const contentParse = JSON.parse(content);
     if (!isNonEmptyString(sox_integration)) errors.push("Missing or invalid: sox_integration");
     if (!isNonEmptyString(sox_transaction_timestamp)) errors.push("Missing or invalid: sox_transaction_timestamp");
     if (!isNonEmptyString(sox_transaction_id)) errors.push("Missing or invalid: sox_transaction_id");
-    if (sox_data == null || typeof sox_data !== "object" || Array.isArray(sox_data)) {
-      errors.push("Missing or invalid: sox_data");
+    if (contentParse == null || typeof contentParse !== "object" || Array.isArray(contentParse)) {
+      errors.push("Missing or invalid: content");
     } else {
-      const { success } = sox_data;
+      const { success } = contentParse;
       if (typeof success !== "number" || !Number.isFinite(success)) {
-        errors.push("Missing or invalid: sox_data.success (must be finite number)");
+        errors.push("Missing or invalid: content.success (must be finite number)");
       }
     }
     return { isValid: errors.length === 0, errorMessages: errors };
@@ -34179,24 +34180,25 @@ var Validators = {
       return { isValid: false, errorMessages: errors };
     }
     const w = value;
+    const contentParse = JSON.parse(w?.content);
     if (!isNonEmptyString(w.sox_integration)) errors.push("Missing or invalid: sox_integration");
     if (!isNonEmptyString(w.sox_transaction_id)) errors.push("Missing or invalid: sox_transaction_id");
     if (!isNonEmptyString(w.sox_transaction_timestamp)) errors.push("Missing or invalid: sox_transaction_timestamp");
     if (!isNonEmptyString(w["@timestamp"])) errors.push("Missing or invalid: @timestamp");
-    if (w.sox_data == null || typeof w.sox_data !== "object" || Array.isArray(w.sox_data)) {
-      errors.push("Missing or invalid: sox_data");
+    if (contentParse == null || typeof contentParse !== "object" || Array.isArray(contentParse)) {
+      errors.push("Missing or invalid: content");
       return { isValid: false, errorMessages: errors };
     }
-    const { request, response } = w.sox_data;
+    const { request, response } = contentParse;
     if (request == null || typeof request !== "object" || Array.isArray(request)) {
-      errors.push("Missing or invalid: sox_data.request");
+      errors.push("Missing or invalid: content.request");
     }
     if (response == null || typeof response !== "object" || Array.isArray(response)) {
-      errors.push("Missing or invalid: sox_data.response");
+      errors.push("Missing or invalid: content.response");
     } else {
       const httpCode = response.http_response_code;
       if (!/^\d{3}$/.test(httpCode ?? "")) {
-        errors.push("Missing or invalid: sox_data.response.http_response_code (must be 3 digits)");
+        errors.push("Missing or invalid: content.response.http_response_code (must be 3 digits)");
       }
     }
     return { isValid: errors.length === 0, errorMessages: errors };
@@ -34204,14 +34206,15 @@ var Validators = {
   /**
    * Extract the business payload from an input which may be:
    *  - Already the business object (flat shape you just created)
-   *  - Async wrapper: sox_data.payload (optionally nested again as payload.payload)
+   *  - Async wrapper: content.payload (optionally nested again as payload.payload)
    *  - Otherwise returned unchanged.
    */
   _extractBusinessPayload(input) {
     if (!input || typeof input !== "object" || Array.isArray(input)) return input;
     const w = input;
-    if (w.sox_data && typeof w.sox_data === "object") {
-      let candidate = w.sox_data.payload;
+    const contentParse = JSON.parse(w?.content);
+    if (contentParse && typeof contentParse === "object") {
+      let candidate = contentParse.payload;
       if (candidate && typeof candidate === "object") {
         if (!Array.isArray(candidate) && candidate.payload && typeof candidate.payload === "object") {
           candidate = candidate.payload;
