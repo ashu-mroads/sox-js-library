@@ -34492,6 +34492,101 @@ async function sendBusinessEvent(soxEvent) {
     };
   }
 }
+function classifyPair(validation) {
+  if (validation.isValid) return {};
+  const collectFailures = (v) => v?.failures ?? [];
+  const srcFailures = collectFailures(validation.sourceValidation);
+  const destFailures = collectFailures(validation.destinationValidation);
+  const allFailures = [...srcFailures, ...destFailures];
+  const missingField = allFailures.filter((f) => /Missing field/i.test(f.reason));
+  const emptyValues = allFailures.filter((f) => /Empty value/i.test(f.reason));
+  const patternMismatch = allFailures.filter((f) => /Pattern mismatch/i.test(f.reason));
+  const mc = validation.mappingComparison;
+  const mappingMismatches = mc?.mismatches ?? [];
+  const mappingMissingCount = (mc?.missingSource?.length ?? 0) + (mc?.missingDestination?.length ?? 0);
+  if (mc && !mc.isValid && mappingMismatches.length > 0) {
+    return {
+      errorType: "Field Value Mismatch",
+      errorSubType: "Value Mismatch",
+      errorSummary: `Value mismatches: ${mappingMismatches.length}`
+    };
+  }
+  if (mc && !mc.isValid && mappingMissingCount > 0) {
+    return {
+      errorType: "Field Validation Error",
+      errorSubType: "Missing Field",
+      errorSummary: `Missing mapped fields: src=${mc.missingSource.length} dest=${mc.missingDestination.length}`
+    };
+  }
+  if (missingField.length > 0) {
+    return {
+      errorType: "Field Validation Error",
+      errorSubType: "Missing Field",
+      errorSummary: `Missing rule fields: ${missingField.length}`
+    };
+  }
+  if (patternMismatch.length > 0) {
+    return {
+      errorType: "Field Validation Error",
+      errorSubType: "Invalid Field Format",
+      errorSummary: `Pattern mismatches: ${patternMismatch.length}`
+    };
+  }
+  if (emptyValues.length > 0) {
+    return {
+      errorType: "Field Validation Error",
+      errorSubType: "Missing Value",
+      errorSummary: `Empty values: ${emptyValues.length}`
+    };
+  }
+  if (validation.errors.length > 0) {
+    return {
+      errorType: "Integration Failure",
+      errorSubType: "Integration Failure",
+      errorSummary: validation.errors[0]
+    };
+  }
+  return {};
+}
+async function CreateBusinessEvent(params) {
+  const {
+    validationResult,
+    transactionId,
+    srcEventTime,
+    destEventTime,
+    sourcePayload,
+    destinationPayload
+  } = params;
+  const { errorType, errorSubType, errorSummary } = classifyPair(validationResult);
+  let sourceData;
+  let destinationData;
+  try {
+    sourceData = sourcePayload !== void 0 ? JSON.stringify(sourcePayload) : void 0;
+  } catch {
+  }
+  try {
+    destinationData = destinationPayload !== void 0 ? JSON.stringify(destinationPayload) : void 0;
+  } catch {
+  }
+  const businessEvent = {
+    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+    eventId: crypto.randomUUID(),
+    eventProvider: "SOX",
+    eventType: validationResult.isValid ? "OK" : "ERROR",
+    srcEventTime,
+    destEventTime,
+    transactionId,
+    sourceIntId: validationResult.sourceIntegrationId,
+    destIntId: validationResult.destinationIntegrationId,
+    errorType,
+    errorSubType,
+    errorSummary,
+    sourceData,
+    destinationData
+  };
+  const { cloudEvent, sourceDataTruncated, destinationDataTruncated } = toCloudEvent(businessEvent);
+  return sendBusinessEvent(businessEvent);
+}
 
 // src/common/regex-constants.ts
 var REGEX = {
@@ -34814,7 +34909,7 @@ var index_default = {
   validateIntegration,
   validateIntegrationPair,
   Validators,
-  sendBusinessEvent,
+  CreateBusinessEvent,
   toCloudEvent
 };
 export {
