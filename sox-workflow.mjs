@@ -34548,7 +34548,7 @@ function classifyPair(validation) {
   }
   return {};
 }
-async function CreateBusinessEvent(params) {
+async function createSoxBusinessEvent(params) {
   const {
     validationResult,
     transactionId,
@@ -34909,7 +34909,7 @@ var index_default = {
   validateIntegration,
   validateIntegrationPair,
   Validators,
-  CreateBusinessEvent,
+  createSoxBusinessEvent,
   toCloudEvent
 };
 export {
