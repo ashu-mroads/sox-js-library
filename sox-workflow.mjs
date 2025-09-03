@@ -34155,14 +34155,13 @@ var Validators = {
       sox_transaction_id,
       content
     } = value;
-    const contentParse = JSON.parse(content);
     if (!isNonEmptyString(sox_integration)) errors.push("Missing or invalid: sox_integration");
     if (!isNonEmptyString(sox_transaction_timestamp)) errors.push("Missing or invalid: sox_transaction_timestamp");
     if (!isNonEmptyString(sox_transaction_id)) errors.push("Missing or invalid: sox_transaction_id");
-    if (contentParse == null || typeof contentParse !== "object" || Array.isArray(contentParse)) {
+    if (content == null || typeof content !== "object" || Array.isArray(content)) {
       errors.push("Missing or invalid: content");
     } else {
-      const { success } = contentParse;
+      const { success } = content;
       if (typeof success !== "number" || !Number.isFinite(success)) {
         errors.push("Missing or invalid: content.success (must be finite number)");
       }
@@ -34180,16 +34179,15 @@ var Validators = {
       return { isValid: false, errorMessages: errors };
     }
     const w = value;
-    const contentParse = JSON.parse(w?.content);
     if (!isNonEmptyString(w.sox_integration)) errors.push("Missing or invalid: sox_integration");
     if (!isNonEmptyString(w.sox_transaction_id)) errors.push("Missing or invalid: sox_transaction_id");
     if (!isNonEmptyString(w.sox_transaction_timestamp)) errors.push("Missing or invalid: sox_transaction_timestamp");
     if (!isNonEmptyString(w["@timestamp"])) errors.push("Missing or invalid: @timestamp");
-    if (contentParse == null || typeof contentParse !== "object" || Array.isArray(contentParse)) {
+    if (w.content == null || typeof w.content !== "object" || Array.isArray(w.content)) {
       errors.push("Missing or invalid: content");
       return { isValid: false, errorMessages: errors };
     }
-    const { request, response } = contentParse;
+    const { request, response } = w.content;
     if (request == null || typeof request !== "object" || Array.isArray(request)) {
       errors.push("Missing or invalid: content.request");
     }
@@ -34212,9 +34210,8 @@ var Validators = {
   _extractBusinessPayload(input) {
     if (!input || typeof input !== "object" || Array.isArray(input)) return input;
     const w = input;
-    const contentParse = JSON.parse(w?.content);
-    if (contentParse && typeof contentParse === "object") {
-      let candidate = contentParse.payload;
+    if (w.content && typeof w.content === "object") {
+      let candidate = w.content.payload;
       if (candidate && typeof candidate === "object") {
         if (!Array.isArray(candidate) && candidate.payload && typeof candidate.payload === "object") {
           candidate = candidate.payload;
@@ -34445,9 +34442,10 @@ function toCloudEvent(sox) {
     specversion: "1.0",
     id: sox.eventId || crypto.randomUUID(),
     source: "sox",
-    type: sox.eventType === "OK" ? "sox.ok" : "sox.error",
+    type: sox.eventType,
+    // 'OK' | 'ERROR'
     time,
-    category: sox.eventType === "OK" ? "OK" : "Error",
+    category: sox.eventType,
     provider: "SOX",
     datacontenttype: "application/json",
     data: {
@@ -34506,7 +34504,7 @@ var REGEX = {
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
   CURRENCY_CODE: /^[A-Z]{3}$/,
-  NUMBER: /^\d+(\.\d+)?$/,
+  NUMBER: /^-?\d+(\.\d+)?$/,
   INTEGER: /^\d+$/
 };
 
@@ -34524,18 +34522,131 @@ var INT1532FieldRegexMap = {
   "guestInformation.altCustId": REGEX.ALPHANUMERIC
 };
 
-// src/integration-pair/source.int15-3-2.dest.int15-3-2.map.rules.ts
+// src/integration/int33-2.field.rules.ts
+var INT332FieldRegexMap = {
+  "postingDate": REGEX.DATE_YYYY_MM_DD,
+  "property.propertyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY,
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.UPPERCASE_LETTERS_ONLY,
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "property.pmsTypeCode": REGEX.ALPHANUMERIC
+};
+
+// src/integration/int33-1.field.rules.ts
+var INT331FieldRegexMap = {
+  "postingDate": REGEX.DATE_YYYY_MM_DD,
+  "property.propertyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY,
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.UPPERCASE_LETTERS_ONLY,
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
+  //Dont see data with these values so this is placeholder for now.
+  "property.pmsTypeCode": REGEX.ALPHANUMERIC
+};
+
+// src/integration-pair/source.int15-3-2.dest.int15-3-1.map.rules.ts
 var INT1532_TO_INT1531_FieldPathMap = {
+  // sourcePath: destinationPath  (both normalized with <array>)
   "confirmationIds<array>.value": "confirmationIds<array>.value",
   "propertyCode": "propertyCode",
   "guestInformation.altCustId": "guestInformation.altCustId"
 };
 
-// src/index.ts
-var FIELD_RULES_REGISTRY = {
-  "int15-3-1": INT1531FieldRegexMap,
-  "int15-3-2": INT1532FieldRegexMap
+// src/integration-pair/source.int33-2.dest.int33-1.map.rules.ts
+var INT332_TO_INT331_FieldPathMap = {
+  "postingDate": "postingDate",
+  "property.propertyCode": "property.propertyCode",
+  "glFeedDetails": "glFeedDetails",
+  "glFeedDetails.financialAmountDetails": "glFeedDetails.financialAmountDetails",
+  "glFeedDetails.totalFinancialAmountDetailLines": "glFeedDetails.totalFinancialAmountDetailLines",
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount": "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount",
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount": "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount",
+  "glFeedDetails.marketSegmentDetails": "glFeedDetails.marketSegmentDetails",
+  "glFeedDetails.marketSegmentDetailLines": "glFeedDetails.marketSegmentDetailLines",
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount",
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount",
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount",
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount",
+  "glFeedDetails.financialAmountDetails<array>.chargeCode": "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode",
+  "glFeedDetails.financialAmountDetails<array>.baseAmount": "glFeedDetails.financialAmountDetails<array>.baseAmount",
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount": "glFeedDetails.financialAmountDetails<array>.foreignAmount",
+  "glFeedDetails.financialAmountDetails<array>.vatDetail": "glFeedDetails.financialAmountDetails<array>.vatDetail",
+  "glFeedDetails.financialAmountDetails<array>.journalSource": "glFeedDetails.financialAmountDetails<array>.journalSource",
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode",
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail": "glFeedDetails.marketSegmentDetails<array>.vatDetail",
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount",
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount",
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount",
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount",
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": "glFeedDetails.marketSegmentDetails<array>.journalSource",
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount",
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase",
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount",
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": "	glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount",
+  "property.pmsTypeCode": "property.pmsTypeCode"
 };
+
+// src/common/integration-validation.types.ts
 var WRAPPER_VALIDATOR_REGISTRY = {
   "int03-1": Validators.validateAsyncSoxWrapper,
   "int04": Validators.validateAsyncSoxWrapper,
@@ -34576,9 +34687,20 @@ var WRAPPER_VALIDATOR_REGISTRY = {
   "int22": Validators.validateAsyncSoxWrapper,
   "int21": Validators.validateAsyncSoxWrapper
 };
+
+// src/index.ts
+var FIELD_RULES_REGISTRY = {
+  "int15-3-1": INT1531FieldRegexMap,
+  "int15-3-2": INT1532FieldRegexMap,
+  "int33-2": INT332FieldRegexMap,
+  "int33-1": INT331FieldRegexMap
+};
 function resolveFieldPathMap(source, dest) {
   if (source === "int15-3-2" && dest === "int15-3-1") {
     return INT1532_TO_INT1531_FieldPathMap;
+  }
+  if (source === "int33-2" && dest === "int33-1") {
+    return INT332_TO_INT331_FieldPathMap;
   }
   return null;
 }
@@ -34608,6 +34730,32 @@ function validateIntegrationPair(params) {
     sourcePayload,
     destinationPayload
   } = params;
+  const { content: sourceContent } = sourcePayload;
+  const { content: destinationContent } = destinationPayload;
+  let parsedSourceContent;
+  if (typeof sourceContent === "string") {
+    try {
+      parsedSourceContent = JSON.parse(sourceContent);
+    } catch (error) {
+      console.error("Failed to parse sourceContent:", error);
+      parsedSourceContent = {};
+    }
+  } else {
+    parsedSourceContent = {};
+  }
+  let parsedDestinationContent;
+  if (typeof destinationContent === "string") {
+    try {
+      parsedDestinationContent = JSON.parse(destinationContent);
+    } catch (error) {
+      console.error("Failed to parse destinationContent:", error);
+      parsedDestinationContent = {};
+    }
+  } else {
+    parsedDestinationContent = {};
+  }
+  sourcePayload.content = parsedSourceContent;
+  destinationPayload.content = parsedDestinationContent;
   const srcId = sourceIntegrationId.toLowerCase();
   const destId = destinationIntegrationId.toLowerCase();
   const errors = [];
