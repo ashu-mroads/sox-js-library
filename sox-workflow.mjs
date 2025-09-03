@@ -34465,7 +34465,7 @@ function toCloudEvent(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
 }
-async function createBusinessEvent(soxEvent) {
+async function sendBusinessEvent(soxEvent) {
   const { cloudEvent, sourceDataTruncated, destinationDataTruncated } = toCloudEvent(soxEvent);
   try {
     const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
@@ -34814,13 +34814,13 @@ var index_default = {
   validateIntegration,
   validateIntegrationPair,
   Validators,
-  createBusinessEvent,
+  sendBusinessEvent,
   toCloudEvent
 };
 export {
   Validators,
-  createBusinessEvent,
   index_default as default,
+  sendBusinessEvent,
   toCloudEvent,
   validateIntegration,
   validateIntegrationPair
