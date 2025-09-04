@@ -1,4 +1,4 @@
-// sox-workflow build hash: 02a8ee0\n
+// sox-workflow build hash: 0bdc6fe\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34826,8 +34826,8 @@ function validateIntegrationPair(params) {
     sourcePayload,
     destinationPayload
   } = params;
-  const { content: sourceContent } = sourcePayload;
-  const { content: destinationContent } = destinationPayload;
+  const sourceContent = sourcePayload?.content;
+  const destinationContent = destinationPayload?.content;
   let parsedSourceContent;
   if (typeof sourceContent === "string") {
     try {
@@ -34915,7 +34915,6 @@ var index_default = {
 };
 export {
   Validators,
-  createSoxBusinessEvent,
   index_default as default,
   sendBusinessEvent,
   toCloudEvent,
