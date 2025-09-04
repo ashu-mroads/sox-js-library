@@ -1,4 +1,4 @@
-// sox-workflow build hash: 3a54baf\n
+// sox-workflow build hash: 02a8ee0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34915,6 +34915,7 @@ var index_default = {
 };
 export {
   Validators,
+  createSoxBusinessEvent,
   index_default as default,
   sendBusinessEvent,
   toCloudEvent,
