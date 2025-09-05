@@ -1,4 +1,4 @@
-// sox-workflow build hash: 0bdc6fe\n
+// sox-workflow build hash: 7a86c1f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34141,6 +34141,26 @@ var Validators = {
     return false;
   },
   /**
+   * Case-insensitive & structural equality used by mapping comparison.
+   * - Primitives compared directly
+   * - Strings compared case-insensitive (locale-insensitive lowercasing)
+   * - Objects/arrays compared via JSON structural serialization
+   */
+  _areValuesEqual(a, b) {
+    if (a === b) return true;
+    if (typeof a === "string" && typeof b === "string") {
+      return a.toLowerCase() === b.toLowerCase();
+    }
+    if (a && b && typeof a === "object" && typeof b === "object") {
+      try {
+        return JSON.stringify(a) === JSON.stringify(b);
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  },
+  /**
    * Async SOX wrapper structural validation.
    */
   validateAsyncSoxWrapper(value) {
@@ -34202,12 +34222,6 @@ var Validators = {
     }
     return { isValid: errors.length === 0, errorMessages: errors };
   },
-  /**
-   * Extract the business payload from an input which may be:
-   *  - Already the business object (flat shape you just created)
-   *  - Async wrapper: content.payload (optionally nested again as payload.payload)
-   *  - Otherwise returned unchanged.
-   */
   _extractBusinessPayload(input) {
     if (!input || typeof input !== "object" || Array.isArray(input)) return input;
     const w = input;
@@ -34222,11 +34236,6 @@ var Validators = {
     }
     return input;
   },
-  /**
-   * INTERNAL: Flatten an object/array/value tree into a dot-path map with array
-   * indices rendered as <array1>, <array2>, ... matching existing rule expectations.
-   * Root path is ''. Caller can ignore empty key or treat it specially.
-   */
   _flattenToPathValueMap(root) {
     const out = {};
     const walk = (val, path) => {
@@ -34262,10 +34271,6 @@ var Validators = {
     walk(root, "");
     return out;
   },
-  /**
-   * Generic payload validator using a rule map (Record<path, RegExp>).
-   * Supports direct flat business objects (new JSON) or legacy async wrapper.
-   */
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
     const failures = [];
@@ -34302,10 +34307,6 @@ var Validators = {
       failures
     };
   },
-  /**
-   * Compare two payloads using a field path map.
-   * (Unwrapping of wrappers is intentionally NOT applied here; call _extractBusinessPayload externally if needed.)
-   */
   comparePayloadsWithFieldMap(fieldPathMap, sourcePayload, destinationPayload) {
     const errorMessages = [];
     const missingSource = [];
@@ -34330,8 +34331,10 @@ var Validators = {
         mismatches
       };
     }
-    const flatSource = this._flattenToPathValueMap(sourcePayload);
-    const flatDest = this._flattenToPathValueMap(destinationPayload);
+    const sourcePayloadExtracted = this._extractBusinessPayload(sourcePayload);
+    const destinationPayloadExtracted = this._extractBusinessPayload(destinationPayload);
+    const flatSource = this._flattenToPathValueMap(sourcePayloadExtracted);
+    const flatDest = this._flattenToPathValueMap(destinationPayloadExtracted);
     const groupByNormalized = (flat) => {
       const map = {};
       Object.entries(flat).forEach(([raw, val]) => {
@@ -34372,18 +34375,7 @@ var Validators = {
       for (let i = 0; i < pairCount; i++) {
         const s = srcEntries[i];
         const d = destEntries[i];
-        const eq = (a, b) => {
-          if (a === b) return true;
-          if (typeof a === "object" && typeof b === "object") {
-            try {
-              return JSON.stringify(a) === JSON.stringify(b);
-            } catch {
-              return false;
-            }
-          }
-          return false;
-        };
-        if (!eq(s.value, d.value)) {
+        if (!this._areValuesEqual(s.value, d.value)) {
           mismatches.push({
             sourcePath: s.rawPath,
             destinationPath: d.rawPath,
@@ -34593,8 +34585,7 @@ async function createSoxBusinessEvent(params) {
 var REGEX = {
   ALPHANUMERIC_UPPERCASE: /^[A-Z0-9]+$/,
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
-  // Accepts: letters (A-Z), digits (0-9), and '.' anywhere (one or more occurrences allowed).
-  ALPHANUMERIC: /^(?=.*[A-Za-z])(?=.*\d)[A-Z0-9.]+$/,
+  ALPHANUMERIC: /^[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
@@ -34800,6 +34791,15 @@ function resolveFieldPathMap(source, dest) {
   }
   return null;
 }
+function parsePayloadContent(raw, label) {
+  if (typeof raw !== "string") return {};
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error(`Failed to parse ${label}`, err);
+    return {};
+  }
+}
 function validateIntegration(params) {
   const { integrationId, payload } = params;
   const id = integrationId.toLowerCase();
@@ -34828,30 +34828,8 @@ function validateIntegrationPair(params) {
   } = params;
   const sourceContent = sourcePayload?.content;
   const destinationContent = destinationPayload?.content;
-  let parsedSourceContent;
-  if (typeof sourceContent === "string") {
-    try {
-      parsedSourceContent = JSON.parse(sourceContent);
-    } catch (error) {
-      console.error("Failed to parse sourceContent:", error);
-      parsedSourceContent = {};
-    }
-  } else {
-    parsedSourceContent = {};
-  }
-  let parsedDestinationContent;
-  if (typeof destinationContent === "string") {
-    try {
-      parsedDestinationContent = JSON.parse(destinationContent);
-    } catch (error) {
-      console.error("Failed to parse destinationContent:", error);
-      parsedDestinationContent = {};
-    }
-  } else {
-    parsedDestinationContent = {};
-  }
-  sourcePayload.content = parsedSourceContent;
-  destinationPayload.content = parsedDestinationContent;
+  sourcePayload.content = parsePayloadContent(sourceContent, "source");
+  destinationPayload.content = parsePayloadContent(destinationContent, "destination");
   const srcId = sourceIntegrationId.toLowerCase();
   const destId = destinationIntegrationId.toLowerCase();
   const errors = [];
@@ -34891,7 +34869,7 @@ function validateIntegrationPair(params) {
         destinationPayload
       );
       if (!mappingComparison?.isValid) {
-        errors.push(`Field value comparison failed for mapping ${srcId} -> ${destId}`);
+        errors.push(`Field value comparison failed for mapping ${srcId} -> ${destId}`, JSON.stringify(mappingComparison));
       }
     }
   }
@@ -34909,15 +34887,12 @@ function validateIntegrationPair(params) {
 var index_default = {
   validateIntegration,
   validateIntegrationPair,
-  createSoxBusinessEvent,
-  Validators,
-  toCloudEvent
+  createSoxBusinessEvent
 };
 export {
   Validators,
+  createSoxBusinessEvent,
   index_default as default,
-  sendBusinessEvent,
-  toCloudEvent,
   validateIntegration,
   validateIntegrationPair
 };
@@ -34976,4 +34951,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.0bdc6fe.mjs.map
+//# sourceMappingURL=sox-workflow.7a86c1f.mjs.map
