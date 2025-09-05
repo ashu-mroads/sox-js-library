@@ -1,4 +1,4 @@
-// sox-workflow build hash: a00ace2\n
+// sox-workflow build hash: 747c726\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34582,14 +34582,14 @@ var REGEX = {
 // src/integration/int15-3-1.field.rules.ts
 var INT1531FieldRegexMap = {
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
-  "propertyCode": REGEX.UPPERCASE_LETTERS_ONLY,
+  "propertyCode": REGEX.ALPHANUMERIC,
   "guestInformation.altCustId": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int15-3-2.field.rules.ts
 var INT1532FieldRegexMap = {
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
-  "propertyCode": REGEX.UPPERCASE_LETTERS_ONLY,
+  "propertyCode": REGEX.ALPHANUMERIC,
   "guestInformation.altCustId": REGEX.ALPHANUMERIC
 };
 
@@ -34935,4 +34935,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.a00ace2.mjs.map
+//# sourceMappingURL=sox-workflow.747c726.mjs.map
