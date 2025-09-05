@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7a86c1f\n
+// sox-workflow build hash: a00ace2\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34436,7 +34436,6 @@ function toCloudEvent(sox) {
     id: sox.eventId || crypto.randomUUID(),
     source: "sox",
     type: sox.eventType,
-    // 'OK' | 'ERROR'
     time,
     category: sox.eventType,
     provider: "SOX",
@@ -34447,8 +34446,8 @@ function toCloudEvent(sox) {
       destIntId: sox.destIntId,
       srcEventTime: sox.srcEventTime,
       destEventTime: sox.destEventTime,
-      errorType: sox.errorType,
-      errorSubType: sox.errorSubType,
+      errorTypes: sox.errorTypes,
+      errorSubTypes: sox.errorSubTypes,
       errorSummary: sox.errorSummary,
       sourceData: srcData,
       destinationData: destData,
@@ -34486,7 +34485,7 @@ async function sendBusinessEvent(soxEvent) {
   }
 }
 function classifyPair(validation) {
-  if (validation.isValid) return {};
+  if (validation.isValid) return { errorTypes: [], errorSubTypes: [] };
   const collectFailures = (v) => v?.failures ?? [];
   const srcFailures = collectFailures(validation.sourceValidation);
   const destFailures = collectFailures(validation.destinationValidation);
@@ -34497,49 +34496,35 @@ function classifyPair(validation) {
   const mc = validation.mappingComparison;
   const mappingMismatches = mc?.mismatches ?? [];
   const mappingMissingCount = (mc?.missingSource?.length ?? 0) + (mc?.missingDestination?.length ?? 0);
+  const errorTypes = [];
+  const errorSubTypes = [];
+  let summary;
   if (mc && !mc.isValid && mappingMismatches.length > 0) {
-    return {
-      errorType: "Field Value Mismatch",
-      errorSubType: "Value Mismatch",
-      errorSummary: `Value mismatches: ${mappingMismatches.length}`
-    };
+    errorTypes.push("Field Value Mismatch");
+    errorSubTypes.push("Value Mismatch");
+    summary = `Value mismatches: ${mappingMismatches.length}`;
+  } else if (mc && !mc.isValid && mappingMissingCount > 0) {
+    errorTypes.push("Field Validation Error");
+    errorSubTypes.push("Missing Field");
+    summary = `Missing mapped fields: src=${mc.missingSource.length} dest=${mc.missingDestination.length}`;
+  } else if (missingField.length > 0) {
+    errorTypes.push("Field Validation Error");
+    errorSubTypes.push("Missing Field");
+    summary = `Missing rule fields: ${missingField.length}`;
+  } else if (patternMismatch.length > 0) {
+    errorTypes.push("Field Validation Error");
+    errorSubTypes.push("Invalid Field Format");
+    summary = `Pattern mismatches: ${patternMismatch.length}`;
+  } else if (emptyValues.length > 0) {
+    errorTypes.push("Field Validation Error");
+    errorSubTypes.push("Missing Value");
+    summary = `Empty values: ${emptyValues.length}`;
+  } else if (validation.errors.length > 0) {
+    errorTypes.push("Integration Failure");
+    errorSubTypes.push("Integration Failure");
+    summary = validation.errors[0];
   }
-  if (mc && !mc.isValid && mappingMissingCount > 0) {
-    return {
-      errorType: "Field Validation Error",
-      errorSubType: "Missing Field",
-      errorSummary: `Missing mapped fields: src=${mc.missingSource.length} dest=${mc.missingDestination.length}`
-    };
-  }
-  if (missingField.length > 0) {
-    return {
-      errorType: "Field Validation Error",
-      errorSubType: "Missing Field",
-      errorSummary: `Missing rule fields: ${missingField.length}`
-    };
-  }
-  if (patternMismatch.length > 0) {
-    return {
-      errorType: "Field Validation Error",
-      errorSubType: "Invalid Field Format",
-      errorSummary: `Pattern mismatches: ${patternMismatch.length}`
-    };
-  }
-  if (emptyValues.length > 0) {
-    return {
-      errorType: "Field Validation Error",
-      errorSubType: "Missing Value",
-      errorSummary: `Empty values: ${emptyValues.length}`
-    };
-  }
-  if (validation.errors.length > 0) {
-    return {
-      errorType: "Integration Failure",
-      errorSubType: "Integration Failure",
-      errorSummary: validation.errors[0]
-    };
-  }
-  return {};
+  return { errorTypes, errorSubTypes, errorSummary: summary };
 }
 async function createSoxBusinessEvent(params) {
   const {
@@ -34550,7 +34535,7 @@ async function createSoxBusinessEvent(params) {
     sourcePayload,
     destinationPayload
   } = params;
-  const { errorType, errorSubType, errorSummary } = classifyPair(validationResult);
+  const { errorTypes, errorSubTypes, errorSummary } = classifyPair(validationResult);
   let sourceData;
   let destinationData;
   try {
@@ -34571,13 +34556,12 @@ async function createSoxBusinessEvent(params) {
     transactionId,
     sourceIntId: validationResult.sourceIntegrationId,
     destIntId: validationResult.destinationIntegrationId,
-    errorType,
-    errorSubType,
+    errorTypes: errorTypes.length ? errorTypes : void 0,
+    errorSubTypes: errorSubTypes.length ? errorSubTypes : void 0,
     errorSummary,
     sourceData,
     destinationData
   };
-  const { cloudEvent, sourceDataTruncated, destinationDataTruncated } = toCloudEvent(businessEvent);
   return sendBusinessEvent(businessEvent);
 }
 
