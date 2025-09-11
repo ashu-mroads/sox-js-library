@@ -1,4 +1,4 @@
-// sox-workflow build hash: 747c726\n
+// sox-workflow build hash: db64776\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34183,8 +34183,11 @@ var Validators = {
       errors.push("Missing or invalid: content");
     } else {
       const { success } = content;
-      if (typeof success !== "number" || !Number.isFinite(success)) {
-        errors.push("Missing or invalid: content.success (must be finite number)");
+      const successNumber = Number(success);
+      const isFiniteNumber = isFinite(successNumber);
+      const isValidSuccess = successNumber === 0 || successNumber === 1;
+      if (!isFiniteNumber && !isValidSuccess) {
+        errors.push(`Missing or invalid: content.success expected value 0 or 1, actual value: ${content.success}`);
       }
     }
     return { isValid: errors.length === 0, errorMessages: errors };
@@ -34279,7 +34282,13 @@ var Validators = {
       return {
         isValid: false,
         errorMessages: ["Payload must be a non-null object"],
-        failures: [{ rulePath: "*", actualPath: "", value: payload, reason: "Not an object" }]
+        failures: [{
+          rulePath: "*",
+          actualPath: "",
+          value: payload,
+          anomalyCategory: "Missing Metadata",
+          anomalyType: "Missing SOX data"
+        }]
       };
     }
     const flat = this._flattenToPathValueMap(payload);
@@ -34288,16 +34297,34 @@ var Validators = {
       const matching = Object.entries(flat).filter(([actual]) => normalize(actual) === rulePath);
       if (matching.length === 0) {
         errorMessages.push(`Missing field: ${rulePath}`);
-        failures.push({ rulePath, actualPath: "", value: void 0, reason: "Missing field" });
+        failures.push({
+          rulePath,
+          actualPath: "",
+          value: void 0,
+          anomalyCategory: "Field Level Anomaly",
+          anomalyType: "Missing Field"
+        });
         continue;
       }
       matching.forEach(([actualPath, value]) => {
         if (this.isEmpty(value)) {
           errorMessages.push(`Empty value at ${actualPath} (rule: ${rulePath})`);
-          failures.push({ rulePath, actualPath, value, reason: "Empty value" });
+          failures.push({
+            rulePath,
+            actualPath,
+            value,
+            anomalyCategory: "Field Level Anomaly",
+            anomalyType: "Missing Value"
+          });
         } else if (!rx.test(String(value))) {
           errorMessages.push(`Invalid format at ${actualPath} value="${value}" (rule: ${rulePath})`);
-          failures.push({ rulePath, actualPath, value, reason: "Pattern mismatch" });
+          failures.push({
+            rulePath,
+            actualPath,
+            value,
+            anomalyCategory: "Field Level Anomaly",
+            anomalyType: "Invalid Field Format"
+          });
         }
       });
     }
@@ -34368,7 +34395,8 @@ var Validators = {
           mappedDestinationRule: destRule,
           sourceValue: srcEntries.map((e) => e.value),
           destinationValue: destEntries.map((e) => e.value),
-          reason: "Count mismatch"
+          anomalyCategory: "Field Level Anomaly",
+          anomalyType: "Missing Value"
         });
       }
       const pairCount = Math.min(srcEntries.length, destEntries.length);
@@ -34383,13 +34411,14 @@ var Validators = {
             mappedDestinationRule: destRule,
             sourceValue: s.value,
             destinationValue: d.value,
-            reason: "Value mismatch"
+            anomalyCategory: "Field Level Anomaly",
+            anomalyType: "Value Mismatch"
           });
           errorMessages.push(`Value mismatch ${s.rawPath} -> ${d.rawPath}`);
         }
       }
     }
-    const isValid = missingSource.length === 0 && missingDestination.length === 0 && mismatches.every((m) => m.reason !== "Value mismatch") && !errorMessages.some((e) => e.startsWith("Count mismatch"));
+    const isValid = missingSource.length === 0 && missingDestination.length === 0 && mismatches.length === 0;
     return {
       isValid,
       errorMessages,
@@ -34446,9 +34475,9 @@ function toCloudEvent(sox) {
       destIntId: sox.destIntId,
       srcEventTime: sox.srcEventTime,
       destEventTime: sox.destEventTime,
-      errorTypes: sox.errorTypes,
-      errorSubTypes: sox.errorSubTypes,
-      errorSummary: sox.errorSummary,
+      anomalyCategory: sox.anomalyCategory,
+      anomalyType: sox.anomalyType,
+      anomalySummary: sox.anomalySummary,
       sourceData: srcData,
       destinationData: destData,
       sourceDataTruncated: srcTrunc || void 0,
@@ -34484,47 +34513,43 @@ async function sendBusinessEvent(soxEvent) {
     };
   }
 }
-function classifyPair(validation) {
-  if (validation.isValid) return { errorTypes: [], errorSubTypes: [] };
+function summarizeAnomalies(validation) {
+  if (validation.isValid) return { anomalyCategory: [], anomalyType: [] };
   const collectFailures = (v) => v?.failures ?? [];
   const srcFailures = collectFailures(validation.sourceValidation);
   const destFailures = collectFailures(validation.destinationValidation);
   const allFailures = [...srcFailures, ...destFailures];
-  const missingField = allFailures.filter((f) => /Missing field/i.test(f.reason));
-  const emptyValues = allFailures.filter((f) => /Empty value/i.test(f.reason));
-  const patternMismatch = allFailures.filter((f) => /Pattern mismatch/i.test(f.reason));
-  const mc = validation.mappingComparison;
-  const mappingMismatches = mc?.mismatches ?? [];
-  const mappingMissingCount = (mc?.missingSource?.length ?? 0) + (mc?.missingDestination?.length ?? 0);
-  const errorTypes = [];
-  const errorSubTypes = [];
-  let summary;
-  if (mc && !mc.isValid && mappingMismatches.length > 0) {
-    errorTypes.push("Field Value Mismatch");
-    errorSubTypes.push("Value Mismatch");
-    summary = `Value mismatches: ${mappingMismatches.length}`;
-  } else if (mc && !mc.isValid && mappingMissingCount > 0) {
-    errorTypes.push("Field Validation Error");
-    errorSubTypes.push("Missing Field");
-    summary = `Missing mapped fields: src=${mc.missingSource.length} dest=${mc.missingDestination.length}`;
-  } else if (missingField.length > 0) {
-    errorTypes.push("Field Validation Error");
-    errorSubTypes.push("Missing Field");
-    summary = `Missing rule fields: ${missingField.length}`;
-  } else if (patternMismatch.length > 0) {
-    errorTypes.push("Field Validation Error");
-    errorSubTypes.push("Invalid Field Format");
-    summary = `Pattern mismatches: ${patternMismatch.length}`;
-  } else if (emptyValues.length > 0) {
-    errorTypes.push("Field Validation Error");
-    errorSubTypes.push("Missing Value");
-    summary = `Empty values: ${emptyValues.length}`;
-  } else if (validation.errors.length > 0) {
-    errorTypes.push("Integration Failure");
-    errorSubTypes.push("Integration Failure");
-    summary = validation.errors[0];
+  const mappingFailures = validation.mappingComparison?.mismatches ?? [];
+  const categorySet = /* @__PURE__ */ new Set();
+  const typeSet = /* @__PURE__ */ new Set();
+  allFailures.forEach((f) => {
+    if (f.anomalyCategory) categorySet.add(f.anomalyCategory);
+    if (f.anomalyType) typeSet.add(f.anomalyType);
+  });
+  mappingFailures.forEach((m) => {
+    if (m.anomalyCategory) categorySet.add(m.anomalyCategory);
+    if (m.anomalyType) typeSet.add(m.anomalyType);
+  });
+  const anomalyCategory = [...categorySet];
+  const anomalyType = [...typeSet];
+  if (allFailures.length === 0 && mappingFailures.length === 0) {
+    return { anomalyCategory, anomalyType };
   }
-  return { errorTypes, errorSubTypes, errorSummary: summary };
+  const parts = [];
+  const countIssues = `Src:${srcFailures.length},Dest: ${destFailures.length},Map:${mappingFailures.length};`;
+  parts.push(countIssues);
+  allFailures.forEach((f) => {
+    parts.push(
+      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|rule=${f.rulePath}|path=${f.actualPath || ""}|value=${f.value}`
+    );
+  });
+  mappingFailures.forEach((m) => {
+    parts.push(
+      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}`
+    );
+  });
+  const anomalySummary = parts.join("; ");
+  return { anomalyCategory, anomalyType, anomalySummary };
 }
 async function createSoxBusinessEvent(params) {
   const {
@@ -34535,7 +34560,7 @@ async function createSoxBusinessEvent(params) {
     sourcePayload,
     destinationPayload
   } = params;
-  const { errorTypes, errorSubTypes, errorSummary } = classifyPair(validationResult);
+  const { anomalyCategory, anomalyType, anomalySummary } = summarizeAnomalies(validationResult);
   let sourceData;
   let destinationData;
   try {
@@ -34556,9 +34581,9 @@ async function createSoxBusinessEvent(params) {
     transactionId,
     sourceIntId: validationResult.sourceIntegrationId,
     destIntId: validationResult.destinationIntegrationId,
-    errorTypes: errorTypes.length ? errorTypes : void 0,
-    errorSubTypes: errorSubTypes.length ? errorSubTypes : void 0,
-    errorSummary,
+    anomalyCategory: anomalyCategory.length ? anomalyCategory : void 0,
+    anomalyType: anomalyType.length ? anomalyType : void 0,
+    anomalySummary,
     sourceData,
     destinationData
   };
@@ -34569,7 +34594,7 @@ async function createSoxBusinessEvent(params) {
 var REGEX = {
   ALPHANUMERIC_UPPERCASE: /^[A-Z0-9]+$/,
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
-  ALPHANUMERIC: /^[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)*$/,
+  ALPHANUMERIC: /^[A-Za-z0-9 ]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
@@ -34589,7 +34614,7 @@ var INT1531FieldRegexMap = {
 // src/integration/int15-3-2.field.rules.ts
 var INT1532FieldRegexMap = {
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
-  "propertyCode": REGEX.ALPHANUMERIC,
+  "propertyCode": REGEX.UPPERCASE_LETTERS_ONLY,
   "guestInformation.altCustId": REGEX.ALPHANUMERIC
 };
 
@@ -34600,7 +34625,6 @@ var INT332FieldRegexMap = {
   "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
@@ -34609,29 +34633,22 @@ var INT332FieldRegexMap = {
   "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
   "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
   "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY,
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.UPPERCASE_LETTERS_ONLY,
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "property.pmsTypeCode": REGEX.ALPHANUMERIC
+  "property.pmsTypeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
 };
 
 // src/integration/int33-1.field.rules.ts
@@ -34641,7 +34658,6 @@ var INT331FieldRegexMap = {
   "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
@@ -34650,29 +34666,22 @@ var INT331FieldRegexMap = {
   "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
   "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
   "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY,
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.UPPERCASE_LETTERS_ONLY,
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER,
-  //Dont see data with these values so this is placeholder for now.
-  "property.pmsTypeCode": REGEX.ALPHANUMERIC
+  "property.pmsTypeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.UPPERCASE_LETTERS_ONLY
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase": REGEX.ALPHANUMERIC, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
+  // "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount": REGEX.NUMBER, //Dont see data with these values so this is placeholder for now.
 };
 
 // src/integration-pair/source.int15-3-2.dest.int15-3-1.map.rules.ts
@@ -34687,33 +34696,28 @@ var INT1532_TO_INT1531_FieldPathMap = {
 var INT332_TO_INT331_FieldPathMap = {
   "postingDate": "postingDate",
   "property.propertyCode": "property.propertyCode",
-  "glFeedDetails": "glFeedDetails",
-  "glFeedDetails.financialAmountDetails": "glFeedDetails.financialAmountDetails",
   "glFeedDetails.totalFinancialAmountDetailLines": "glFeedDetails.totalFinancialAmountDetailLines",
-  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount": "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount",
-  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount": "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount",
-  "glFeedDetails.marketSegmentDetails": "glFeedDetails.marketSegmentDetails",
-  "glFeedDetails.marketSegmentDetailLines": "glFeedDetails.marketSegmentDetailLines",
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount",
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount",
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount",
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount",
-  "glFeedDetails.financialAmountDetails<array>.chargeCode": "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode",
-  "glFeedDetails.financialAmountDetails<array>.baseAmount": "glFeedDetails.financialAmountDetails<array>.baseAmount",
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount": "glFeedDetails.financialAmountDetails<array>.foreignAmount",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail": "glFeedDetails.financialAmountDetails<array>.vatDetail",
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value",
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value",
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value",
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value",
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value",
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value",
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode",
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": "glFeedDetails.financialAmountDetails<array>.baseAmount.value",
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": "glFeedDetails.financialAmountDetails<array>.foreignAmount.value",
   "glFeedDetails.financialAmountDetails<array>.journalSource": "glFeedDetails.financialAmountDetails<array>.journalSource",
+  "glFeedDetails.totalMarketSegmentDetailLines": "glFeedDetails.totalMarketSegmentDetailLines",
   "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail": "glFeedDetails.marketSegmentDetails<array>.vatDetail",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount",
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value",
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value",
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value",
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value",
   "glFeedDetails.marketSegmentDetails<array>.journalSource": "glFeedDetails.marketSegmentDetails<array>.journalSource",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount": "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount": "	glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount",
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount":"glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount",
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase":"glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase",
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount":"glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount",
+  // "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount":"	glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount",
   "property.pmsTypeCode": "property.pmsTypeCode"
 };
 
@@ -34857,6 +34861,7 @@ function validateIntegrationPair(params) {
       }
     }
   }
+  console.log(`Validation result for ${srcId} -> ${destId}:`, { errors, sourceValidation, destinationValidation, mappingComparison });
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
   return {
     sourceIntegrationId: srcId,
