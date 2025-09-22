@@ -35583,15 +35583,34 @@ function validateIntegrationPair(params) {
     errors
   };
 }
-async function processMatchedPair({ loopItemValue }) {
-  const dataArr = loopItemValue?.data;
-  if (!Array.isArray(dataArr) || dataArr.length < 2) {
-    throw new Error("processMatchedPair: loopItemValue.data must be an array with at least two elements (source, destination).");
+async function processMatchedPair({
+  loopItemValue,
+  srcIntegration,
+  destIntegration
+}) {
+  if (!srcIntegration || !destIntegration) {
+    throw new Error("processMatchedPair: srcIntegration and destIntegration are required.");
   }
-  const sourcePayload = dataArr[0];
-  const destinationPayload = dataArr[1];
-  const sourceIntegrationId = sourcePayload?.sox_integration;
-  const destinationIntegrationId = destinationPayload?.sox_integration;
+  const dataArr = Array.isArray(loopItemValue?.data) ? loopItemValue.data : [];
+  if (dataArr.length === 0) {
+    throw new Error("processMatchedPair: loopItemValue.data must be a non-empty array.");
+  }
+  const srcKey = String(srcIntegration).toLowerCase();
+  const destKey = String(destIntegration).toLowerCase();
+  const sourcePayload = dataArr.find(
+    (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey
+  );
+  const destinationPayload = dataArr.find(
+    (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
+  );
+  if (!sourcePayload) {
+    throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
+  }
+  if (!destinationPayload) {
+    throw new Error(`processMatchedPair: No payload found for destIntegration='${destIntegration}'`);
+  }
+  const sourceIntegrationId = sourcePayload.sox_integration;
+  const destinationIntegrationId = destinationPayload.sox_integration;
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
@@ -35635,10 +35654,10 @@ async function processSingleIntegration({ loopItemValue }) {
   console.log("processSingleIntegration ingestResult:", ingestResult);
   return ingestResult;
 }
-async function processIntegrationFailure({ loopItemValue }) {
+async function processMissingTransaction({ loopItemValue }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
-    throw new Error("processIntegrationFailure: no valid failure payload found (expected object).");
+    throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
   }
   const sourceIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
@@ -35656,7 +35675,7 @@ async function processIntegrationFailure({ loopItemValue }) {
     rulePath: "",
     actualPath: "",
     value: payload?.content?.success,
-    anomalyCategory: "Integration Failure",
+    anomalyCategory: "Missing Transaction",
     anomalyType: "Missing Transaction Pair"
   });
   const ingestResult = await createSoxBusinessEvent({
@@ -35674,12 +35693,12 @@ var index_default = {
   createSoxBusinessEvent,
   processMatchedPair,
   processSingleIntegration,
-  processIntegrationFailure
+  processMissingTransaction
 };
 export {
   index_default as default,
-  processIntegrationFailure,
   processMatchedPair,
+  processMissingTransaction,
   processSingleIntegration,
   validateIntegration,
   validateIntegrationPair
