@@ -1,10 +1,10 @@
 {
-  "hash": "db64776",
-  "builtAt": "2025-09-11T20:07:30.746Z",
+  "hash": "8063117",
+  "builtAt": "2025-09-22T19:22:54.185Z",
   "files": {
     "hashed": {
-      "js": "sox-workflow.db64776.mjs",
-      "map": "sox-workflow.db64776.mjs.map"
+      "js": "sox-workflow.8063117.mjs",
+      "map": "sox-workflow.8063117.mjs.map"
     },
     "stable": {
       "js": "sox-workflow.mjs",
