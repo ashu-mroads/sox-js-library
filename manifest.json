@@ -1,10 +1,10 @@
 {
-  "hash": "8063117",
-  "builtAt": "2025-09-22T19:57:47.357Z",
+  "hash": "d50109c",
+  "builtAt": "2025-09-23T14:37:31.738Z",
   "files": {
     "hashed": {
-      "js": "sox-workflow.8063117.mjs",
-      "map": "sox-workflow.8063117.mjs.map"
+      "js": "sox-workflow.d50109c.mjs",
+      "map": "sox-workflow.d50109c.mjs.map"
     },
     "stable": {
       "js": "sox-workflow.mjs",
