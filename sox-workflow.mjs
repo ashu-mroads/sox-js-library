@@ -36773,23 +36773,23 @@ async function processMatchedPair({
   return ingestResult;
 }
 async function processSingleIntegration({ loopItemValue }) {
-  const payload = loopItemValue?.data[0];
-  if (!payload || typeof payload !== "object") {
-    throw new Error("processSingleIntegration: no valid content found (payload = loopItemValue?.data[0])" + JSON.stringify(payload));
+  const soxData = loopItemValue.data[0];
+  if (typeof soxData !== "object") {
+    throw new Error("processSingleIntegration: no valid content found (soxData = loopItemValue?.data[0]): " + JSON.stringify(soxData));
   }
-  const sourceIntegrationId = payload.sox_integration;
-  const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
-  const transactionId = payload.sox_transaction_id;
+  const sourceIntegrationId = soxData.sox_integration;
+  const srcEventTime = soxData.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
+  const transactionId = soxData.sox_transaction_id;
   const validationResult = validateIntegration({
     sourceIntegrationId,
-    payload
+    payload: soxData
   });
   console.log("processSingleIntegration validationResult:", validationResult);
   const ingestResult = await createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload: payload
+    sourcePayload: soxData
   });
   console.log("processSingleIntegration ingestResult:", ingestResult);
   return ingestResult;
