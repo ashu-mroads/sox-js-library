@@ -1,4 +1,4 @@
-// sox-workflow build hash: 0abae36\n
+// sox-workflow build hash: c6d98b9\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
