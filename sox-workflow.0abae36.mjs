@@ -1,4 +1,4 @@
-// sox-workflow build hash: d7e9807\n
+// sox-workflow build hash: 0abae36\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36773,13 +36773,15 @@ async function processMatchedPair({
   return ingestResult;
 }
 async function processSingleIntegration({ loopItemValue }) {
-  const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
+  if (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0) {
+  }
+  const payload = loopItemValue?.data[0].content;
   if (!payload || typeof payload !== "object") {
-    throw new Error("processSingleIntegration: no valid payload found (expected object).");
+    throw new Error("processSingleIntegration: no valid content found (loopItemValue?.data[0].content).");
   }
   const sourceIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
-  const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
+  const transactionId = payload.sox_transaction_id;
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload
@@ -36900,4 +36902,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.d7e9807.mjs.map
+//# sourceMappingURL=sox-workflow.0abae36.mjs.map
