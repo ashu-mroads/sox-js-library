@@ -1,4 +1,4 @@
-// sox-workflow build hash: d50109c\n
+// sox-workflow build hash: d7e9807\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34316,6 +34316,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-\.TZ]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -34323,7 +34324,8 @@ var REGEX = {
   NUMBER: /^-?\d+(\.\d+)?$/,
   INTEGER: /^\d+$/,
   DATE_TIME: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
-  DATE_TIME_MS: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}$/
+  DATE_TIME_MS: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z?$/,
+  NOT_EMPTY: /^.+$/
 };
 
 // src/integration/int15-3-1.field.rules.ts
@@ -34496,7 +34498,7 @@ var INT16FieldRegexMap = {
   "request.request_body.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.staysDetails.pmsAccountNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.pmsAccountSetupDate": REGEX.DATE_YYYY_MM_DD
+  "request.request_body.staysDetails.pmsAccountSetupDate": REGEX.DATE_TIME_MS
 };
 
 // src/integration/int17.field.rules.ts
@@ -34507,7 +34509,7 @@ var INT17FieldRegexMap = {
   "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.stayRequestInput.staysDetails.pmsAccountNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_YYYY_MM_DD
+  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_TIME_MS
 };
 
 // src/integration/int31.field.rules.ts
@@ -34603,9 +34605,10 @@ var INT193FieldRegexMap = {
 var INT20FieldRegexMap = {
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.pmsAccountNumber": REGEX.ALPHANUMERIC,
   "request.request_body.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
 };
 
@@ -34614,7 +34617,7 @@ var int04FieldRegexMapData = {
   // A. Top-Level Header Fields
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
-  "folioId": REGEX.ALPHANUMERIC,
+  "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
   "balance.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
   "balance.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
@@ -34686,7 +34689,7 @@ var int031FieldRegexMapData = {
   // A. Top-Level Header Fields
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
-  "folioId": REGEX.ALPHANUMERIC,
+  "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
   "balance.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
   "balance.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
@@ -34758,7 +34761,7 @@ var int032FieldRegexMapData = {
   // A. Top-Level Header Fields
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
-  "folioId": REGEX.ALPHANUMERIC,
+  "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
   "balance.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
   "balance.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
@@ -36070,6 +36073,16 @@ var INT04_TO_INT31_FieldPathMap = {
   // 'folioTransactionDetails<array>.folioTransferDetails<array>.transferTS': null // Complex mapping needed
 };
 
+// src/integration-pair/source.int20.dest.int16.map.rules.ts
+var INT20_TO_INT16_FieldPathMap = {
+  "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
+  "request.request_body.staysDetails.propertyCode": "request.request_body.staysDetails.propertyCode",
+  "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
+  "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
+  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.staysDetails.pmsAccountNumber",
+  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
+};
+
 // src/common/field-path-map.ts
 function resolveFieldPathMap(source, dest) {
   if (source === "int15-3-2" && dest === "int15-3-1") {
@@ -36101,6 +36114,9 @@ function resolveFieldPathMap(source, dest) {
   }
   if (source === "int04" && dest === "int31") {
     return INT04_TO_INT31_FieldPathMap;
+  }
+  if (source === "int20" && dest === "int16") {
+    return INT20_TO_INT16_FieldPathMap;
   }
   return null;
 }
@@ -36180,7 +36196,6 @@ var Validators = {
     if (!isNonEmptyString(w.sox_integration)) errors.push("Missing or invalid: sox_integration");
     if (!isNonEmptyString(w.sox_transaction_id)) errors.push("Missing or invalid: sox_transaction_id");
     if (!isNonEmptyString(w.sox_transaction_timestamp)) errors.push("Missing or invalid: sox_transaction_timestamp");
-    if (!isNonEmptyString(w["@timestamp"])) errors.push("Missing or invalid: @timestamp");
     if (w.content == null || typeof w.content !== "object" || Array.isArray(w.content)) {
       errors.push("Missing or invalid: content");
       return { isValid: false, errorMessages: errors };
@@ -36192,7 +36207,7 @@ var Validators = {
     if (response == null || typeof response !== "object" || Array.isArray(response)) {
       errors.push("Missing or invalid: content.response");
     } else {
-      const httpCode = response.http_response_code;
+      const httpCode = response.http_response_code.slice(0, 3);
       if (!/^\d{3}$/.test(httpCode ?? "")) {
         errors.push("Missing or invalid: content.response.http_response_code (must be 3 digits)");
       }
@@ -36209,6 +36224,8 @@ var Validators = {
           candidate = candidate.payload;
         }
         return candidate;
+      } else {
+        return w.content;
       }
     }
     return input;
@@ -36251,9 +36268,10 @@ var Validators = {
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
     const failures = [];
-    const isSuccess = payload?.content?.success === 0 ? false : true;
+    payload = payload.content.payload ?? payload?.content;
+    let isSuccess = payload?.success === 0 ? false : true;
     if (!isSuccess) {
-      errorMessages.push(payload?.content?.payload.response?.response_error_message);
+      errorMessages.push(payload.response?.response_error_message);
       failures.push({
         rulePath: "",
         actualPath: "",
@@ -36304,7 +36322,7 @@ var Validators = {
             anomalyCategory: "Field Level Anomaly",
             anomalyType: "Missing Value"
           });
-        } else if (!(rx instanceof RegExp) && rx.regex && !rx.regex.test(String(value))) {
+        } else if (!(rx instanceof RegExp) && rx.regex && !rx.optional && !rx.regex.test(String(value))) {
           errorMessages.push(`Invalid format at ${actualPath} value="${value}" (rule: ${rulePath})`);
           failures.push({
             rulePath,
@@ -36525,45 +36543,85 @@ var IntegrationPairs = [
 ];
 
 // src/common/integration-validation.types.ts
+var httpSoxKeys = [
+  "int11-2",
+  // API    
+  "int12-2",
+  // API    
+  "int08-1",
+  // API
+  "int09-1",
+  // API
+  "int10-1",
+  // API
+  "int16",
+  // API/API
+  "int17",
+  // API/DB
+  "int25",
+  // API/API
+  "int26",
+  // API/DB
+  "int21",
+  // API/API
+  "int22"
+  // API/API
+];
+var asyncSoxKeys = [
+  "int03-1",
+  // EH/EH
+  "int04",
+  // EH/EH, EH/DB
+  "int03-2",
+  // EH/EH
+  "int31",
+  // EH/DB
+  "int11-1",
+  // DB
+  "int12-1",
+  // DB
+  "int15-1-1",
+  // EH/EH
+  "int15-2-2",
+  // EH/EH
+  "int15-2-1",
+  // EH/EH
+  "int15-3-2",
+  // EH/EH
+  "int15-3-1",
+  // EH/EH
+  "int27",
+  // EH/EH
+  "int28",
+  // EH/EH
+  "int29",
+  // DB
+  "int30",
+  // DB 
+  "int32-2",
+  // EH/EH
+  "int32-1",
+  // EH/EH
+  "int33-2",
+  // EH/EH
+  "int33-1",
+  // EH/EH
+  "int24-1",
+  // EH/DB
+  "int18",
+  // DB
+  "int19-1",
+  // DB/DB
+  "int19-2",
+  // DB/DB
+  "int19-3",
+  // DB/DB
+  "int20"
+  // API/DB
+];
 var WRAPPER_VALIDATOR_REGISTRY = {
-  "int03-1": Validators.validateAsyncSoxWrapper,
-  "int04": Validators.validateAsyncSoxWrapper,
-  "int03-2": Validators.validateAsyncSoxWrapper,
-  "int31": Validators.validateAsyncSoxWrapper,
-  "int11-2": Validators.validateAsyncSoxWrapper,
-  "int11-1": Validators.validateAsyncSoxWrapper,
-  "int12-2": Validators.validateAsyncSoxWrapper,
-  "int12-1": Validators.validateAsyncSoxWrapper,
-  "int15-1-1": Validators.validateAsyncSoxWrapper,
-  "int15-2-2": Validators.validateAsyncSoxWrapper,
-  "int15-3-2": Validators.validateAsyncSoxWrapper,
-  "int15-3-1": Validators.validateAsyncSoxWrapper,
-  "int27": Validators.validateAsyncSoxWrapper,
-  "int28": Validators.validateAsyncSoxWrapper,
-  "int19-1": Validators.validateAsyncSoxWrapper,
-  "int16": Validators.validateAsyncSoxWrapper,
-  "int19-2": Validators.validateAsyncSoxWrapper,
-  "int19-3": Validators.validateAsyncSoxWrapper,
-  "int17": Validators.validateAsyncSoxWrapper,
-  "int18": Validators.validateAsyncSoxWrapper,
-  "int29": Validators.validateAsyncSoxWrapper,
-  "int25": Validators.validateAsyncSoxWrapper,
-  "int26": Validators.validateAsyncSoxWrapper,
-  "int30": Validators.validateAsyncSoxWrapper,
-  "int32-2": Validators.validateAsyncSoxWrapper,
-  "int32-1": Validators.validateAsyncSoxWrapper,
-  "int08-2": Validators.validateAsyncSoxWrapper,
-  "int08-1": Validators.validateAsyncSoxWrapper,
-  "int09-2": Validators.validateAsyncSoxWrapper,
-  "int09-1": Validators.validateAsyncSoxWrapper,
-  "int10-2": Validators.validateAsyncSoxWrapper,
-  "int10-1": Validators.validateAsyncSoxWrapper,
-  "int33-2": Validators.validateAsyncSoxWrapper,
-  "int33-1": Validators.validateAsyncSoxWrapper,
-  "int24-1": Validators.validateAsyncSoxWrapper,
-  "int23": Validators.validateAsyncSoxWrapper,
-  "int22": Validators.validateAsyncSoxWrapper,
-  "int21": Validators.validateAsyncSoxWrapper
+  ...Object.fromEntries(asyncSoxKeys.map((key) => [key, Validators.validateAsyncSoxWrapper])),
+  ...Object.fromEntries(httpSoxKeys.map((key) => [key, Validators.validateHttpSoxWrapper]))
 };
 
 // src/index.ts
@@ -36582,10 +36640,6 @@ function validateIntegration(params) {
   const errors = [];
   const content = payload.content;
   payload.content = parsePayloadContent(content, sourceIntegrationId);
-  if (!Object.keys(payload?.content?.payload).length) {
-    errors.push(`Missing payload: ${id}`);
-    return { sourceIntegrationId: id, sourceValidation: void 0, isValid: false, errors };
-  }
   const wrapperValidator = WRAPPER_VALIDATOR_REGISTRY[id];
   if (wrapperValidator) {
     const w = wrapperValidator(payload);
@@ -36846,4 +36900,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.d50109c.mjs.map
+//# sourceMappingURL=sox-workflow.d7e9807.mjs.map
