@@ -36775,7 +36775,7 @@ async function processMatchedPair({
 async function processSingleIntegration({ loopItemValue }) {
   if (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0) {
   }
-  const payload = loopItemValue?.data[0].content;
+  const payload = loopItemValue?.data[0];
   if (!payload || typeof payload !== "object") {
     throw new Error("processSingleIntegration: no valid content found (loopItemValue?.data[0].content).");
   }
