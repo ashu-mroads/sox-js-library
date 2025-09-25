@@ -1,4 +1,4 @@
-// sox-workflow build hash: c6d98b9\n
+// sox-workflow build hash: 3190f50\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36773,11 +36773,9 @@ async function processMatchedPair({
   return ingestResult;
 }
 async function processSingleIntegration({ loopItemValue }) {
-  if (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0) {
-  }
   const payload = loopItemValue?.data[0];
   if (!payload || typeof payload !== "object") {
-    throw new Error("processSingleIntegration: no valid content found (loopItemValue?.data[0].content).");
+    throw new Error("processSingleIntegration: no valid content found (payload = loopItemValue?.data[0])" + JSON.stringify(payload));
   }
   const sourceIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
