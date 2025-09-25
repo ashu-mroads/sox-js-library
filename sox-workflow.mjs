@@ -1,4 +1,4 @@
-// sox-workflow build hash: c6d98b9\n
+// sox-workflow build hash: a780862\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34182,8 +34182,8 @@ function toCloudEvent(sox) {
       anomalySummary: sox.anomalySummary,
       sourceData: srcData,
       destinationData: destData,
-      sourceDataTruncated: srcTrunc || void 0,
-      destinationDataTruncated: destTrunc || void 0
+      sourceDataTruncated: srcTrunc,
+      destinationDataTruncated: destTrunc
     }
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
@@ -34284,13 +34284,15 @@ async function createSoxBusinessEvent(params) {
   let sourceData;
   let destinationData;
   try {
-    sourceData = sourcePayload !== void 0 ? JSON.stringify(sourcePayload) : void 0;
+    sourceData = JSON.stringify(sourcePayload);
   } catch {
   }
+  ;
   try {
-    destinationData = destinationPayload !== void 0 ? JSON.stringify(destinationPayload) : void 0;
+    destinationData = JSON.stringify(destinationPayload);
   } catch {
   }
+  ;
   const businessEvent = {
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     eventId: crypto.randomUUID(),
@@ -34301,11 +34303,11 @@ async function createSoxBusinessEvent(params) {
     transactionId,
     sourceIntId: validationResult.sourceIntegrationId,
     destIntId: validationResult.destinationIntegrationId,
-    anomalyCategory: anomalyCategory.length ? anomalyCategory : void 0,
-    anomalyType: anomalyType.length ? anomalyType : void 0,
+    anomalyCategory,
+    anomalyType,
     anomalySummary,
-    sourceData: "",
-    destinationData: ""
+    sourceData,
+    destinationData
   };
   return sendBusinessEvent(businessEvent);
 }
@@ -36200,10 +36202,7 @@ var Validators = {
       errors.push("Missing or invalid: content");
       return { isValid: false, errorMessages: errors };
     }
-    const { request, response } = w.content;
-    if (request == null || typeof request !== "object" || Array.isArray(request)) {
-      errors.push("Missing or invalid: content.request");
-    }
+    const { response } = w.content;
     if (response == null || typeof response !== "object" || Array.isArray(response)) {
       errors.push("Missing or invalid: content.response");
     } else {
@@ -36773,25 +36772,23 @@ async function processMatchedPair({
   return ingestResult;
 }
 async function processSingleIntegration({ loopItemValue }) {
-  if (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0) {
+  const soxData = loopItemValue.data[0];
+  if (typeof soxData !== "object") {
+    throw new Error("processSingleIntegration: no valid content found (soxData = loopItemValue?.data[0]): " + JSON.stringify(soxData));
   }
-  const payload = loopItemValue?.data[0];
-  if (!payload || typeof payload !== "object") {
-    throw new Error("processSingleIntegration: no valid content found (loopItemValue?.data[0].content).");
-  }
-  const sourceIntegrationId = payload.sox_integration;
-  const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
-  const transactionId = payload.sox_transaction_id;
+  const sourceIntegrationId = soxData.sox_integration;
+  const srcEventTime = soxData.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
+  const transactionId = soxData.sox_transaction_id;
   const validationResult = validateIntegration({
     sourceIntegrationId,
-    payload
+    payload: soxData
   });
   console.log("processSingleIntegration validationResult:", validationResult);
   const ingestResult = await createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload: payload
+    sourcePayload: soxData
   });
   console.log("processSingleIntegration ingestResult:", ingestResult);
   return ingestResult;
