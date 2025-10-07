@@ -1,4 +1,4 @@
-// sox-workflow build hash: b713e1c\n
+// sox-workflow build hash: 50f50b0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34619,7 +34619,7 @@ var INT20FieldRegexMap = {
 // src/integration/int04.field.rules.ts
 var int04FieldRegexMapData = {
   // A. Top-Level Header Fields
-  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
+  "confirmationIds<array>.id": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
   "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34691,7 +34691,7 @@ var INT04FieldRegexMap = int04FieldRegexMapData;
 // src/integration/int03-1.field.rules.ts
 var int031FieldRegexMapData = {
   // A. Top-Level Header Fields
-  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
+  "confirmationIds<array>.id": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
   "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34763,7 +34763,7 @@ var INT031FieldRegexMap = int031FieldRegexMapData;
 // src/integration/int03-2.field.rules.ts
 var int032FieldRegexMapData = {
   // A. Top-Level Header Fields
-  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
+  "confirmationIds<array>.id": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
   "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -35864,7 +35864,7 @@ var INT193_TO_INT20_FieldPathMap = {
 
 // src/integration-pair/source.int03-1.dest.int04.map.rules.ts
 var INT031_TO_INT04_FieldPathMap = {
-  "confirmationIds<array>.value": "confirmationIds<array>.value",
+  "confirmationIds<array>.id": "confirmationIds<array>.id",
   "folioNumber": "folioNumber",
   "folioId": "folioId",
   "customerId": "customerId",
@@ -35929,7 +35929,7 @@ var INT031_TO_INT04_FieldPathMap = {
 // src/integration-pair/source.int03-2.dest.int04.map.rules.ts
 var INT032_TO_INT04_FieldPathMap = {
   // A. Top-Level Header Fields
-  "confirmationIds<array>.value": "confirmationIds<array>.value",
+  "confirmationIds<array>.id": "confirmationIds<array>.id",
   "folioNumber": "folioNumber",
   "folioId": "folioId",
   "customerId": "customerId",
@@ -36025,7 +36025,7 @@ var INT04_TO_INT31_FieldPathMap = {
   // Group Code
   "groupCode": "folioTransDetailList<array>.groupCode",
   // Confirmation IDs (mapping might be complex due to array structure)
-  "confirmationIds<array>.value": "folioTransDetailList<array>.confirmationIds<array>.value",
+  "confirmationIds<array>.id": "folioTransDetailList<array>.confirmationIds<array>.id",
   // Creation Timestamp
   "creationTS": "folioTransDetailList<array>.creationTS"
   // Optional nested structures (these might need special handling in transformation logic)
@@ -36037,7 +36037,7 @@ var INT04_TO_INT31_FieldPathMap = {
 // src/integration-pair/source.int04.dest.int1511.map.rules.ts
 var INT04_TO_INT1511_FieldPathMap = {
   // FOLIO-1 to LOY-1
-  "confirmationIds<array>.value": "confirmationIds<array>.value",
+  "confirmationIds<array>.id": "confirmationIds<array>.id",
   // FOLIO-4 to LOY-2
   "customerId": "customerId",
   // FOLIO-26 to LOY-3
