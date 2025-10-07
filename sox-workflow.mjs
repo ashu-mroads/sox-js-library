@@ -1,4 +1,4 @@
-// sox-workflow build hash: 25e5a4b\n
+// sox-workflow build hash: b713e1c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34245,11 +34245,11 @@ function summarizeAnomalies(validation, response) {
     return { anomalyCategory, anomalyType };
   }
   const parts = [];
-  const countIssues = `Src:${srcFailures.length},Dest: ${destFailures?.length},Map:${mappingFailures.length};`;
+  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map:${mappingFailures.length};`;
   parts.push(countIssues);
   allFailures.forEach((f) => {
     parts.push(
-      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|rule=${f.rulePath}|path=${f.actualPath || ""}|value=${f.value}`
+      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value}`
     );
   });
   mappingFailures.forEach((m) => {
@@ -34412,14 +34412,28 @@ var INT331FieldRegexMap = {
   "postingDate": REGEX.DATE_YYYY_MM_DD,
   "property.propertyCode": REGEX.ALPHANUMERIC,
   "property.pmsTypeCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.transactionReferenceNumber": REGEX.ALPHANUMERIC,
-  "glFeedDetails.transactionDescription": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.transactionReferenceNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.transactionDescription": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // Formerly with '?'
   "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage": { regex: REGEX.NUMBER, optional: true },
@@ -34435,13 +34449,8 @@ var INT331FieldRegexMap = {
   "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // Market segment VAT (converted)
   "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34451,25 +34460,16 @@ var INT331FieldRegexMap = {
   "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
 
 // src/integration/int08-1.field.rules.ts
@@ -34497,10 +34497,11 @@ var INT321FieldRegexMap = {
 var INT16FieldRegexMap = {
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
+  "request.request_body.acid": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.staysDetails.pmsAccountNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.pmsAccountSetupDate": REGEX.DATE_TIME_MS
+  "request.request_body.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
 };
 
 // src/integration/int17.field.rules.ts
@@ -34511,7 +34512,7 @@ var INT17FieldRegexMap = {
   "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.stayRequestInput.staysDetails.pmsAccountNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_TIME_MS
+  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
 };
 
 // src/integration/int31.field.rules.ts
@@ -34606,6 +34607,7 @@ var INT193FieldRegexMap = {
 // src/integration/int20.field.rules.ts
 var INT20FieldRegexMap = {
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.acid": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.ALPHANUMERIC,
@@ -35811,53 +35813,11 @@ var INT332_TO_INT331_FieldPathMap = {
   "postingDate": "postingDate",
   "property.propertyCode": "property.propertyCode",
   "property.pmsTypeCode": "property.pmsTypeCode",
-  "glFeedDetails.transactionReferenceNumber": "glFeedDetails.transactionReferenceNumber",
-  "glFeedDetails.transactionDescription": "glFeedDetails.transactionDescription",
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode",
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc",
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": "glFeedDetails.financialAmountDetails<array>.baseAmount.value",
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": "glFeedDetails.financialAmountDetails<array>.foreignAmount.value",
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode": "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage": "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.useType": "glFeedDetails.financialAmountDetails<array>.vatDetail.useType",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryPercentage": "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryPercentage",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebatePercentage": "glFeedDetails.financialAmountDetails<array>.vatDetail.rebatePercentage",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatApplicability": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatApplicability",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode": "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value": "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value",
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode",
-  "glFeedDetails.financialAmountDetails<array>.journalSource": "glFeedDetails.financialAmountDetails<array>.journalSource",
   "glFeedDetails.totalFinancialAmountDetailLines": "glFeedDetails.totalFinancialAmountDetailLines",
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value",
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode",
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value",
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value": "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode": "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value": "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value",
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode",
-  "glFeedDetails.marketSegmentDetails<array>.journalSource": "glFeedDetails.marketSegmentDetails<array>.journalSource",
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": "glFeedDetails.marketSegmentDetails<array>.totalRoomNights",
   "glFeedDetails.totalMarketSegmentDetailLines": "glFeedDetails.totalMarketSegmentDetailLines",
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value",
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode",
@@ -35881,8 +35841,7 @@ var INT16_TO_INT17_FieldPathMap = {
   "request.request_body.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
   "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
   "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue",
-  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.stayRequestInput.staysDetails.pmsAccountNumber",
-  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate"
+  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.stayRequestInput.staysDetails.pmsAccountNumber"
 };
 
 // src/integration-pair/source.int19-1.dest.int20.map.rules.ts
