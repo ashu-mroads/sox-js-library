@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7937ecb\n
+// sox-workflow build hash: d5d7ad1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34517,73 +34517,69 @@ var INT17FieldRegexMap = {
 
 // src/integration/int31.field.rules.ts
 var int31FieldRegexMapData = {
-  // A. Top-Level Header Fields
-  "confirmationIds<array>.id": REGEX.ALPHANUMERIC,
-  "folioNumber": REGEX.ALPHANUMERIC,
-  "folioId": REGEX.EXTENDED_ALPHANUMERIC,
-  "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "balance.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "balance.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "creationTS": REGEX.DATE_TIME_MS,
-  "folioStatus": REGEX.ALPHANUMERIC,
-  "totalChargeAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "totalChargeAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "totalCreditAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "totalCreditAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
-  "folioType.folioTypeCode": REGEX.ALPHANUMERIC,
-  "folioWindowId": REGEX.ALPHANUMERIC,
-  "groupCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'folioType.folioTypeCode=="GM"', set: { required: true } }] },
-  "groupCreateTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: 'folioType.folioTypeCode=="GM"', set: { required: true } }] },
-  "invoiceFlag": REGEX.BOOLEAN_STRING,
-  // Haven’t found a situation where invoiceFlag = true in samples. Awaiting example field format from 
-  "invoiceNumber": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "invoiceFlag==true", set: { required: true } }] },
-  "propertyCode": REGEX.ALPHANUMERIC,
-  // B. Folio Transaction Details Fields
-  "folioTransactionDetails<array>.folioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transType": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.revenueType.revenueTypeCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transactionTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.businessTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transDesc": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transRefNo": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.transactionAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transactionAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.transForexAmt.value": { regex: REGEX.NUMBER, optional: true },
-  "folioTransactionDetails<array>.transForexAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true },
-  "folioTransactionDetails<array>.currExchngeRate": { regex: REGEX.NUMBER, optional: true },
-  "folioTransactionDetails<array>.transPostingSrc": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.transferFlag": { regex: REGEX.BOOLEAN_STRING, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.banquetChkFlag": { regex: REGEX.BOOLEAN_STRING, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
-  "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
-  // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": { regex: REGEX.ALPHANUMERIC, optional: true },
-  // Assuming format, marked as optional
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  // D. Folio Payment Auth Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  // E. Folio Transfer Fields
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true }
+  // Folio Transaction Detail List Fields
+  "folioTransDetailList<array>.folioIdLineItemNo": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.lineItemNo": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.folioId": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.transRefNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.transType": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.propertyCode": REGEX.ALPHANUMERIC,
+  // Folio Type Fields
+  "folioTransDetailList<array>.folioType.folioTypeCode": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.folioType.folioTypeDesc": REGEX.ALPHANUMERIC,
+  // Reservation State Fields
+  "folioTransDetailList<array>.resState": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.resCloseDate": { regex: REGEX.DATE_TIME_MS, optional: true },
+  "folioTransDetailList<array>.resReopenDate": { regex: REGEX.DATE_TIME_MS, optional: true },
+  "folioTransDetailList<array>.groupCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Confirmation IDs Fields
+  "folioTransDetailList<array>.confirmationIds<array>.id": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.confirmationIds<array>.provider": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.confirmationIds<array>.value": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.confirmationIds<array>.type": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.confirmationIds<array>.description": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Transaction Fields
+  "folioTransDetailList<array>.transLinkId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.chargeCode": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.roomNumber": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.transactionTS": REGEX.DATE_TIME_MS,
+  "folioTransDetailList<array>.businessTS": REGEX.DATE_TIME_MS,
+  "folioTransDetailList<array>.transDesc": REGEX.ALPHANUMERIC,
+  // Amount Fields
+  "folioTransDetailList<array>.transactionAmt.currencyCode": REGEX.CURRENCY_CODE,
+  "folioTransDetailList<array>.transactionAmt.value": REGEX.NUMBER,
+  "folioTransDetailList<array>.transactionAmt.guestViewable": REGEX.BOOLEAN_STRING,
+  "folioTransDetailList<array>.transactionAmt.numberOfDecimals": REGEX.NUMBER,
+  "folioTransDetailList<array>.transForexAmt": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.currExchngeRate": { regex: REGEX.NUMBER, optional: true },
+  // Posting Fields
+  "folioTransDetailList<array>.transPostingNotes": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.transPostingSrc": REGEX.ALPHANUMERIC,
+  // Flag Fields
+  "folioTransDetailList<array>.summarizeFlag": REGEX.BOOLEAN_STRING,
+  "folioTransDetailList<array>.suppressionFlag": REGEX.BOOLEAN_STRING,
+  "folioTransDetailList<array>.transferFlag": REGEX.BOOLEAN_STRING,
+  "folioTransDetailList<array>.banquetChkFlag": REGEX.BOOLEAN_STRING,
+  "folioTransDetailList<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransDetailList<array>.banquetChkFlag==true", set: { required: true } }] },
+  "folioTransDetailList<array>.posFlag": REGEX.BOOLEAN_STRING,
+  // Posted By Fields
+  "folioTransDetailList<array>.postedBy.agentId": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.postedBy.firstName": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.postedBy.middleName": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.postedBy.lastName": REGEX.ALPHANUMERIC,
+  // Optional Detail Fields
+  "folioTransDetailList<array>.folioTransPaymentDetails": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.folioTransferDetails": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Revenue Type Fields
+  "folioTransDetailList<array>.revenueType.revenueTypeCode": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.revenueType.revenueTypeCodeDesc": REGEX.ALPHANUMERIC,
+  "folioTransDetailList<array>.revenueType.revenueTypeCodeParent": REGEX.ALPHANUMERIC,
+  // Additional Fields
+  "folioTransDetailList<array>.taxInclusive": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  "folioTransDetailList<array>.chargeTaxLinkId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.interimSetFlag": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  "folioTransDetailList<array>.posChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransDetailList<array>.creationTS": REGEX.DATE_TIME_MS
 };
 var INT31FieldRegexMap = int31FieldRegexMapData;
 
@@ -34623,6 +34619,7 @@ var INT20FieldRegexMap = {
 // src/integration/int04.field.rules.ts
 var int04FieldRegexMapData = {
   // A. Top-Level Header Fields
+  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "confirmationIds<array>.id": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
   "folioId": REGEX.EXTENDED_ALPHANUMERIC,
@@ -35781,6 +35778,35 @@ var int122FieldRegexMapData = {
 };
 var INT122FieldRegexMap = int122FieldRegexMapData;
 
+// src/integration/int21.field.rules.ts
+var INT21FieldRegexMap = {
+  "response.response_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
+  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.propertyCode": REGEX.ALPHANUMERIC
+};
+
+// src/integration/int22.field.rules.ts
+var INT22FieldRegexMap = {
+  "request.request_body.redemptionReservations[0].confirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.propertyCode": REGEX.ALPHANUMERIC
+};
+
+// src/integration/int28.field.rules.ts
+var INT28FieldRegexMap = {
+  "x.sox_data.payload.transactionCodeDetails.chargeCode": REGEX.ALPHANUMERIC,
+  "x.sox_data.payload.transactionCodeDetails.chargeDesc": REGEX.ALPHANUMERIC,
+  "x.sox_data.payload.transactionCodeDetails.effectiveDate": REGEX.DATE_YYYY_MM_DD,
+  "x.sox_data.payload.transactionCodeDetails.propertyCode": REGEX.ALPHANUMERIC
+};
+
+// src/integration/int29.field.rules.ts
+var INT29FieldRegexMap = {
+  "x.sox_data.payload.chargeCode": REGEX.ALPHANUMERIC,
+  "x.sox_data.payload.description": REGEX.ALPHANUMERIC,
+  "x.sox_data.payload.propertyCode": REGEX.ALPHANUMERIC
+};
+
 // src/common/field-rules-registry.ts
 var FIELD_RULES_REGISTRY = {
   "int15-3-1": INT1531FieldRegexMap,
@@ -35792,18 +35818,22 @@ var FIELD_RULES_REGISTRY = {
   "int10-1": INT101FieldRegexMap,
   "int32-2": INT322FieldRegexMap,
   "int32-1": INT321FieldRegexMap,
-  "int16": INT16FieldRegexMap,
-  "int17": INT17FieldRegexMap,
+  int16: INT16FieldRegexMap,
+  int17: INT17FieldRegexMap,
   "int19-1": INT191FieldRegexMap,
   "int19-2": INT192FieldRegexMap,
   "int19-3": INT193FieldRegexMap,
-  "int20": INT20FieldRegexMap,
+  int20: INT20FieldRegexMap,
   "int03-1": INT031FieldRegexMap,
-  "int04": INT04FieldRegexMap,
+  int04: INT04FieldRegexMap,
   "int03-2": INT032FieldRegexMap,
-  "int31": INT31FieldRegexMap,
+  int31: INT31FieldRegexMap,
   "int12-1": INT121FieldRegexMap,
-  "int12-2": INT122FieldRegexMap
+  "int12-2": INT122FieldRegexMap,
+  int21: INT21FieldRegexMap,
+  int22: INT22FieldRegexMap,
+  int28: INT28FieldRegexMap,
+  int29: INT29FieldRegexMap
 };
 
 // src/integration-pair/source.int15-3-2.dest.int15-3-1.map.rules.ts
@@ -35868,7 +35898,6 @@ var INT193_TO_INT20_FieldPathMap = {
 
 // src/integration-pair/source.int03-1.dest.int04.map.rules.ts
 var INT031_TO_INT04_FieldPathMap = {
-  // A. Top-Level Header Fields
   "confirmationIds<array>.id": "confirmationIds<array>.id",
   "folioNumber": "folioNumber",
   "folioId": "folioId",
@@ -35888,7 +35917,6 @@ var INT031_TO_INT04_FieldPathMap = {
   "invoiceFlag": "invoiceFlag",
   "invoiceNumber": "invoiceNumber",
   "propertyCode": "propertyCode",
-  // B. Folio Transaction Details Fields
   "folioTransactionDetails<array>.folioId": "folioTransactionDetails<array>.folioId",
   "folioTransactionDetails<array>.lineItemNo": "folioTransactionDetails<array>.lineItemNo",
   "folioTransactionDetails<array>.transType": "folioTransactionDetails<array>.transType",
@@ -35910,7 +35938,6 @@ var INT031_TO_INT04_FieldPathMap = {
   "folioTransactionDetails<array>.banquetChkFlag": "folioTransactionDetails<array>.banquetChkFlag",
   "folioTransactionDetails<array>.banquetChkRefNo": "folioTransactionDetails<array>.banquetChkRefNo",
   "folioTransactionDetails<array>.postedBy.agentId": "folioTransactionDetails<array>.postedBy.agentId",
-  // C. Folio Transaction Payment Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value",
@@ -35919,11 +35946,9 @@ var INT031_TO_INT04_FieldPathMap = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId",
-  // D. Folio Payment Auth Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value",
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode",
-  // E. Folio Transfer Fields
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId",
   "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS",
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo",
@@ -36006,77 +36031,47 @@ var INT032_TO_INT04_FieldPathMap = {
 
 // src/integration-pair/source.int04.dest.int31.map.rules.ts
 var INT04_TO_INT31_FieldPathMap = {
-  // A. Top-Level Header Fields
-  "confirmationIds<array>.id": "confirmationIds<array>.id",
-  "folioNumber": "folioNumber",
-  "folioId": "folioId",
-  "customerId": "customerId",
-  "balance.value": "balance.value",
-  "balance.currencyCode": "balance.currencyCode",
-  "creationTS": "creationTS",
-  "folioStatus": "folioStatus",
-  "totalChargeAmt.value": "totalChargeAmt.value",
-  "totalChargeAmt.currencyCode": "totalChargeAmt.currencyCode",
-  "totalCreditAmt.value": "totalCreditAmt.value",
-  "totalCreditAmt.currencyCode": "totalCreditAmt.currencyCode",
-  "folioType.folioTypeCode": "folioType.folioTypeCode",
-  "folioWindowId": "folioWindowId",
-  "groupCode": "groupCode",
-  "groupCreateTS": "groupCreateTS",
-  "invoiceFlag": "invoiceFlag",
-  "invoiceNumber": "invoiceNumber",
-  "propertyCode": "propertyCode",
-  // B. Folio Transaction Details Fields
-  "folioTransactionDetails<array>.folioId": "folioTransactionDetails<array>.folioId",
-  "folioTransactionDetails<array>.lineItemNo": "folioTransactionDetails<array>.lineItemNo",
-  "folioTransactionDetails<array>.transType": "folioTransactionDetails<array>.transType",
-  "folioTransactionDetails<array>.revenueType.revenueTypeCode": "folioTransactionDetails<array>.revenueType.revenueTypeCode",
-  "folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": "folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc",
-  "folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": "folioTransactionDetails<array>.revenueType.revenueTypeCodeParent",
-  "folioTransactionDetails<array>.propertyCode": "folioTransactionDetails<array>.propertyCode",
-  "folioTransactionDetails<array>.transactionTS": "folioTransactionDetails<array>.transactionTS",
-  "folioTransactionDetails<array>.businessTS": "folioTransactionDetails<array>.businessTS",
-  "folioTransactionDetails<array>.transDesc": "folioTransactionDetails<array>.transDesc",
-  "folioTransactionDetails<array>.transRefNo": "folioTransactionDetails<array>.transRefNo",
-  "folioTransactionDetails<array>.transactionAmt.value": "folioTransactionDetails<array>.transactionAmt.value",
-  "folioTransactionDetails<array>.transactionAmt.currencyCode": "folioTransactionDetails<array>.transactionAmt.currencyCode",
-  "folioTransactionDetails<array>.transForexAmt.value": "folioTransactionDetails<array>.transForexAmt.value",
-  "folioTransactionDetails<array>.transForexAmt.currencyCode": "folioTransactionDetails<array>.transForexAmt.currencyCode",
-  "folioTransactionDetails<array>.currExchngeRate": "folioTransactionDetails<array>.currExchngeRate",
-  "folioTransactionDetails<array>.transPostingSrc": "folioTransactionDetails<array>.transPostingSrc",
-  "folioTransactionDetails<array>.transferFlag": "folioTransactionDetails<array>.transferFlag",
-  "folioTransactionDetails<array>.banquetChkFlag": "folioTransactionDetails<array>.banquetChkFlag",
-  "folioTransactionDetails<array>.banquetChkRefNo": "folioTransactionDetails<array>.banquetChkRefNo",
-  "folioTransactionDetails<array>.postedBy.agentId": "folioTransactionDetails<array>.postedBy.agentId",
-  // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId",
-  // D. Folio Payment Auth Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value",
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode",
-  // E. Folio Transfer Fields
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value",
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode"
+  // Mapping folioTransactionDetails array fields to folioTransDetailList array fields
+  "folioTransactionDetails<array>.folioId": "folioTransDetailList<array>.folioId",
+  "folioTransactionDetails<array>.lineItemNo": "folioTransDetailList<array>.lineItemNo",
+  "folioTransactionDetails<array>.transType": "folioTransDetailList<array>.transType",
+  "folioTransactionDetails<array>.propertyCode": "folioTransDetailList<array>.propertyCode",
+  "folioTransactionDetails<array>.transRefNo": "folioTransDetailList<array>.transRefNo",
+  "folioTransactionDetails<array>.transactionTS": "folioTransDetailList<array>.transactionTS",
+  "folioTransactionDetails<array>.businessTS": "folioTransDetailList<array>.businessTS",
+  "folioTransactionDetails<array>.transDesc": "folioTransDetailList<array>.transDesc",
+  "folioTransactionDetails<array>.transPostingSrc": "folioTransDetailList<array>.transPostingSrc",
+  "folioTransactionDetails<array>.transferFlag": "folioTransDetailList<array>.transferFlag",
+  "folioTransactionDetails<array>.banquetChkFlag": "folioTransDetailList<array>.banquetChkFlag",
+  "folioTransactionDetails<array>.banquetChkRefNo": "folioTransDetailList<array>.banquetChkRefNo",
+  // Revenue Type Fields
+  "folioTransactionDetails<array>.revenueType.revenueTypeCode": "folioTransDetailList<array>.revenueType.revenueTypeCode",
+  "folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": "folioTransDetailList<array>.revenueType.revenueTypeCodeDesc",
+  "folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": "folioTransDetailList<array>.revenueType.revenueTypeCodeParent",
+  // Transaction Amount Fields
+  "folioTransactionDetails<array>.transactionAmt.value": "folioTransDetailList<array>.transactionAmt.value",
+  "folioTransactionDetails<array>.transactionAmt.currencyCode": "folioTransDetailList<array>.transactionAmt.currencyCode",
+  "folioTransactionDetails<array>.currExchngeRate": "folioTransDetailList<array>.currExchngeRate",
+  // Posted By Fields
+  "folioTransactionDetails<array>.postedBy.agentId": "folioTransDetailList<array>.postedBy.agentId",
+  // Folio Type Fields
+  "folioType.folioTypeCode": "folioTransDetailList<array>.folioType.folioTypeCode",
+  // Group Code
+  "groupCode": "folioTransDetailList<array>.groupCode",
+  // Confirmation IDs (mapping might be complex due to array structure)
+  "confirmationIds<array>.value": "folioTransDetailList<array>.confirmationIds<array>.value",
+  // Creation Timestamp
+  "creationTS": "folioTransDetailList<array>.creationTS"
+  // Optional nested structures (these might need special handling in transformation logic)
+  // FIXME: Complex mapping needed
+  // 'folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum': null, // Complex mapping needed
+  // 'folioTransactionDetails<array>.folioTransferDetails<array>.transferTS': null // Complex mapping needed
 };
 
 // src/integration-pair/source.int04.dest.int1511.map.rules.ts
 var INT04_TO_INT1511_FieldPathMap = {
   // FOLIO-1 to LOY-1
-  "confirmationIds<array>.id": "confirmationIds<array>.id",
+  "confirmationIds<array>.value": "confirmationIds<array>.value",
   // FOLIO-4 to LOY-2
   "customerId": "customerId",
   // FOLIO-26 to LOY-3
@@ -37015,4 +37010,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.7937ecb.mjs.map
+//# sourceMappingURL=sox-workflow.d5d7ad1.mjs.map
