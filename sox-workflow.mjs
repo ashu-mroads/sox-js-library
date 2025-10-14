@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7fa8006\n
+// sox-workflow build hash: 74cc7c0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34131,7 +34131,7 @@ var require_cjs5 = __commonJS({
   }
 });
 
-// src/integration/common/dynatrace.bizevents.ts
+// src/common/dynatrace.bizevents.ts
 var import_client_classic_environment_v2 = __toESM(require_cjs5(), 1);
 var MAX_FIELD_BYTES = 31 * 1024;
 function byteLen(v) {
@@ -34312,7 +34312,7 @@ async function createSoxBusinessEvent(params) {
   return sendBusinessEvent(businessEvent);
 }
 
-// src/integration/common/regex-constants.ts
+// src/common/regex-constants.ts
 var REGEX = {
   ALPHANUMERIC_UPPERCASE: /^[A-Z0-9]+$/,
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
@@ -35794,7 +35794,331 @@ var INT29FieldRegexMap = {
   "x.sox_data.payload.propertyCode": REGEX.ALPHANUMERIC
 };
 
-// src/integration/common/field-rules-registry.ts
+// src/integration/int11.field.rules.ts
+var INT11FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/integration/int11-2.field.rules.ts
+var INT112FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/integration/int15-2-2.field.rules.ts
+var INT1522FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/integration/int5-2-1.field.rules.ts
+var INT521FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/integration/int26.field.rules.ts
+var INT26FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/integration/int30.field.rules.ts
+var INT30FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
+// src/common/field-rules-registry.ts
 var FIELD_RULES_REGISTRY = {
   "int15-3-1": INT1531FieldRegexMap,
   "int15-3-2": INT1532FieldRegexMap,
@@ -35820,7 +36144,13 @@ var FIELD_RULES_REGISTRY = {
   int21: INT21FieldRegexMap,
   int22: INT22FieldRegexMap,
   int28: INT28FieldRegexMap,
-  int29: INT29FieldRegexMap
+  int29: INT29FieldRegexMap,
+  int11: INT11FieldRegexMap,
+  "int11-2": INT112FieldRegexMap,
+  "int15-2-2": INT1522FieldRegexMap,
+  "int5-2-1": INT521FieldRegexMap,
+  int26: INT26FieldRegexMap,
+  int30: INT30FieldRegexMap
 };
 
 // src/integration-pair/source.int15-3-2.dest.int15-3-1.map.rules.ts
@@ -36014,6 +36344,16 @@ var INT032_TO_INT04_FieldPathMap = {
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo",
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value",
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode"
+};
+
+// src/integration-pair/source.int16.dest.int20.map.rules.ts
+var INT16_TO_INT20_FieldPathMap = {
+  "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
+  "request.request_body.staysDetails.propertyCode": "request.request_body.staysDetails.propertyCode",
+  "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
+  "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
+  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.staysDetails.pmsAccountNumber",
+  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
 };
 
 // src/integration-pair/source.int04.dest.int31.map.rules.ts
@@ -36239,17 +36579,184 @@ var INT122_TO_INT121_FieldPathMap = {
   // 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value': 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value'
 };
 
-// src/integration-pair/source.int16.dest.int20.map.rules.ts
-var INT16_TO_INT20_FieldPathMap = {
-  "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "request.request_body.staysDetails.propertyCode": "request.request_body.staysDetails.propertyCode",
-  "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
-  "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
-  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.staysDetails.pmsAccountNumber",
-  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
+// src/integration-pair/source.int27.dest.int28.map.rules.ts
+var INT27_TO_INT28_FieldPathMap = {
+  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.transactionCodeDetails.chargeCode",
+  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.transactionCodeDetails.chargeDesc",
+  "x.sox_data.payload.transactionCodeDetails.effectiveDate": "x.sox_data.payload.transactionCodeDetails.effectiveDate",
+  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.transactionCodeDetails.propertyCode"
 };
 
-// src/integration/common/field-path-map.ts
+// src/integration-pair/source.int28.dest.int29.map.rules.ts
+var INT28_TO_INT29_FieldPathMap = {
+  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.chargeCode",
+  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.description",
+  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.propertyCode"
+};
+
+// src/integration-pair/source.int11-2.dest.int11.map.rules.ts
+var INT112_TO_INT11_FieldPathMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": "hotelReservation.confirmationNumber.id",
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": "hotelReservation.timespan.start",
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": "hotelReservation.timespan.end",
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": "hotelReservation.segments<array>.id",
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+};
+
+// src/integration-pair/source.int15-2-2.dest.int5-2-1.map.rules.ts
+var INT1522_TO_INT521_FieldPathMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": "hotelReservation.confirmationNumber.id",
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": "hotelReservation.timespan.start",
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": "hotelReservation.timespan.end",
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": "hotelReservation.segments<array>.id",
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+};
+
+// src/integration-pair/source.int26.dest.int30.map.rules.ts
+var INT26_TO_INT30_FieldPathMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": "hotelReservation.confirmationNumber.id",
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": "hotelReservation.timespan.start",
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": "hotelReservation.timespan.end",
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": "hotelReservation.segments<array>.id",
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+};
+
+// src/common/field-path-map.ts
 function resolveFieldPathMap(source, dest) {
   if (source === "int15-3-2" && dest === "int15-3-1") {
     return INT1532_TO_INT1531_FieldPathMap;
@@ -36290,10 +36797,25 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int16" && dest === "int20") {
     return INT16_TO_INT20_FieldPathMap;
   }
+  if (source === "int27" && dest === "int28") {
+    return INT27_TO_INT28_FieldPathMap;
+  }
+  if (source === "int28" && dest === "int29") {
+    return INT28_TO_INT29_FieldPathMap;
+  }
+  if (source === "int11-2" && dest === "int11") {
+    return INT112_TO_INT11_FieldPathMap;
+  }
+  if (source === "int15-2-2" && dest === "int5-2-1") {
+    return INT1522_TO_INT521_FieldPathMap;
+  }
+  if (source === "int26" && dest === "int30") {
+    return INT26_TO_INT30_FieldPathMap;
+  }
   return null;
 }
 
-// src/integration/common/validators.ts
+// src/common/validators.ts
 var Validators = {
   isEmpty(value) {
     if (value == null) return true;
@@ -36679,7 +37201,7 @@ var Validators = {
   }
 };
 
-// src/integration/common/integrations.ts
+// src/common/integrations.ts
 var SingleIntegrations = [
   { id: "IC-07", source: "INT08-1", destination: "N/A" },
   { id: "IC-08", source: "INT09-1", destination: "N/A" },
@@ -36712,7 +37234,7 @@ var IntegrationPairs = [
   { id: "IC-27", source: "INT04", destination: "INT15-1-1" }
 ];
 
-// src/integration/common/integration-validation.types.ts
+// src/common/integration-validation.types.ts
 var httpSoxKeys = [
   "int11-2",
   // API    
