@@ -1,4 +1,4 @@
-// sox-workflow build hash: a0f893b\n
+// sox-workflow build hash: 61dc864\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35857,9 +35857,9 @@ var INT112FieldRegexMap = {
   // RES-3: Field Structure & Compare
   "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
   // RES-4: Field Structure & Compare
-  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  "hotelReservation.reservationStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-5: Field Structure & Compare
-  "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  "hotelReservation.sourceCRSEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-6: Field Structure & Compare
   "hotelReservation.timespan.start": REGEX.DATE_YYYY_MM_DD,
   // RES-7: Field Structure & Compare
@@ -36035,7 +36035,7 @@ var INT26FieldRegexMap = {
   // RES-11: Field Structure & Compare (Optional)
   "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-12: Field Structure & Compare
-  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
+  // 'hotelReservation.segments<array>.id': REGEX.ALPHANUMERIC,
   // RES-13: Field Structure & Compare
   "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
   // RES-14: Field Structure & Compare
@@ -36072,8 +36072,6 @@ var INT30FieldRegexMap = {
   "hotelReservation.confirmationNumber.provider": REGEX.ALPHANUMERIC,
   // RES-3: Field Structure & Compare
   "hotelReservation.confirmationNumber.value": REGEX.ALPHANUMERIC,
-  // RES-4: Field Structure & Compare
-  "hotelReservation.reservationStatusEnum": REGEX.ALPHANUMERIC,
   // RES-5: Field Structure & Compare
   "hotelReservation.sourceCRSEnum": REGEX.ALPHANUMERIC,
   // RES-6: Field Structure & Compare
@@ -36603,9 +36601,9 @@ var INT112_TO_INT11_FieldPathMap = {
   // RES-3: Field Structure & Compare
   "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
   // RES-4: Field Structure & Compare
-  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  // 'hotelReservation.reservationStatusEnum': 'hotelReservation.reservationStatusEnum',
   // RES-5: Field Structure & Compare
-  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  // 'hotelReservation.sourceCRSEnum': 'hotelReservation.sourceCRSEnum',
   // RES-6: Field Structure & Compare
   "hotelReservation.timespan.start": "hotelReservation.timespan.start",
   // RES-7: Field Structure & Compare
@@ -36710,8 +36708,6 @@ var INT26_TO_INT30_FieldPathMap = {
   "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
   // RES-3: Field Structure & Compare
   "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
-  // RES-4: Field Structure & Compare
-  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
   // RES-5: Field Structure & Compare
   "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
   // RES-6: Field Structure & Compare
