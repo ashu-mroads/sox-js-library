@@ -1,4 +1,4 @@
-// sox-workflow build hash: 61dc864\n
+// sox-workflow build hash: 85979e3\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36035,7 +36035,7 @@ var INT26FieldRegexMap = {
   // RES-11: Field Structure & Compare (Optional)
   "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-12: Field Structure & Compare
-  // 'hotelReservation.segments<array>.id': REGEX.ALPHANUMERIC,
+  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
   // RES-13: Field Structure & Compare
   "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
   // RES-14: Field Structure & Compare
@@ -37626,4 +37626,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.61dc864.mjs.map
+//# sourceMappingURL=sox-workflow.85979e3.mjs.map
