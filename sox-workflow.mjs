@@ -1,4 +1,4 @@
-// sox-workflow build hash: 85979e3\n
+// sox-workflow build hash: 5dd5916\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34332,7 +34332,7 @@ var REGEX = {
 
 // src/integration/int15-3-1.field.rules.ts
 var int1531FieldRegexMapData = {
-  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
+  "confirmationIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'confirmationIds<array>.provider=="ACRS"', set: { required: true } }] },
   "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "guestInformation.altCustId": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
@@ -34614,12 +34614,12 @@ var INT193FieldRegexMap = {
 
 // src/integration/int20.field.rules.ts
 var INT20FieldRegexMap = {
-  "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.reservationConfirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.acid": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.staysDetails.totalEligibleRevenue": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.totalEligibleRevenue": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.staysDetails.folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
 };
 
@@ -36190,7 +36190,7 @@ var INT16_TO_INT17_FieldPathMap = {
   "request.request_body.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
   "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
   "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue",
-  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.stayRequestInput.staysDetails.pmsAccountNumber"
+  "request.request_body.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber"
 };
 
 // src/integration-pair/source.int19-1.dest.int20.map.rules.ts
@@ -36346,12 +36346,12 @@ var INT032_TO_INT04_FieldPathMap = {
 
 // src/integration-pair/source.int16.dest.int20.map.rules.ts
 var INT16_TO_INT20_FieldPathMap = {
-  "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "request.request_body.staysDetails.propertyCode": "request.request_body.staysDetails.propertyCode",
-  "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
-  "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
-  "request.request_body.staysDetails.pmsAccountNumber": "request.request_body.staysDetails.pmsAccountNumber",
-  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
+  // 'request.request_body.staysDetails.reservationConfirmationNumber': 'request.request_body.staysDetails.reservationConfirmationNumber',
+  // 'request.request_body.staysDetails.propertyCode': 'request.request_body.staysDetails.propertyCode',
+  // 'request.request_body.staysDetails.paymentTypeIdentifier':'request.request_body.staysDetails.paymentTypeIdentifier',
+  // 'request.request_body.staysDetails.totalEligibleRevenue': 'request.request_body.staysDetails.totalEligibleRevenue',
+  // 'request.request_body.staysDetails.pmsAccountNumber': 'request.request_body.staysDetails.pmsAccountNumber',
+  // 'request.request_body.staysDetails.pmsAccountSetupDate': 'request.request_body.staysDetails.pmsAccountSetupDate'
 };
 
 // src/integration-pair/source.int04.dest.int31.map.rules.ts
@@ -37532,7 +37532,6 @@ async function processMissingTransaction({ loopItemValue }) {
     sourceIntegrationId,
     payload
   });
-  console.log("processIntegrationFailure validationResult:", validationResult);
   if (!validationResult.sourceValidation)
     validationResult.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
   validationResult.isValid = false;
