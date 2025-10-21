@@ -1,4 +1,4 @@
-// sox-workflow build hash: e244512\n
+// sox-workflow build hash: c3b135a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35768,14 +35768,14 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
   "response.response_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
-  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
-  "request.request_body.redemptionReservations[0].confirmationNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -35790,7 +35790,7 @@ var INT28FieldRegexMap = {
 // src/integration/int29.field.rules.ts
 var INT29FieldRegexMap = {
   "chargeCode": REGEX.ALPHANUMERIC,
-  "chargeDesc": REGEX.ALPHANUMERIC,
+  "description": REGEX.ALPHANUMERIC,
   "propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -36579,10 +36579,10 @@ var INT122_TO_INT121_FieldPathMap = {
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
 var INT27_TO_INT28_FieldPathMap = {
-  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.transactionCodeDetails.chargeCode",
-  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.transactionCodeDetails.chargeDesc",
-  "x.sox_data.payload.transactionCodeDetails.effectiveDate": "x.sox_data.payload.transactionCodeDetails.effectiveDate",
-  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.transactionCodeDetails.propertyCode"
+  "transactionCodeDetails.chargeCode": "transactionCodeDetails.chargeCode",
+  "transactionCodeDetails.chargeDesc": "transactionCodeDetails.chargeDesc",
+  "transactionCodeDetails.effectiveDate": "transactionCodeDetails.effectiveDate",
+  "transactionCodeDetails.propertyCode": "transactionCodeDetails.propertyCode"
 };
 
 // src/integration-pair/source.int28.dest.int29.map.rules.ts
@@ -36752,6 +36752,60 @@ var INT26_TO_INT30_FieldPathMap = {
   "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
+// src/integration-pair/source.int15-2-2.dest.int24-1.map.rules.ts
+var INT1522_TO_INT241_FieldPathMap = {
+  // RES-1: Field Structure & Compare
+  "hotelReservation.confirmationNumber.id": "hotelReservation.confirmationNumber.id",
+  // RES-2: Field Structure & Compare
+  "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
+  // RES-3: Field Structure & Compare
+  "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
+  // RES-4: Field Structure & Compare
+  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  // RES-5: Field Structure & Compare
+  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  // RES-6: Field Structure & Compare
+  "hotelReservation.timespan.start": "hotelReservation.timespan.start",
+  // RES-7: Field Structure & Compare
+  "hotelReservation.timespan.end": "hotelReservation.timespan.end",
+  // RES-8: Field Structure & Compare
+  "hotelReservation.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  // RES-9: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // RES-10: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // RES-11: Field Structure & Compare (Optional)
+  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // RES-12: Field Structure & Compare
+  "hotelReservation.segments<array>.id": "hotelReservation.segments<array>.id",
+  // RES-13: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
+  // RES-14: Field Structure & Compare
+  "hotelReservation.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  // RES-15: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // RES-16: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  // RES-17: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // RES-18: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  // RES-19: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  // RES-20: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // RES-21: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // RES-25: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // RES-28: Field Structure & Compare (Optional)
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+};
+
 // src/common/field-path-map.ts
 function resolveFieldPathMap(source, dest) {
   if (source === "int15-3-2" && dest === "int15-3-1") {
@@ -36807,6 +36861,9 @@ function resolveFieldPathMap(source, dest) {
   }
   if (source === "int26" && dest === "int30") {
     return INT26_TO_INT30_FieldPathMap;
+  }
+  if (source === "int15-2-2" && dest === "int24-1") {
+    return INT1522_TO_INT241_FieldPathMap;
   }
   return null;
 }
@@ -37234,12 +37291,12 @@ var IntegrationPairs = [
 function mergeInt31Files(files) {
   let headerPayload = {};
   let detailPayload = {};
-  let headerFile;
-  let mainFile;
+  let headerFile = {};
+  let mainFile = {};
   for (const file of files) {
     const parsed = file.parsed;
     const { payload } = JSON.parse(parsed.content);
-    if (payload?.propertyCode) {
+    if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
       headerFile = parsed;
       headerPayload = payload;
@@ -37248,13 +37305,10 @@ function mergeInt31Files(files) {
       detailPayload = payload;
     }
   }
-  if (!mainFile || !headerFile) {
-    throw new Error("Required files not found in input.");
-  }
   const mergedPayload = { ...headerPayload, ...detailPayload };
-  const content = JSON.parse(headerFile.content);
+  const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
   content.payload = mergedPayload;
-  headerFile.content = content;
+  headerFile?.content ? headerFile.content = content : headerFile.content = {};
   mainFile.raw = JSON.stringify(headerFile);
   mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
   return mainFile;
@@ -37788,4 +37842,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.e244512.mjs.map
+//# sourceMappingURL=sox-workflow.c3b135a.mjs.map
