@@ -1,4 +1,4 @@
-// sox-workflow build hash: c3b135a\n
+// sox-workflow build hash: 45ab2a8\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35775,7 +35775,7 @@ var INT21FieldRegexMap = {
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
   "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -36579,10 +36579,10 @@ var INT122_TO_INT121_FieldPathMap = {
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
 var INT27_TO_INT28_FieldPathMap = {
-  "transactionCodeDetails.chargeCode": "transactionCodeDetails.chargeCode",
-  "transactionCodeDetails.chargeDesc": "transactionCodeDetails.chargeDesc",
-  "transactionCodeDetails.effectiveDate": "transactionCodeDetails.effectiveDate",
-  "transactionCodeDetails.propertyCode": "transactionCodeDetails.propertyCode"
+  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.transactionCodeDetails.chargeCode",
+  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.transactionCodeDetails.chargeDesc",
+  "x.sox_data.payload.transactionCodeDetails.effectiveDate": "x.sox_data.payload.transactionCodeDetails.effectiveDate",
+  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.transactionCodeDetails.propertyCode"
 };
 
 // src/integration-pair/source.int28.dest.int29.map.rules.ts
@@ -37408,12 +37408,12 @@ function mapRowsToSox(rows, soxAlarmMap, dynatraceDashboardUrl, alarmDescription
     const err = r.Errors ?? 0;
     const tot = r["Total Records"] ?? 0;
     const pct = r["Error Percentage"] != null ? Number(r["Error Percentage"]).toFixed(1) : "n/a";
-    return `** ${src} \u2192 ${dst} | Errors: ${err}/${tot} (${pct}%)`;
+    return `${src}\u2192${dst} |Errors: ${err}/${tot} (${pct}%)`;
   };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
-    const body = rowsForAlarm.length ? rowsForAlarm.map(line).join("|-|") : "(no records)";
-    const recordsText = `Anomaly Summary: ${body}`;
+    const body = rowsForAlarm.length ? rowsForAlarm.map(line).join("|") : "(no records)";
+    const recordsText = `${body}`;
     return {
       alarmCode: code,
       miTeam: meta.miTeam,
@@ -37842,4 +37842,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.c3b135a.mjs.map
+//# sourceMappingURL=sox-workflow.45ab2a8.mjs.map
