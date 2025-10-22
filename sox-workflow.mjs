@@ -37527,7 +37527,8 @@ function mergeInt31Files(files) {
     }
   }
   const mergedPayload = { ...headerPayload, ...detailPayload };
-  mainFile = { ...headerFile, content: JSON.stringify({ payload: mergedPayload }) };
+  const content = JSON.stringify({ content: { payload: mergedPayload } });
+  mainFile = { ...headerFile, content };
   return mainFile;
 }
 
