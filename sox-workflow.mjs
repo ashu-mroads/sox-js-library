@@ -1,4 +1,4 @@
-// sox-workflow build hash: 45ab2a8\n
+// sox-workflow build hash: 29763b4\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37319,69 +37319,77 @@ function getReportAlarmData(dtResult, dynatraceDashboardUrl) {
   const recordsRaw = Array.isArray(dtResult?.records) ? dtResult.records : [];
   const merged = mergeMissingDest(recordsRaw);
   const soxAlarmMap = getsoxAlarmMap();
-  const alarmDescription = formatSoxAnomalyReportPeriod(dtResult);
-  const mappedArray = mapRowsToSox(merged, soxAlarmMap, dynatraceDashboardUrl, alarmDescription);
+  const mappedArray = mapRowsToSox(dtResult, merged, soxAlarmMap, dynatraceDashboardUrl);
   return mappedArray;
 }
 function mergeMissingDest(rows) {
+  const validSingleIntegrations = ["INT08-1", "INT09-1", "INT10-1"];
   const toNum = (v) => v == null || v === "" ? 0 : Number(v);
-  const bumpBySource = {};
-  for (const r of rows) {
-    const src = r["Source Integration"] || "";
-    const dst = r["Destination Integration"];
-    if (!src) continue;
-    if (dst === "-") {
-      const total = toNum(r["Total Records"]);
-      bumpBySource[src] = (bumpBySource[src] || 0) + total;
-    }
-  }
-  const validBySource = {};
-  for (const r of rows) {
-    const src = r["Source Integration"] || "";
-    const dst = r["Destination Integration"];
-    if (!src) continue;
-    if (dst !== "-") {
-      if (!validBySource[src]) validBySource[src] = [];
-      validBySource[src].push(r);
-    }
-  }
+  const round2 = (n) => Number.isFinite(n) ? Number(n.toFixed(2)) : n;
+  const same = (a, b) => String(a ?? "").toLowerCase() === String(b ?? "").toLowerCase();
   const out = [];
-  for (const src of Object.keys(validBySource)) {
-    const list = validBySource[src];
-    const bump = bumpBySource[src] || 0;
-    for (const r of list) {
-      const baseErr = toNum(r.Errors);
-      const baseTot = toNum(r["Total Records"]);
-      const newErr = baseErr + bump;
-      const newTot = baseTot + bump;
-      out.push({
-        "Source Integration": src,
-        "Destination Integration": r["Destination Integration"] ?? null,
-        Errors: String(newErr),
-        "Total Records": String(newTot),
-        "Error Percentage": newTot ? newErr * 100 / newTot : null
-      });
-    }
-  }
   for (const r of rows) {
     const src = r["Source Integration"] || "";
+    if (!src || src === "-") continue;
     const dst = r["Destination Integration"];
-    if (!src) continue;
-    if (dst === "-" && !validBySource[src]) {
-      const total = toNum(r["Total Records"]);
+    const errors = toNum(r["Errors"]);
+    const total = toNum(r["Total Records"]);
+    const errorPct = round2(toNum(r["Error Percentage"]));
+    if (validSingleIntegrations.some((id) => same(id, src))) {
       out.push({
         "Source Integration": src,
         "Destination Integration": "-",
-        Errors: String(total),
-        // all are errors
+        Errors: String(errors),
         "Total Records": String(total),
-        "Error Percentage": total ? 100 : null
+        "Error Percentage": errorPct
+      });
+      continue;
+    }
+    if (dst && dst !== "-") {
+      out.push({
+        "Source Integration": src,
+        "Destination Integration": dst,
+        Errors: String(errors),
+        "Total Records": String(total),
+        "Error Percentage": errorPct
+      });
+    }
+  }
+  const missingTransactionRows = {};
+  for (const r of rows) {
+    const src = r["Source Integration"] || "";
+    const dst = r["Destination Integration"];
+    if (!src) continue;
+    if (dst === "-" && !validSingleIntegrations.some((id) => same(id, src))) {
+      const total = toNum(r["Total Records"]);
+      missingTransactionRows[src] = (missingTransactionRows[src] || 0) + total;
+    }
+  }
+  for (const src of Object.keys(missingTransactionRows)) {
+    const bump = missingTransactionRows[src] || 0;
+    if (bump <= 0) continue;
+    const match = out.find((o) => same(o["Source Integration"], src));
+    if (match) {
+      const baseErr = toNum(match.Errors);
+      const baseTot = toNum(match["Total Records"]);
+      const newErr = baseErr + bump;
+      const newTot = baseTot + bump;
+      match.Errors = String(newErr);
+      match["Total Records"] = String(newTot);
+      match["Error Percentage"] = newTot ? round2(newErr * 100 / newTot) : null;
+    } else {
+      out.push({
+        "Source Integration": src,
+        "Destination Integration": "-",
+        Errors: String(bump),
+        "Total Records": String(bump),
+        "Error Percentage": 100
       });
     }
   }
   return out;
 }
-function mapRowsToSox(rows, soxAlarmMap, dynatraceDashboardUrl, alarmDescription) {
+function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
   const norm = (s) => s == null ? "" : String(s).trim().toUpperCase();
   const alarmSets = Object.fromEntries(
     Object.entries(soxAlarmMap).map(([code, v]) => [code, new Set((v.integrations || []).map(norm))])
@@ -37407,13 +37415,15 @@ function mapRowsToSox(rows, soxAlarmMap, dynatraceDashboardUrl, alarmDescription
     const dst = r["Destination Integration"] ?? "";
     const err = r.Errors ?? 0;
     const tot = r["Total Records"] ?? 0;
-    const pct = r["Error Percentage"] != null ? Number(r["Error Percentage"]).toFixed(1) : "n/a";
-    return `${src}\u2192${dst} |Errors: ${err}/${tot} (${pct}%)`;
+    const pct = r["Error Percentage"] != null ? Number(r["Error Percentage"]).toFixed(2) : "n/a";
+    const path = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
+    return `${path} |Errors: ${err}/${tot} (${pct}%)`;
   };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
     const body = rowsForAlarm.length ? rowsForAlarm.map(line).join("|") : "(no records)";
     const recordsText = `${body}`;
+    const alarmDescription = formatSoxAnomalyReportPeriod(dtResult, code);
     return {
       alarmCode: code,
       miTeam: meta.miTeam,
@@ -37454,7 +37464,7 @@ function getsoxAlarmMap() {
     SOX010: { integrations: ["INT21"], miTeam: "Shop & Book" }
   };
 }
-function formatSoxAnomalyReportPeriod(dtResult) {
+function formatSoxAnomalyReportPeriod(dtResult, alarmCode) {
   const timeframe = dtResult?.metadata?.grail?.analysisTimeframe;
   const formatIsoAsMMDDYYYY = (iso) => {
     const d = new Date(iso);
@@ -37465,11 +37475,11 @@ function formatSoxAnomalyReportPeriod(dtResult) {
     return `${mm}/${dd}/${yyyy}`;
   };
   if (!timeframe?.start || !timeframe?.end) {
-    return "Sox Anomaly Report";
+    return `${alarmCode} | Sox Anomaly Report`;
   }
   const start = formatIsoAsMMDDYYYY(timeframe.start);
   const end = formatIsoAsMMDDYYYY(timeframe.end);
-  return `Sox Anomaly Report for period ${start} to ${end}`;
+  return `${alarmCode} | Sox Anomaly Analysis Reporting Period ${start} to ${end}`;
 }
 
 // src/common/integration-validation.types.ts
