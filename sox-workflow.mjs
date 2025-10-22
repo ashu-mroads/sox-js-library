@@ -37516,7 +37516,7 @@ function mergeInt31Files(files) {
   let mainFile = {};
   for (const file of files) {
     const parsed = JSON.parse(file);
-    const { payload } = JSON.parse(parsed.content) ?? parsed;
+    const { payload } = parsed.content;
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
       headerFile = parsed;
