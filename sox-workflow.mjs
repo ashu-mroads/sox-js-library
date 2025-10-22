@@ -37515,11 +37515,11 @@ function mergeInt31Files(files) {
   let headerFile = {};
   let mainFile = {};
   for (const file of files) {
-    let content = file?.content;
-    content = parsePayloadContent(content, "int31");
-    const { payload } = JSON.parse(content);
+    const parsed = file.parsed;
+    const { payload } = JSON.parse(parsed.content) ?? file.content;
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
+      headerFile = parsed;
       headerPayload = payload;
     }
     if (payload?.folioTransDetailList) {
@@ -37527,7 +37527,12 @@ function mergeInt31Files(files) {
     }
   }
   const mergedPayload = { ...headerPayload, ...detailPayload };
-  mainFile.content.payload = mergedPayload;
+  const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
+  content.payload = mergedPayload;
+  headerFile?.content ? headerFile.content = content : headerFile.content = {};
+  mainFile.raw = JSON.stringify(headerFile);
+  mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
+  console.log("main file after merge:", mainFile);
   return mainFile;
 }
 
