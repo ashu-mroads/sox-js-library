@@ -37512,23 +37512,22 @@ var IntegrationPairs = [
 function mergeInt31Files(files) {
   let headerPayload = {};
   let detailPayload = {};
-  let headerFile = {};
   let mainFile = {};
+  let fileSuccess = "1";
   for (const file of files) {
-    const parsed = file;
-    const { payload } = JSON.parse(file.content);
+    const { payload, success } = JSON.parse(file.content);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
-      headerFile = parsed;
       headerPayload = payload;
     }
     if (payload?.folioTransDetailList) {
       detailPayload = payload;
     }
+    success == "0" && (fileSuccess = "0");
   }
   const mergedPayload = { ...headerPayload, ...detailPayload };
-  const content = JSON.stringify({ payload: mergedPayload });
-  mainFile = { ...headerFile, content };
+  const content = JSON.stringify({ success: fileSuccess, payload: mergedPayload });
+  mainFile = { ...mainFile, content };
   return mainFile;
 }
 
