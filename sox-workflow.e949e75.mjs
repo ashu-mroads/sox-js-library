@@ -37530,7 +37530,9 @@ function mergeInt31Files(files) {
   const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
   content.payload = mergedPayload;
   headerFile?.content ? headerFile.content = content : headerFile.content = {};
-  return { ...mainFile, content: JSON.stringify(mergedPayload) };
+  mainFile.raw = JSON.stringify(headerFile);
+  mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
+  return mainFile;
 }
 
 // src/reporting/anomaly-alarmdoc-data.ts
