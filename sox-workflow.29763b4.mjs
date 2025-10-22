@@ -37308,9 +37308,7 @@ function mergeInt31Files(files) {
   const mergedPayload = { ...headerPayload, ...detailPayload };
   const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
   content.payload = mergedPayload;
-  headerFile?.content ? headerFile.content = content : headerFile.content = {};
-  mainFile.raw = JSON.stringify(headerFile);
-  mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
+  mainFile.content = { ...headerFile, content: JSON.stringify(content) };
   return mainFile;
 }
 
