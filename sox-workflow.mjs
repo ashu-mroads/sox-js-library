@@ -37902,7 +37902,7 @@ async function processMatchedPair({
     (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey
   );
   let destinationPayload;
-  if (destIntegration === "int31") {
+  if (destKey === "int31") {
     const payloadArr = dataArr.filter(
       (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
     );
