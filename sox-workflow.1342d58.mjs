@@ -1,4 +1,4 @@
-// sox-workflow build hash: e949e75\n
+// sox-workflow build hash: 1342d58\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37239,7 +37239,7 @@ var Validators = {
       failures.push({
         rulePath: "",
         actualPath: "",
-        value: "",
+        value: payload.response?.http_response_code,
         anomalyCategory: "Integration Failure",
         anomalyType: "Unsuccessful Response"
       });
@@ -38069,4 +38069,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.e949e75.mjs.map
+//# sourceMappingURL=sox-workflow.1342d58.mjs.map
