@@ -1,4 +1,4 @@
-// sox-workflow build hash: 29763b4\n
+// sox-workflow build hash: e949e75\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34519,6 +34519,17 @@ var INT17FieldRegexMap = {
   "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
 };
 
+// src/integration/int18.field.rules.ts
+var INT18FieldRegexMap = {
+  "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.acid": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
+  "request.request_body.stayRequestInput.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_TIME_MS, optional: true }
+};
+
 // src/integration/int31.field.rules.ts
 var int31FieldRegexMapData = {
   // A. Top-Level Header Fields
@@ -35767,15 +35778,21 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
+  // LOY-1 (test path retained): confirmation number
   "response.response_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
-  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
+  // LOY-2 (destination-only in comparison; optional in INT21 tests)
+  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // LOY-3: property code required
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
-  "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // LOY-1: confirmation number may be absent for Cancel operations
+  "request.request_body.redemptionReservations[0].confirmationNumber": REGEX.ALPHANUMERIC,
+  // LOY-2: member account number optional
   "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // LOY-3: property code required
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -35956,6 +35973,89 @@ var INT1522FieldRegexMap = {
   "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
 };
 
+// src/integration/int15-2-1.field.rules.ts
+var int1521FieldRegexMapData = {
+  // LOY-1: Field Structure & Compare
+  "confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // LOY-2: Field Structure & Compare
+  "travelers<array>.altCustID": REGEX.ALPHANUMERIC,
+  // LOY-3: Field Structure (Source) - not used by SE
+  "hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC
+};
+var INT1521FieldRegexMap = int1521FieldRegexMapData;
+
+// src/integration/int15-1-1.field.rules.ts
+var int1511FieldRegexMapData = {
+  // A. Top-Level Header Fields
+  "confirmationIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'confirmationIds<array>.provider=="ACRS"', set: { required: true } }] },
+  "folioNumber": REGEX.ALPHANUMERIC,
+  "folioId": REGEX.EXTENDED_ALPHANUMERIC,
+  "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "balance.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "balance.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "creationTS": REGEX.DATE_TIME_MS,
+  "folioStatus": REGEX.ALPHANUMERIC,
+  "totalChargeAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "totalChargeAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "totalCreditAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "totalCreditAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioClosedDate)", set: { required: true } }] },
+  "folioType.folioTypeCode": REGEX.ALPHANUMERIC,
+  "folioWindowId": REGEX.ALPHANUMERIC,
+  "groupCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'folioType.folioTypeCode=="GM"', set: { required: true } }] },
+  "groupCreateTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: 'folioType.folioTypeCode=="GM"', set: { required: true } }] },
+  "invoiceFlag": REGEX.BOOLEAN_STRING,
+  // Haven’t found a situation where invoiceFlag = true in samples. Awaiting example field format from 
+  "invoiceNumber": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "invoiceFlag==true", set: { required: true } }] },
+  "propertyCode": REGEX.ALPHANUMERIC,
+  // B. Folio Transaction Details Fields
+  "folioTransactionDetails<array>.folioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transType": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.revenueType.revenueTypeCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transactionTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.businessTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transDesc": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transRefNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.transactionAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transactionAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.transForexAmt.value": { regex: REGEX.NUMBER, optional: true },
+  "folioTransactionDetails<array>.transForexAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true },
+  "folioTransactionDetails<array>.currExchngeRate": { regex: REGEX.NUMBER, optional: true },
+  "folioTransactionDetails<array>.transPostingSrc": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.transferFlag": { regex: REGEX.BOOLEAN_STRING, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.banquetChkFlag": { regex: REGEX.BOOLEAN_STRING, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
+  "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
+  // C. Folio Transaction Payment Details Fields
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Assuming format, marked as optional
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // D. Folio Payment Auth Details Fields
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  // E. Folio Transfer Fields
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true }
+};
+var INT1511FieldRegexMap = int1511FieldRegexMapData;
+
 // src/integration/int5-2-1.field.rules.ts
 var INT521FieldRegexMap = {
   // RES-1: Field Structure & Compare
@@ -36064,6 +36164,38 @@ var INT26FieldRegexMap = {
   "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
 };
 
+// src/integration/int25.field.rules.ts
+var INT25FieldRegexMap = {
+  // RES-3: Field Structure & Compare
+  "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "request.request_body.data.hotelReservation.status": REGEX.ALPHANUMERIC,
+  // RES-8: Field Structure & Compare
+  "request.request_body.data.hotelReservation.hotels<array>.propertyCode": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional) - INT25 does not use .value wrapper
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtBfTx": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional) - INT25 does not use .value wrapper
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional) - INT25 does not use .value wrapper
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtAfTx": { regex: REGEX.NUMBER, optional: true },
+  // RES-15: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.consolidatedSegmentStatus": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.lateArrivalTime": { regex: REGEX.TIME_HH_MM_SS, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
 // src/integration/int30.field.rules.ts
 var INT30FieldRegexMap = {
   // RES-1: Field Structure & Compare
@@ -36129,6 +36261,7 @@ var FIELD_RULES_REGISTRY = {
   "int32-1": INT321FieldRegexMap,
   int16: INT16FieldRegexMap,
   int17: INT17FieldRegexMap,
+  int18: INT18FieldRegexMap,
   "int19-1": INT191FieldRegexMap,
   "int19-2": INT192FieldRegexMap,
   "int19-3": INT193FieldRegexMap,
@@ -36146,8 +36279,11 @@ var FIELD_RULES_REGISTRY = {
   int11: INT11FieldRegexMap,
   "int11-2": INT112FieldRegexMap,
   "int15-2-2": INT1522FieldRegexMap,
+  "int15-2-1": INT1521FieldRegexMap,
+  "int15-1-1": INT1511FieldRegexMap,
   "int5-2-1": INT521FieldRegexMap,
   int26: INT26FieldRegexMap,
+  int25: INT25FieldRegexMap,
   int30: INT30FieldRegexMap
 };
 
@@ -36193,10 +36329,15 @@ var INT16_TO_INT17_FieldPathMap = {
   "request.request_body.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber"
 };
 
-// src/integration-pair/source.int19-1.dest.int20.map.rules.ts
-var INT191_TO_INT20_FieldPathMap = {
-  "request.request_body.resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "request.request_body.creationTs": "request.request_body.staysDetails.pmsAccountSetupDate"
+// src/integration-pair/source.int17.dest.int18.map.rules.ts
+var INT17_TO_INT18_FieldPathMap = {
+  "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber",
+  "request.request_body.acid": "request.request_body.acid",
+  "request.request_body.stayRequestInput.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
+  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
+  "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue",
+  "request.request_body.stayRequestInput.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber",
+  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate"
 };
 
 // src/integration-pair/source.int19-2.dest.int20.map.rules.ts
@@ -36752,6 +36893,70 @@ var INT26_TO_INT30_FieldPathMap = {
   "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
+// src/integration-pair/source.int15-3-1.dest.int19-3.map.rules.ts
+var INT1531_TO_INT193_FieldPathMap = {
+  "confirmationIds<array>.value": "request.request_body<array>.resConfirmationNumber"
+};
+
+// src/integration-pair/source.int15-2-1.dest.int19-2.map.rules.ts
+var INT1521_TO_INT192_FieldPathMap = {
+  "confirmationNumber.value": "request.request_body.resConfirmationNumber",
+  "travelers<array>.altCustID": "request.request_body.acid"
+};
+
+// src/integration-pair/source.int15-1-1.dest.int19-1.map.rules.ts
+var INT1511_TO_INT191_FieldPathMap = {
+  "confirmationIds<array>.value": "request.request_body.resConfirmationNumber",
+  "customerId": "request.request_body.acid"
+};
+
+// src/integration-pair/source.int21.dest.int22.map.rules.ts
+var INT21_TO_INT22_FieldPathMap = {
+  // LOY-1: confirmationNumber — compare INT21 request to INT22 response (optional overall)
+  "request.request_body.redemptionReservations<array>.confirmationNumber": "response.response_body.data<array>.confirmationNumber",
+  // LOY-3: propertyCode — present and required in both
+  "request.request_body.propertyCode": "request.request_body.propertyCode"
+};
+
+// src/integration-pair/source.int25.dest.int26.map.rules.ts
+var INT25_TO_INT26_FieldPathMap = {
+  // RES-3: cfNumber -> confirmationNumber.value
+  "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": "hotelReservation.confirmationNumber.value",
+  // RES-4: status -> reservationStatusEnum
+  "request.request_body.data.hotelReservation.status": "hotelReservation.reservationStatusEnum",
+  // RES-5: destination only (source never present) — no mapping
+  // RES-6/7: destination only (date combine backlog MGPSOX-1201) — no mapping
+  // RES-8: propertyCode (flat) -> propertyCode.code
+  "request.request_body.data.hotelReservation.hotels<array>.propertyCode": "hotelReservation.hotels<array>.propertyCode.code",
+  // RES-9: amtBfTx (no .value in INT25) -> rateAmount.amtBfTx.value
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtBfTx": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // RES-10: bsAmt -> rateAmount.bsAmt.value
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.bsAmt": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // RES-11: amtAfTx -> rateAmount.amtAfTx.value
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtAfTx": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // RES-12: segments[].id excluded per IC-15 — no mapping
+  // RES-13/14: destination only (post-launch backlog) — no mapping
+  // RES-15: consolidatedSegmentStatus -> consolidatedSegmentStatusEnum
+  "request.request_body.data.hotelReservation.segments<array>.consolidatedSegmentStatus": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // RES-16: segments.propertyCode (flat) -> propertyCode.code
+  "request.request_body.data.hotelReservation.segments<array>.propertyCode": "hotelReservation.segments<array>.propertyCode.code",
+  // RES-17: lateArrivalTime -> lateArrivalTime
+  "request.request_body.data.hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // RES-18/19: destination only (post-launch backlog) — no mapping
+  // RES-20: nightlyCorpMarketSegments.value -> value
+  "request.request_body.data.hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // RES-21: isDayUse -> dayUseInd
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // RES-25: productRates.dailyRates...bsAmt.value -> same path
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: packageRates.dailyRates...bsAmt.value -> same path
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: ...dailyBaseOccRateDetails.rateAmount.bsAmt -> same path
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // RES-28: ...dailyTotalRate.bsAmt -> same path
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+};
+
 // src/integration-pair/source.int15-2-2.dest.int24-1.map.rules.ts
 var INT1522_TO_INT241_FieldPathMap = {
   // RES-1: Field Structure & Compare
@@ -36820,8 +37025,8 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int16" && dest === "int17") {
     return INT16_TO_INT17_FieldPathMap;
   }
-  if (source === "int19-1" && dest === "int20") {
-    return INT191_TO_INT20_FieldPathMap;
+  if (source === "int17" && dest === "int18") {
+    return INT17_TO_INT18_FieldPathMap;
   }
   if (source === "int19-2" && dest === "int20") {
     return INT192_TO_INT20_FieldPathMap;
@@ -36862,8 +37067,23 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int26" && dest === "int30") {
     return INT26_TO_INT30_FieldPathMap;
   }
+  if (source === "int25" && dest === "int26") {
+    return INT25_TO_INT26_FieldPathMap;
+  }
   if (source === "int15-2-2" && dest === "int24-1") {
     return INT1522_TO_INT241_FieldPathMap;
+  }
+  if (source === "int15-3-1" && dest === "int19-3") {
+    return INT1531_TO_INT193_FieldPathMap;
+  }
+  if (source === "int15-2-1" && dest === "int19-2") {
+    return INT1521_TO_INT192_FieldPathMap;
+  }
+  if (source === "int15-1-1" && dest === "int19-1") {
+    return INT1511_TO_INT191_FieldPathMap;
+  }
+  if (source === "int21" && dest === "int22") {
+    return INT21_TO_INT22_FieldPathMap;
   }
   return null;
 }
@@ -37283,8 +37503,9 @@ var IntegrationPairs = [
   { id: "IC-23", source: "INT19-3", destination: "INT20" },
   { id: "IC-24", source: "INT16", destination: "INT17" },
   { id: "IC-25", source: "INT20", destination: "INT16" },
-  { id: "IC-26", source: "INT12-2", destination: "INT12-1" },
-  { id: "IC-27", source: "INT04", destination: "INT15-1-1" }
+  { id: "IC-26", source: "INT15-1-1", destination: "INT19-1" },
+  { id: "IC-27", source: "INT15-2-1", destination: "INT19-2" },
+  { id: "IC-28", source: "INT15-3-1", destination: "INT19-3" }
 ];
 
 // src/test-utils/fileReaders.ts
@@ -37294,8 +37515,8 @@ function mergeInt31Files(files) {
   let headerFile = {};
   let mainFile = {};
   for (const file of files) {
-    const parsed = file.parsed;
-    const { payload } = JSON.parse(parsed.content);
+    const parsed = JSON.parse(file);
+    const { payload } = JSON.parse(parsed?.content);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
       headerFile = parsed;
