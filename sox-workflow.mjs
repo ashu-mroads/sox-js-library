@@ -35775,7 +35775,7 @@ var INT21FieldRegexMap = {
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
   "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -36579,10 +36579,10 @@ var INT122_TO_INT121_FieldPathMap = {
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
 var INT27_TO_INT28_FieldPathMap = {
-  "transactionCodeDetails.chargeCode": "transactionCodeDetails.chargeCode",
-  "transactionCodeDetails.chargeDesc": "transactionCodeDetails.chargeDesc",
-  "transactionCodeDetails.effectiveDate": "transactionCodeDetails.effectiveDate",
-  "transactionCodeDetails.propertyCode": "transactionCodeDetails.propertyCode"
+  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.transactionCodeDetails.chargeCode",
+  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.transactionCodeDetails.chargeDesc",
+  "x.sox_data.payload.transactionCodeDetails.effectiveDate": "x.sox_data.payload.transactionCodeDetails.effectiveDate",
+  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.transactionCodeDetails.propertyCode"
 };
 
 // src/integration-pair/source.int28.dest.int29.map.rules.ts
@@ -37294,7 +37294,7 @@ function mergeInt31Files(files) {
   let headerFile = {};
   let mainFile = {};
   for (const file of files) {
-    const parsed = file.parsed ?? file;
+    const parsed = file.parsed;
     const { payload } = JSON.parse(parsed.content);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
@@ -37308,7 +37308,9 @@ function mergeInt31Files(files) {
   const mergedPayload = { ...headerPayload, ...detailPayload };
   const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
   content.payload = mergedPayload;
-  mainFile.content = { ...headerFile, content: JSON.stringify(content) };
+  headerFile?.content ? headerFile.content = content : headerFile.content = {};
+  mainFile.raw = JSON.stringify(headerFile);
+  mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
   return mainFile;
 }
 
@@ -37679,7 +37681,7 @@ async function processMatchedPair({
     (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey
   );
   let destinationPayload;
-  if (destKey === "int31") {
+  if (destIntegration === "int31") {
     const payloadArr = dataArr.filter(
       (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
     );
