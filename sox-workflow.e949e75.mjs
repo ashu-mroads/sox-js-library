@@ -37515,11 +37515,11 @@ function mergeInt31Files(files) {
   let headerFile = {};
   let mainFile = {};
   for (const file of files) {
-    const parsed = JSON.parse(file);
-    const { payload } = parsed.content;
+    let content = file?.content;
+    content = parsePayloadContent(content, "int31");
+    const { payload } = JSON.parse(content);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainFile = file;
-      headerFile = parsed;
       headerPayload = payload;
     }
     if (payload?.folioTransDetailList) {
@@ -37527,11 +37527,7 @@ function mergeInt31Files(files) {
     }
   }
   const mergedPayload = { ...headerPayload, ...detailPayload };
-  const content = headerFile?.content ? JSON.parse(headerFile?.content) : {};
-  content.payload = mergedPayload;
-  headerFile?.content ? headerFile.content = content : headerFile.content = {};
-  mainFile.raw = JSON.stringify(headerFile);
-  mainFile.parsed = { ...headerFile, content: JSON.stringify(content) };
+  mainFile.content.payload = mergedPayload;
   return mainFile;
 }
 
@@ -38006,11 +38002,13 @@ var index_default = {
   processSingleIntegration,
   processMissingTransaction,
   processReportData,
+  parsePayloadContent,
   IntegrationPairs,
   SingleIntegrations
 };
 export {
   index_default as default,
+  parsePayloadContent,
   processMatchedPair,
   processMissingTransaction,
   processReportData,
