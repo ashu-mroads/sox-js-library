@@ -1,4 +1,4 @@
-// sox-workflow build hash: c6aec5c\n
+// sox-workflow build hash: e10c466\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34318,7 +34318,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-\.TZ]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-\.TZ%]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -35799,7 +35799,7 @@ var INT22FieldRegexMap = {
 // src/integration/int27.field.rules.ts
 var INT27FieldRegexMap = {
   "transactionCodeDetails.chargeCode": REGEX.ALPHANUMERIC,
-  "transactionCodeDetails.chargeDesc": REGEX.ALPHANUMERIC,
+  "transactionCodeDetails.chargeDesc": REGEX.EXTENDED_ALPHANUMERIC,
   "transactionCodeDetails.effectiveDate": REGEX.DATE_YYYY_MM_DD,
   "transactionCodeDetails.propertyCode": REGEX.ALPHANUMERIC
 };
@@ -35807,7 +35807,7 @@ var INT27FieldRegexMap = {
 // src/integration/int28.field.rules.ts
 var INT28FieldRegexMap = {
   "transactionCodeDetails.chargeCode": REGEX.ALPHANUMERIC,
-  "transactionCodeDetails.chargeDesc": REGEX.ALPHANUMERIC,
+  "transactionCodeDetails.chargeDesc": REGEX.EXTENDED_ALPHANUMERIC,
   "transactionCodeDetails.effectiveDate": REGEX.DATE_YYYY_MM_DD,
   "transactionCodeDetails.propertyCode": REGEX.ALPHANUMERIC
 };
