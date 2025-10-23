@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6a55c37\n
+// sox-workflow build hash: c6aec5c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34259,7 +34259,7 @@ function summarizeAnomalies(validation, response) {
   });
   if (allFailures.length === 1 && allFailures[0]?.anomalyCategory === "Integration Failure") {
     parts.push(
-      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.payload?.response)}`
+      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}`
     );
   }
   const anomalySummary = parts.join("; ");
@@ -38078,4 +38078,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.6a55c37.mjs.map
+//# sourceMappingURL=sox-workflow.c6aec5c.mjs.map
