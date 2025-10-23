@@ -1,4 +1,4 @@
-// sox-workflow build hash: e10c466\n
+// sox-workflow build hash: 9b94ef9\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36142,8 +36142,6 @@ var INT26FieldRegexMap = {
   "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-11: Field Structure & Compare (Optional)
   "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
-  // RES-12: Field Structure & Compare
-  "hotelReservation.segments<array>.id": REGEX.ALPHANUMERIC,
   // RES-13: Field Structure & Compare
   "hotelReservation.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
   // RES-14: Field Structure & Compare
@@ -37238,6 +37236,30 @@ var Validators = {
     walk(root, "");
     return out;
   },
+  _checkAllArrayValuesPresent(payload, path) {
+    const [variableName, requiredField] = path.split("<array>.");
+    const keys = Object.keys(payload);
+    const arrayMap = {};
+    keys.forEach((key) => {
+      const match = key.match(new RegExp(`^${variableName}<array(\\d+)>\\.(\\w+)$`));
+      if (match) {
+        const [, index, field] = match;
+        const groupKey = `${variableName}<array${index}>`;
+        if (!arrayMap[groupKey]) arrayMap[groupKey] = /* @__PURE__ */ new Set();
+        arrayMap[groupKey].add(field);
+      }
+    });
+    let isValid = true;
+    for (const groupKey of Object.keys(arrayMap)) {
+      const fullKey = `${groupKey}.${requiredField}`;
+      const value = payload[fullKey];
+      if (value === void 0 || value === null || value === "") {
+        console.log(`${fullKey} is missing or empty`);
+        isValid = false;
+      }
+    }
+    return { isValid, path };
+  },
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
     const failures = [];
@@ -37270,10 +37292,10 @@ var Validators = {
     const flat = this._flattenToPathValueMap(payload);
     const normalize = (p) => p.replace(/<array\d+>/g, "<array>").replace(/^\./, "");
     for (const [rulePath, rx] of Object.entries(ruleMap)) {
+      const isRequired = rx instanceof RegExp || !rx?.optional;
       const matching = Object.entries(flat).filter(([actual]) => {
         return normalize(actual) === rulePath;
       });
-      const isRequired = rx instanceof RegExp || !rx?.optional;
       if (matching.length === 0 && isRequired) {
         errorMessages.push(`Missing field: ${rulePath}`);
         failures.push({
@@ -37284,6 +37306,21 @@ var Validators = {
           anomalyType: "Missing Field"
         });
         continue;
+      } else if (isRequired && rulePath.indexOf("array") > -1) {
+        const pathSplit = rulePath.split(".");
+        const value = pathSplit[pathSplit.length - 1];
+        const { isValid } = this._checkAllArrayValuesPresent(flat, rulePath);
+        if (!isValid) {
+          errorMessages.push(`Missing field: ${rulePath}`);
+          failures.push({
+            rulePath,
+            actualPath: rulePath,
+            value: void 0,
+            anomalyCategory: "Field Level Anomaly",
+            anomalyType: "Missing Field"
+          });
+          continue;
+        }
       }
       matching.forEach(([actualPath, value]) => {
         if (this.isEmpty(value) && isRequired) {
