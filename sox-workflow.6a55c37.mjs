@@ -1,4 +1,4 @@
-// sox-workflow build hash: 1342d58\n
+// sox-workflow build hash: 6a55c37\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34332,7 +34332,7 @@ var REGEX = {
 
 // src/integration/int15-3-1.field.rules.ts
 var int1531FieldRegexMapData = {
-  "confirmationIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'confirmationIds<array>.provider=="ACRS"', set: { required: true } }] },
+  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "guestInformation.altCustId": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
@@ -34355,10 +34355,10 @@ var INT332FieldRegexMap = {
   "glFeedDetails.transactionDescription": REGEX.ALPHANUMERIC,
   "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": REGEX.ALPHANUMERIC,
   "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // Formerly had '?' markers (now explicit optional)
   "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage": { regex: REGEX.NUMBER, optional: true },
@@ -34366,104 +34366,30 @@ var INT332FieldRegexMap = {
   "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryPercentage": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.rebatePercentage": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.financialAmountDetails<array>.vatDetail.vatApplicability": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
   "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
   "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
   "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": REGEX.ALPHANUMERIC,
-  // Market segment VAT (converted to explicit optional)
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC
-};
-
-// src/integration/int33-1.field.rules.ts
-var INT331FieldRegexMap = {
-  "postingDate": REGEX.DATE_YYYY_MM_DD,
-  "property.propertyCode": REGEX.ALPHANUMERIC,
-  "property.pmsTypeCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": REGEX.NUMBER,
-  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
-  "glFeedDetails.transactionReferenceNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.transactionDescription": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  // Formerly with '?'
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.useType": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryPercentage": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebatePercentage": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatApplicability": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  // Market segment VAT (converted)
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Market segment VAT (converted to explicit optional)
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
@@ -34472,8 +34398,82 @@ var INT331FieldRegexMap = {
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": { regex: REGEX.ALPHANUMERIC, optional: true }
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true }
+};
+
+// src/integration/int33-1.field.rules.ts
+var INT331FieldRegexMap = {
+  "postingDate": REGEX.DATE_YYYY_MM_DD,
+  "property.propertyCode": REGEX.ALPHANUMERIC,
+  "property.pmsTypeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.transactionReferenceNumber": REGEX.ALPHANUMERIC,
+  "glFeedDetails.transactionDescription": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": REGEX.ALPHANUMERIC,
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.foreignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Formerly had '?' markers (now explicit optional)
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.taxCodeVATPercentage": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.useType": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryPercentage": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebatePercentage": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatApplicability": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.financialAmountDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.financialAmountDetails<array>.journalSource": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitBaseAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.value": REGEX.NUMBER,
+  "glFeedDetails.totalFinancialAmountDetailDebitForeignAmount.currencyCode": REGEX.ALPHANUMERIC,
+  "glFeedDetails.marketSegmentDetails<array>.marketSegmentCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // Market segment VAT (converted to explicit optional)
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.vatAmountBase.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.recoveryAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.vatDetail.rebateAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(glFeedDetails.marketSegmentDetails<array>.vatDetail)", set: { required: true } }] },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
+  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
+  "glFeedDetails.totalMarketSegmentDetailsNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
 
 // src/integration/int08-1.field.rules.ts
@@ -35796,6 +35796,14 @@ var INT22FieldRegexMap = {
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
 
+// src/integration/int27.field.rules.ts
+var INT27FieldRegexMap = {
+  "transactionCodeDetails.chargeCode": REGEX.ALPHANUMERIC,
+  "transactionCodeDetails.chargeDesc": REGEX.ALPHANUMERIC,
+  "transactionCodeDetails.effectiveDate": REGEX.DATE_YYYY_MM_DD,
+  "transactionCodeDetails.propertyCode": REGEX.ALPHANUMERIC
+};
+
 // src/integration/int28.field.rules.ts
 var INT28FieldRegexMap = {
   "transactionCodeDetails.chargeCode": REGEX.ALPHANUMERIC,
@@ -36274,6 +36282,7 @@ var FIELD_RULES_REGISTRY = {
   "int12-2": INT122FieldRegexMap,
   int21: INT21FieldRegexMap,
   int22: INT22FieldRegexMap,
+  int27: INT27FieldRegexMap,
   int28: INT28FieldRegexMap,
   int29: INT29FieldRegexMap,
   int11: INT11FieldRegexMap,
@@ -36720,10 +36729,10 @@ var INT122_TO_INT121_FieldPathMap = {
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
 var INT27_TO_INT28_FieldPathMap = {
-  "x.sox_data.payload.transactionCodeDetails.chargeCode": "x.sox_data.payload.transactionCodeDetails.chargeCode",
-  "x.sox_data.payload.transactionCodeDetails.chargeDesc": "x.sox_data.payload.transactionCodeDetails.chargeDesc",
-  "x.sox_data.payload.transactionCodeDetails.effectiveDate": "x.sox_data.payload.transactionCodeDetails.effectiveDate",
-  "x.sox_data.payload.transactionCodeDetails.propertyCode": "x.sox_data.payload.transactionCodeDetails.propertyCode"
+  "transactionCodeDetails.chargeCode": "transactionCodeDetails.chargeCode",
+  "transactionCodeDetails.chargeDesc": "transactionCodeDetails.chargeDesc",
+  "transactionCodeDetails.effectiveDate": "transactionCodeDetails.effectiveDate",
+  "transactionCodeDetails.propertyCode": "transactionCodeDetails.propertyCode"
 };
 
 // src/integration-pair/source.int28.dest.int29.map.rules.ts
@@ -38069,4 +38078,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.1342d58.mjs.map
+//# sourceMappingURL=sox-workflow.6a55c37.mjs.map
