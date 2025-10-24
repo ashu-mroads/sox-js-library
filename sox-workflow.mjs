@@ -1,4 +1,4 @@
-// sox-workflow build hash: bdff43b\n
+// sox-workflow build hash: 6a2b5ec\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36174,8 +36174,6 @@ var INT26FieldRegexMap = {
 var INT25FieldRegexMap = {
   // RES-3: Field Structure & Compare
   "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": REGEX.ALPHANUMERIC,
-  // RES-4: Field Structure & Compare
-  "request.request_body.data.hotelReservation.status": REGEX.ALPHANUMERIC,
   // RES-8: Field Structure & Compare
   "request.request_body.data.hotelReservation.hotels<array>.propertyCode": REGEX.ALPHANUMERIC,
   // RES-9: Field Structure & Compare (Optional) - INT25 does not use .value wrapper
@@ -36929,8 +36927,6 @@ var INT21_TO_INT22_FieldPathMap = {
 var INT25_TO_INT26_FieldPathMap = {
   // RES-3: cfNumber -> confirmationNumber.value
   "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": "hotelReservation.confirmationNumber.value",
-  // RES-4: status -> reservationStatusEnum
-  "request.request_body.data.hotelReservation.status": "hotelReservation.reservationStatusEnum",
   // RES-5: destination only (source never present) — no mapping
   // RES-6/7: destination only (date combine backlog MGPSOX-1201) — no mapping
   // RES-8: propertyCode (flat) -> propertyCode.code
