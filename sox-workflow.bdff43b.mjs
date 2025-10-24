@@ -1,4 +1,4 @@
-// sox-workflow build hash: 9b94ef9\n
+// sox-workflow build hash: bdff43b\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35781,7 +35781,7 @@ var INT21FieldRegexMap = {
   // LOY-1 (test path retained): confirmation number
   "response.response_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
   // LOY-2 (destination-only in comparison; optional in INT21 tests)
-  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
@@ -35789,7 +35789,7 @@ var INT21FieldRegexMap = {
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
   // LOY-1: confirmation number may be absent for Cancel operations
-  "request.request_body.redemptionReservations[0].confirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   // LOY-2: member account number optional
   "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   // LOY-3: property code required
@@ -35995,7 +35995,7 @@ var INT1521FieldRegexMap = int1521FieldRegexMapData;
 // src/integration/int15-1-1.field.rules.ts
 var int1511FieldRegexMapData = {
   // A. Top-Level Header Fields
-  "confirmationIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: 'confirmationIds<array>.provider=="ACRS"', set: { required: true } }] },
+  "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "folioNumber": REGEX.ALPHANUMERIC,
   "folioId": REGEX.EXTENDED_ALPHANUMERIC,
   "customerId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -37858,6 +37858,16 @@ function validateIntegration(params) {
   const isValid = errors.length === 0 && !!sourceValidation.isValid;
   return { sourceIntegrationId: id, sourceValidation, isValid, errors };
 }
+function filterACRS(content) {
+  if (Object.keys(content).length > 0) {
+    const { confirmationIds } = content?.payload;
+    const strippedIds = confirmationIds?.filter((confirmationId) => {
+      return confirmationId.provider === "ACRS";
+    });
+    content.payload.confirmationIds = strippedIds;
+  }
+  return content;
+}
 function validateIntegrationPair(params) {
   const {
     sourceIntegrationId,
@@ -37869,6 +37879,10 @@ function validateIntegrationPair(params) {
   const destinationContent = destinationPayload?.content;
   sourcePayload.content = parsePayloadContent(sourceContent, "source");
   destinationPayload.content = parsePayloadContent(destinationContent, "destination");
+  const acrsFilterIntegrations = ["int15-1-1", "int15-2-1", "int15-3-1"];
+  if (acrsFilterIntegrations.includes(sourceIntegrationId)) {
+    sourcePayload.content = filterACRS(sourcePayload.content);
+  }
   const srcId = sourceIntegrationId.toLowerCase();
   const destId = destinationIntegrationId.toLowerCase();
   const errors = [];
@@ -38115,4 +38129,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.9b94ef9.mjs.map
+//# sourceMappingURL=sox-workflow.bdff43b.mjs.map
