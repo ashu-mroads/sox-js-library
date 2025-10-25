@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6a2b5ec\n
+// sox-workflow build hash: d49e6dd\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35791,7 +35791,7 @@ var INT22FieldRegexMap = {
   // LOY-1: confirmation number may be absent for Cancel operations
   "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   // LOY-2: member account number optional
-  "request.request_body.memberAccount.memberAccountNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
   "request.request_body.propertyCode": REGEX.ALPHANUMERIC
 };
