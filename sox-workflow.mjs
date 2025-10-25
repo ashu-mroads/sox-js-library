@@ -1,4 +1,4 @@
-// sox-workflow build hash: d49e6dd\n
+// sox-workflow build hash: 169fa0a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34399,7 +34399,6 @@ var INT332FieldRegexMap = {
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34464,7 +34463,6 @@ var INT331FieldRegexMap = {
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.totalNonRoomRevenueForeignAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.marketSegmentDetails<array>.journalSource": REGEX.ALPHANUMERIC,
-  "glFeedDetails.marketSegmentDetails<array>.totalRoomNights": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailLines": REGEX.NUMBER,
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.totalMarketSegmentDetailsRoomRevenueBaseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34576,7 +34574,7 @@ var int31FieldRegexMapData = {
   "folioTransDetailList<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransDetailList<array>.banquetChkFlag==true", set: { required: true } }] },
   "folioTransDetailList<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransDetailList)", set: { required: true } }] },
   // C. Folio Transaction Payment Details Fields
-  "folioTransDetailList<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransDetailList<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails)", set: { required: true } }] },
@@ -34587,7 +34585,7 @@ var int31FieldRegexMapData = {
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
   // D. Folio Payment Auth Details Fields
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransDetailList<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
   "folioTransDetailList<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34605,22 +34603,18 @@ var INT31FieldRegexMap = int31FieldRegexMapData;
 // src/integration/int19-1.field.rules.ts
 var INT191FieldRegexMap = {
   "request.request_body.resConfirmationNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.acid": REGEX.ALPHANUMERIC,
-  "request.request_body.creationTs": REGEX.DATE_TIME_MS
+  "request.request_body.acid": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int19-2.field.rules.ts
 var INT192FieldRegexMap = {
   "request.request_body.resConfirmationNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.acid": REGEX.ALPHANUMERIC,
-  "request.request_body.creationTs": REGEX.DATE_TIME_MS
+  "request.request_body.acid": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int19-3.field.rules.ts
 var INT193FieldRegexMap = {
-  "request.request_body<array>.resConfirmationNumber": REGEX.ALPHANUMERIC,
-  "request.request_body<array>.acid": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body<array>.creationTs": { regex: REGEX.DATE_TIME_MS, optional: true }
+  "request.request_body<array>.resConfirmationNumber": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int20.field.rules.ts
@@ -34680,7 +34674,7 @@ var int04FieldRegexMapData = {
   "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
   "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
   // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
@@ -34691,7 +34685,7 @@ var int04FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
   // D. Folio Payment Auth Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34752,7 +34746,7 @@ var int031FieldRegexMapData = {
   "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
   "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
   // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
@@ -34763,7 +34757,7 @@ var int031FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
   // D. Folio Payment Auth Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34824,7 +34818,7 @@ var int032FieldRegexMapData = {
   "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
   "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
   // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
@@ -34835,7 +34829,7 @@ var int032FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
   // D. Folio Payment Auth Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -36038,7 +36032,7 @@ var int1511FieldRegexMapData = {
   "folioTransactionDetails<array>.banquetChkRefNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "folioTransactionDetails<array>.banquetChkFlag==true", set: { required: true } }] },
   "folioTransactionDetails<array>.postedBy.agentId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails)", set: { required: true } }] },
   // C. Folio Transaction Payment Details Fields
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails)", set: { required: true } }] },
@@ -36049,7 +36043,7 @@ var int1511FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": { regex: REGEX.ALPHANUMERIC, optional: true },
   // D. Folio Payment Auth Details Fields
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.NUMBER, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
