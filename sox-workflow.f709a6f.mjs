@@ -1,4 +1,4 @@
-// sox-workflow build hash: 39cac63\n
+// sox-workflow build hash: f709a6f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34497,9 +34497,9 @@ var INT321FieldRegexMap = {
 
 // src/integration/int16.field.rules.ts
 var INT16FieldRegexMap = {
+  "request.acid": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
-  "request.request_body.acid": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
@@ -34508,8 +34508,8 @@ var INT16FieldRegexMap = {
 
 // src/integration/int17.field.rules.ts
 var INT17FieldRegexMap = {
-  "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.acid": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
@@ -36877,7 +36877,7 @@ var INT1532_TO_INT1531_FieldPathMap = {
 
 // src/integration-pair/source.int16.dest.int17.map.rules.ts
 var INT16_TO_INT17_FieldPathMap = {
-  "request.request_body.acid": "request.request_body.acid",
+  "request.acid": "request.request_body.acid",
   "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber",
   "request.request_body.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
   "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
@@ -37636,41 +37636,34 @@ function mergeMissingDest(rows) {
   const round2 = (n) => Number.isFinite(n) ? Number(n.toFixed(2)) : n;
   const same = (a, b) => String(a ?? "").toLowerCase() === String(b ?? "").toLowerCase();
   const out = [];
+  const addRow = (src, dst, err, tot, pct) => out.push({
+    "Source Integration": src,
+    "Destination Integration": dst,
+    Errors: String(err),
+    "Total Records": String(tot),
+    "Error Percentage": pct
+  });
+  const missingTransactionRows = {};
   for (const r of rows) {
-    const src = r["Source Integration"] || "";
-    if (!src || src === "-") continue;
-    const dst = r["Destination Integration"];
+    const src = r["Source Integration"] || "-";
+    const dst = r["Destination Integration"] || "-";
     const errors = toNum(r["Errors"]);
     const total = toNum(r["Total Records"]);
     const errorPct = round2(toNum(r["Error Percentage"]));
-    if (validSingleIntegrations.some((id) => same(id, src))) {
-      out.push({
-        "Source Integration": src,
-        "Destination Integration": "-",
-        Errors: String(errors),
-        "Total Records": String(total),
-        "Error Percentage": errorPct
-      });
+    if ((!src || src === "-") && (!dst || dst === "-")) {
+      addRow("Log Schema Mismatch", "Log Schema Mismatch", total, total, total);
       continue;
     }
-    if (dst && dst !== "-") {
-      out.push({
-        "Source Integration": src,
-        "Destination Integration": dst,
-        Errors: String(errors),
-        "Total Records": String(total),
-        "Error Percentage": errorPct
-      });
+    if (!src || src === "-") continue;
+    if (validSingleIntegrations.some((id) => same(id, src))) {
+      addRow(src, "-", errors, total, errorPct);
+      continue;
     }
-  }
-  const missingTransactionRows = {};
-  for (const r of rows) {
-    const src = r["Source Integration"] || "";
-    const dst = r["Destination Integration"];
-    if (!src) continue;
-    if (dst === "-" && !validSingleIntegrations.some((id) => same(id, src))) {
-      const total = toNum(r["Total Records"]);
-      missingTransactionRows[src] = (missingTransactionRows[src] || 0) + total;
+    if (dst !== "-") {
+      addRow(src, dst, errors, total, errorPct);
+    } else {
+      const tot = toNum(r["Total Records"]);
+      missingTransactionRows[src] = (missingTransactionRows[src] || 0) + tot;
     }
   }
   for (const src of Object.keys(missingTransactionRows)) {
@@ -37686,13 +37679,7 @@ function mergeMissingDest(rows) {
       match["Total Records"] = String(newTot);
       match["Error Percentage"] = newTot ? round2(newErr * 100 / newTot) : null;
     } else {
-      out.push({
-        "Source Integration": src,
-        "Destination Integration": "-",
-        Errors: String(bump),
-        "Total Records": String(bump),
-        "Error Percentage": 100
-      });
+      addRow(src, "-", bump, bump, 100);
     }
   }
   return out;
@@ -37718,6 +37705,9 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
       }
     }
   }
+  const toNum = (v) => v == null || v === "" ? 0 : Number(v);
+  const round2 = (n) => Number.isFinite(n) ? Number(n.toFixed(2)) : n;
+  const pctStr = (num) => num == null ? "n/a" : num.toFixed(2);
   const line = (r) => {
     const src = r["Source Integration"] ?? "";
     const dst = r["Destination Integration"] ?? "";
@@ -37729,6 +37719,34 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
   };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
+    if (code === "SOX001") {
+      const isMismatch = (r) => r["Source Integration"]?.toLowerCase() === "log schema mismatch" || r["Destination Integration"]?.toLowerCase() === "log schema mismatch";
+      const mismatchRows = rowsForAlarm.filter(isMismatch);
+      const normalRows = rowsForAlarm.filter((r) => !isMismatch(r));
+      const aggregate = (list) => {
+        const totals = list.reduce(
+          (acc, r) => {
+            acc.err += toNum(r.Errors);
+            acc.tot += toNum(r["Total Records"]);
+            return acc;
+          },
+          { err: 0, tot: 0 }
+        );
+        const pct = totals.tot ? round2(totals.err * 100 / totals.tot) : null;
+        return { ...totals, pct };
+      };
+      const normalAgg = aggregate(normalRows);
+      const mismatchAgg = aggregate(mismatchRows);
+      const recordsText2 = `Total Transactions ${normalAgg.tot} |Errors: ${normalAgg.err} (${pctStr(normalAgg.pct)}%)|Log Schema Mismatch |Errors: ${mismatchAgg.err}/${mismatchAgg.tot} (${pctStr(mismatchAgg.pct)}%)`;
+      const alarmDescription2 = formatSoxAnomalyReportPeriod(dtResult, code);
+      return {
+        alarmCode: code,
+        miTeam: meta.miTeam,
+        dynatraceDashboardUrl,
+        alarmDescription: alarmDescription2,
+        recordsText: recordsText2
+      };
+    }
     const body = rowsForAlarm.length ? rowsForAlarm.map(line).join("|") : "(no records)";
     const recordsText = `${body}`;
     const alarmDescription = formatSoxAnomalyReportPeriod(dtResult, code);
@@ -38174,4 +38192,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.39cac63.mjs.map
+//# sourceMappingURL=sox-workflow.f709a6f.mjs.map
