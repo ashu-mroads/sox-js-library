@@ -1,4 +1,4 @@
-// sox-workflow build hash: f709a6f\n
+// sox-workflow build hash: 5a19b82\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34514,7 +34514,7 @@ var INT17FieldRegexMap = {
   "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.stayRequestInput.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_YYYY_MM_DD, optional: true }
+  "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_YYYY_MM_DD
 };
 
 // src/integration/int18.field.rules.ts
@@ -36882,8 +36882,8 @@ var INT16_TO_INT17_FieldPathMap = {
   "request.request_body.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
   "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
   "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue",
-  "request.request_body.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber",
-  "request.request_body.staysDetails.pmsAccountSetupDate": "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate"
+  "request.request_body.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber"
+  // 'request.request_body.staysDetails.pmsAccountSetupDate': 'request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate',
 };
 
 // src/integration-pair/source.int16.dest.int20.map.rules.ts
@@ -38192,4 +38192,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.f709a6f.mjs.map
+//# sourceMappingURL=sox-workflow.5a19b82.mjs.map
