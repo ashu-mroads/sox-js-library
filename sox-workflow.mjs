@@ -1,4 +1,4 @@
-// sox-workflow build hash: c036874\n
+// sox-workflow build hash: 4aa4af9\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34354,7 +34354,7 @@ var INT332FieldRegexMap = {
   "glFeedDetails.transactionReferenceNumber": REGEX.ALPHANUMERIC,
   "glFeedDetails.transactionDescription": REGEX.ALPHANUMERIC,
   "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.EXTENDED_ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -34417,7 +34417,7 @@ var INT331FieldRegexMap = {
   "glFeedDetails.transactionReferenceNumber": REGEX.ALPHANUMERIC,
   "glFeedDetails.transactionDescription": REGEX.ALPHANUMERIC,
   "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "glFeedDetails.financialAmountDetails<array>.chargeCode.chargeDesc": { regex: REGEX.EXTENDED_ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.journalSource": { regex: REGEX.ALPHANUMERIC, optional: true },
   "glFeedDetails.financialAmountDetails<array>.baseAmount.value": { regex: REGEX.NUMBER, optional: true },
   "glFeedDetails.financialAmountDetails<array>.baseAmount.currencyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
