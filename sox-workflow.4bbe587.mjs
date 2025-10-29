@@ -1,4 +1,4 @@
-// sox-workflow build hash: 192d88c\n
+// sox-workflow build hash: 4bbe587\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36181,7 +36181,7 @@ var INT26FieldRegexMap = {
   // RES-11: Field Structure & Compare (Optional)
   "request.request_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-12: Field Structure & Compare
-  "request.request_body.segments<array>.id": REGEX.ALPHANUMERIC,
+  // 'request.request_body.segments<array>.id': REGEX.ALPHANUMERIC,
   // RES-13: Field Structure & Compare
   "request.request_body.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
   // RES-14: Field Structure & Compare
@@ -38190,4 +38190,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.192d88c.mjs.map
+//# sourceMappingURL=sox-workflow.4bbe587.mjs.map
