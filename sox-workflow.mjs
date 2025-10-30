@@ -1,4 +1,4 @@
-// sox-workflow build hash: 77b042e\n
+// sox-workflow build hash: b2bfe80\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37963,6 +37963,16 @@ function validateIntegrationPair(params) {
   if (acrsFilterIntegrations.includes(srcId)) {
     sourcePayload.content = filterACRS(sourcePayload.content);
   }
+  if (destinationPayload?.content?.payload?.loyaltyCheckFailed === true && (srcId === "int15-1-1" && destId === "int19-1" || srcId === "int15-2-2" && destId === "int19-2")) {
+    return {
+      sourceIntegrationId: srcId,
+      destinationIntegrationId: destId,
+      sourceValidation: { isValid: true, errorMessages: [], failures: [] },
+      destinationValidation: { isValid: true, errorMessages: [], failures: [] },
+      isValid: true,
+      errors: []
+    };
+  }
   const srcWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[srcId];
   if (srcWrapperValidator) {
     const r = srcWrapperValidator(sourcePayload);
@@ -38003,16 +38013,6 @@ function validateIntegrationPair(params) {
   }
   console.log(`Validation result for ${srcId} -> ${destId}:`, { errors, sourceValidation, destinationValidation, mappingComparison });
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
-  if (destinationPayload?.content?.payload?.loyaltyCheckFailed === true && (srcId === "int19-1" || destId === "int19-1")) {
-    return {
-      sourceIntegrationId: srcId,
-      destinationIntegrationId: destId,
-      sourceValidation: { isValid: true, errorMessages: [], failures: [] },
-      destinationValidation: { isValid: true, errorMessages: [], failures: [] },
-      isValid: true,
-      errors: []
-    };
-  }
   return {
     sourceIntegrationId: srcId,
     destinationIntegrationId: destId,
