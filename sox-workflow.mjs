@@ -1,4 +1,4 @@
-// sox-workflow build hash: b2bfe80\n
+// sox-workflow build hash: bfcd348\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35776,7 +35776,7 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
   // LOY-1 (test path retained): confirmation number
-  "request.request_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
+  "request.request_body.redemptionReservations<array>.confirmationNumber": REGEX.ALPHANUMERIC,
   // LOY-2 (destination-only in comparison)
   "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
@@ -35786,7 +35786,7 @@ var INT21FieldRegexMap = {
 // src/integration/int22.field.rules.ts
 var INT22FieldRegexMap = {
   // LOY-1: confirmation number may be absent for Cancel operations
-  "response.response_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.redemptionReservations[0].confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   // LOY-2: member account number optional
   "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
