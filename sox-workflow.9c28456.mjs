@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7f5d018\n
+// sox-workflow build hash: 9c28456\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34758,15 +34758,15 @@ var int031FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true }
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] }
 };
 var INT031FieldRegexMap = int031FieldRegexMapData;
 
@@ -38192,4 +38192,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.7f5d018.mjs.map
+//# sourceMappingURL=sox-workflow.9c28456.mjs.map
