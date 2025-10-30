@@ -1,4 +1,4 @@
-// sox-workflow build hash: bfcd348\n
+// sox-workflow build hash: 8a18fd7\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35776,7 +35776,7 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
   // LOY-1 (test path retained): confirmation number
-  "request.request_body.redemptionReservations<array>.confirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
   // LOY-2 (destination-only in comparison)
   "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
@@ -37171,8 +37171,26 @@ var Validators = {
    */
   _areValuesEqual(a, b) {
     if (a === b) return true;
+    const toFixed2IfNumeric = (v) => {
+      if (typeof v === "number" && Number.isFinite(v)) {
+        return v.toFixed(2);
+      }
+      if (typeof v === "string") {
+        const s = v.trim();
+        if (/^-?\d+(\.\d+)?$/.test(s)) {
+          const n = Number(s);
+          if (Number.isFinite(n)) return n.toFixed(2);
+        }
+      }
+      return null;
+    };
+    const a2 = toFixed2IfNumeric(a);
+    const b2 = toFixed2IfNumeric(b);
+    if (a2 !== null && b2 !== null) {
+      return a2 === b2;
+    }
     if (typeof a === "string" && typeof b === "string") {
-      return a.toLowerCase() === b.toLowerCase();
+      return a.trim().toLowerCase() === b.trim().toLowerCase();
     }
     if (a && b && typeof a === "object" && typeof b === "object") {
       try {
@@ -37322,7 +37340,7 @@ var Validators = {
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
     const failures = [];
-    payload = payload.content.payload ?? payload?.content;
+    payload = payload?.content?.payload ?? payload?.content;
     let isSuccess = payload?.success === 0 || payload?.success === "0" ? false : true;
     if (!isSuccess) {
       errorMessages.push(payload.response?.response_error_message);
@@ -37580,37 +37598,76 @@ var Validators = {
 };
 
 // src/common/integrations.ts
+var INTEGRATIONS = {
+  INT03_1: "INT03-1",
+  INT03_2: "INT03-2",
+  INT04: "INT04",
+  INT31: "INT31",
+  INT11_2: "INT11-2",
+  INT11_1: "INT11-1",
+  INT12_2: "INT12-2",
+  INT12_1: "INT12-1",
+  INT15_1_1: "INT15-1-1",
+  INT15_2_1: "INT15-2-1",
+  INT15_2_2: "INT15-2-2",
+  INT15_3_2: "INT15-3-2",
+  INT15_3_1: "INT15-3-1",
+  INT27: "INT27",
+  INT28: "INT28",
+  INT17: "INT17",
+  INT18: "INT18",
+  INT29: "INT29",
+  INT25: "INT25",
+  INT26: "INT26",
+  INT30: "INT30",
+  INT32_2: "INT32-2",
+  INT32_1: "INT32-1",
+  INT33_2: "INT33-2",
+  INT33_1: "INT33-1",
+  INT24_1: "INT24-1",
+  INT21: "INT21",
+  INT22: "INT22",
+  INT19_1: "INT19-1",
+  INT19_2: "INT19-2",
+  INT19_3: "INT19-3",
+  INT16: "INT16",
+  INT20: "INT20",
+  INT08_1: "INT08-1",
+  INT09_1: "INT09-1",
+  INT10_1: "INT10-1",
+  NA: "N/A"
+};
 var SingleIntegrations = [
-  { id: "IC-07", source: "INT08-1", destination: "N/A" },
-  { id: "IC-08", source: "INT09-1", destination: "N/A" },
-  { id: "IC-09", source: "INT10-1", destination: "N/A" }
+  { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA },
+  { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA },
+  { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA }
 ];
 var IntegrationPairs = [
-  { id: "IC-01", source: "INT03-1", destination: "INT04" },
-  { id: "IC-02", source: "INT03-2", destination: "INT04" },
-  { id: "IC-03", source: "INT04", destination: "INT31" },
-  { id: "IC-04", source: "INT11-2", destination: "INT11-1" },
-  { id: "IC-05", source: "INT12-2", destination: "INT12-1" },
-  { id: "IC-06", source: "INT04", destination: "INT15-1-1" },
-  { id: "IC-10", source: "INT15-2-2", destination: "INT11-2" },
-  { id: "IC-11", source: "INT15-3-2", destination: "INT15-3-1" },
-  { id: "IC-12", source: "INT27", destination: "INT28" },
-  { id: "IC-13", source: "INT17", destination: "INT18" },
-  { id: "IC-14", source: "INT28", destination: "INT29" },
-  { id: "IC-15", source: "INT25", destination: "INT26" },
-  { id: "IC-16", source: "INT26", destination: "INT30" },
-  { id: "IC-17", source: "INT32-2", destination: "INT32-1" },
-  { id: "IC-18", source: "INT33-2", destination: "INT33-1" },
-  { id: "IC-19", source: "INT15-2-2", destination: "INT24-1" },
-  { id: "IC-20", source: "INT21", destination: "INT22" },
-  { id: "IC-21", source: "INT19-1", destination: "INT20" },
-  { id: "IC-22", source: "INT19-2", destination: "INT20" },
-  { id: "IC-23", source: "INT19-3", destination: "INT20" },
-  { id: "IC-24", source: "INT16", destination: "INT17" },
-  { id: "IC-25", source: "INT20", destination: "INT16" },
-  { id: "IC-26", source: "INT15-1-1", destination: "INT19-1" },
-  { id: "IC-27", source: "INT15-2-1", destination: "INT19-2" },
-  { id: "IC-28", source: "INT15-3-1", destination: "INT19-3" }
+  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04 },
+  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04 },
+  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31 },
+  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11_1 },
+  { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1 },
+  { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1 },
+  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2 },
+  { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1 },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28 },
+  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18 },
+  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29 },
+  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26 },
+  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30 },
+  { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1 },
+  { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1 },
+  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1 },
+  { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22 },
+  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20 },
+  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20 },
+  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20 },
+  { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17 },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16 },
+  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1 },
+  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2 },
+  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
 ];
 
 // src/test-utils/fileReaders.ts
