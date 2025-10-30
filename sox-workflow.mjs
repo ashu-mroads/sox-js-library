@@ -1,4 +1,4 @@
-// sox-workflow build hash: 9c28456\n
+// sox-workflow build hash: d44ec2b\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34758,15 +34758,15 @@ var int031FieldRegexMapData = {
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   "folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": { regex: REGEX.CURRENCY_CODE, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)", set: { required: true } }] },
   // E. Folio Transfer Fields
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromfolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
   "folioTransactionDetails<array>.folioTransferDetails<array>.transferTS": { regex: REGEX.DATE_TIME_MS, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
   "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] },
-  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true, overrides: [{ expr: "exists(folioTransactionDetails<array>.folioTransferDetails)", set: { required: true } }] }
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrFromPropCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToFolioId": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToLineItemNo": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToConfIds<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folioTransactionDetails<array>.folioTransferDetails<array>.trnsfrToPropCode": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
 var INT031FieldRegexMap = int031FieldRegexMapData;
 
@@ -37707,7 +37707,7 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
   }
   const toNum = (v) => v == null || v === "" ? 0 : Number(v);
   const round2 = (n) => Number.isFinite(n) ? Number(n.toFixed(2)) : n;
-  const pctStr = (num) => num == null ? "n/a" : num.toFixed(2);
+  const pctStr = (num) => num == null ? "0" : num.toFixed(2);
   const line = (r) => {
     const src = r["Source Integration"] ?? "";
     const dst = r["Destination Integration"] ?? "";
@@ -37737,7 +37737,7 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
       };
       const normalAgg = aggregate(normalRows);
       const mismatchAgg = aggregate(mismatchRows);
-      const recordsText2 = `Total Transactions ${normalAgg.tot} |Errors: ${normalAgg.err} (${pctStr(normalAgg.pct)}%)|Log Schema Mismatch |Errors: ${mismatchAgg.err}/${mismatchAgg.tot} (${pctStr(mismatchAgg.pct)}%)`;
+      const recordsText2 = `Total Transactions |Errors: ${normalAgg.err}/${normalAgg.tot} (${pctStr(normalAgg.pct)}%)|Log Schema Mismatch |Errors: ${mismatchAgg.err}/${mismatchAgg.tot} (${pctStr(mismatchAgg.pct)}%)`;
       const alarmDescription2 = formatSoxAnomalyReportPeriod(dtResult, code);
       return {
         alarmCode: code,
