@@ -1,4 +1,4 @@
-// sox-workflow build hash: 8a18fd7\n
+// sox-workflow build hash: 4ddc2bc\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34872,7 +34872,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34880,7 +34880,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34890,7 +34890,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34898,7 +34898,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34906,7 +34906,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34914,7 +34914,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -34992,46 +34992,6 @@ var int121FieldRegexMapData = {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.pmtInstType": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.ccTypeCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.cardAcctNo": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.expireDate": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.voucher.seriesCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
   // Folio Payment Auth Details Fields
   "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
@@ -35050,7 +35010,7 @@ var int121FieldRegexMapData = {
     }]
   },
   "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
-    regex: REGEX.NUMBER,
+    regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
       expr: "exists(response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)",
@@ -35062,14 +35022,6 @@ var int121FieldRegexMapData = {
     optional: true,
     overrides: [{
       expr: "exists(response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
       set: { required: true }
     }]
   },
@@ -35283,23 +35235,7 @@ var int121FieldRegexMapData = {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromRoomNo": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrByUser.agentId": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.provider": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
   "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.provider": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
@@ -35335,7 +35271,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35343,7 +35279,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35353,7 +35289,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35361,7 +35297,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35369,7 +35305,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35377,7 +35313,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
-      expr: "exists(response.response_body.data<array>.folioClosedDate)",
+      expr: "exists(response.response_body.data<array>.folioCloseDate)",
       set: { required: true }
     }]
   },
@@ -35455,46 +35391,6 @@ var int122FieldRegexMapData = {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.pmtInstType": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.ccTypeCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.cardAcctNo": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.expireDate": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.voucher.seriesCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
-      set: { required: true }
-    }]
-  },
   // Folio Payment Auth Details Fields
   "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
@@ -35513,7 +35409,7 @@ var int122FieldRegexMapData = {
     }]
   },
   "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
-    regex: REGEX.NUMBER,
+    regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
       expr: "exists(response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)",
@@ -35525,14 +35421,6 @@ var int122FieldRegexMapData = {
     optional: true,
     overrides: [{
       expr: "exists(response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails)",
-      set: { required: true }
-    }]
-  },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authCode": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true,
-    overrides: [{
-      expr: "exists(response.response_body.data<array>.folioTransPaymentDetails)",
       set: { required: true }
     }]
   },
@@ -35746,23 +35634,7 @@ var int122FieldRegexMapData = {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromRoomNo": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrByUser.agentId": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.provider": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
   "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value": {
-    regex: REGEX.ALPHANUMERIC,
-    optional: true
-  },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.provider": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
@@ -35776,7 +35648,7 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
   // LOY-1 (test path retained): confirmation number
-  "request.request_body.data[0].confirmationNumber.value": REGEX.ALPHANUMERIC,
+  "request.request_body.redemptionReservations<array>.confirmationNumber": REGEX.ALPHANUMERIC,
   // LOY-2 (destination-only in comparison)
   "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
