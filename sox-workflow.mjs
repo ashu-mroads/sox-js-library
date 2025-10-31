@@ -1,4 +1,4 @@
-// sox-workflow build hash: b6e6f93\n
+// sox-workflow build hash: c57d103\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37922,6 +37922,10 @@ function validateIntegrationPair(params) {
   if (sourceRules) {
     sourceValidation = Validators.validatePayloadWithRules(sourceRules, sourcePayload);
     if (!sourceValidation.isValid) errors.push(`Source payload rule validation failed (${srcId})`);
+  }
+  if (destinationRules) {
+    destinationValidation = Validators.validatePayloadWithRules(destinationRules, destinationPayload);
+    if (!destinationValidation.isValid) errors.push(`Source payload rule validation failed (${srcId})`);
   }
   if (sourceRules && destinationRules) {
     const fieldPathMap = resolveFieldPathMap(srcId, destId);
