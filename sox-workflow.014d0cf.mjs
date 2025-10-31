@@ -1,4 +1,4 @@
-// sox-workflow build hash: c57d103\n
+// sox-workflow build hash: 014d0cf\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36870,41 +36870,41 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-7: Field Structure & Compare
   "request.request_body.timespan.end": "hotelReservation.timespan.end",
   // RES-8: Field Structure & Compare
-  "request.request_body.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  // 'request.request_body.hotels<array>.propertyCode.code': 'hotelReservation.hotels<array>.propertyCode.code',
   // RES-9: Field Structure & Compare (Optional)
-  "request.request_body.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  // 'request.request_body.totalOfActiveSegments<array>.rateAmount.amtBfTx.value': 'hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value',
   // RES-10: Field Structure & Compare (Optional)
-  "request.request_body.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  // 'request.request_body.totalOfActiveSegments<array>.rateAmount.bsAmt.value': 'hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value',
   // RES-11: Field Structure & Compare (Optional)
-  "request.request_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  // 'request.request_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value': 'hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value',
   // RES-12: Field Structure & Compare
   "request.request_body.segments<array>.id": "hotelReservation.segments<array>.id",
   // RES-13: Field Structure & Compare
   "request.request_body.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
   // RES-14: Field Structure & Compare
-  "request.request_body.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  "request.request_body.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end"
   // RES-15: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  // 'request.request_body.segments<array>.consolidatedSegmentStatusEnum': 'hotelReservation.segments<array>.consolidatedSegmentStatusEnum',
   // RES-16: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  // 'request.request_body.segments<array>.propertyCode.code': 'hotelReservation.segments<array>.propertyCode.code',
   // RES-17: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  // 'request.request_body.segments<array>.lateArrivalTime': 'hotelReservation.segments<array>.lateArrivalTime',
   // RES-18: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  // 'request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start': 'hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start',
   // RES-19: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  // 'request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end': 'hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end',
   // RES-20: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  // 'request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value': 'hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value',
   // RES-21: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  // 'request.request_body.segments<array>.offer.productUses<array>.dayUseInd': 'hotelReservation.segments<array>.offer.productUses<array>.dayUseInd',
   // RES-25: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value',
   // RES-26: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // 'request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value': 'hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value',
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt',
   // RES-28: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
 };
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
@@ -37123,6 +37123,7 @@ var Validators = {
       errors.push("Missing or invalid: content");
       return { isValid: false, errorMessages: errors };
     }
+    console.log("content", w.content);
     const { response } = w.content;
     if (response == null || typeof response !== "object" || Array.isArray(response)) {
       errors.push("Missing or invalid: content.response");
@@ -37904,7 +37905,9 @@ function validateIntegrationPair(params) {
   }
   const srcWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[srcId];
   if (srcWrapperValidator) {
+    console.log("srce wrapper validator", { sourcePayload });
     const r = srcWrapperValidator(sourcePayload);
+    console.log("srce validator2", r);
     if (!r.isValid) r.errorMessages.forEach((e) => errors.push(`Source wrapper: ${e}`));
   }
   const destWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[destId];
@@ -38067,6 +38070,38 @@ async function processMissingTransaction({ loopItemValue }) {
   console.log("processIntegrationFailure ingestResult:", ingestResult);
   return ingestResult;
 }
+async function processError({ loopItemValue }) {
+  const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
+  if (!payload || typeof payload !== "object") {
+    throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
+  }
+  const sourceIntegrationId = payload.sox_integration;
+  const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
+  const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
+  const validationResult = validateIntegration({
+    sourceIntegrationId,
+    payload
+  });
+  if (!validationResult.sourceValidation)
+    validationResult.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+  validationResult.isValid = false;
+  const failures = validationResult.sourceValidation?.failures;
+  failures.push({
+    rulePath: "",
+    actualPath: "",
+    value: payload?.content?.success,
+    anomalyCategory: "Missing Transaction",
+    anomalyType: "Missing Transaction Pair"
+  });
+  const ingestResult = await createSoxBusinessEvent({
+    validationResult,
+    transactionId,
+    srcEventTime,
+    sourcePayload: payload
+  });
+  console.log("processIntegrationFailure ingestResult:", ingestResult);
+  return ingestResult;
+}
 function processReportData(dtResult, dynatraceDashboardUrl) {
   return getReportAlarmData(dtResult, dynatraceDashboardUrl);
 }
@@ -38083,6 +38118,7 @@ var index_default = {
 };
 export {
   index_default as default,
+  processError,
   processMatchedPair,
   processMissingTransaction,
   processReportData,
@@ -38145,4 +38181,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.c57d103.mjs.map
+//# sourceMappingURL=sox-workflow.014d0cf.mjs.map
