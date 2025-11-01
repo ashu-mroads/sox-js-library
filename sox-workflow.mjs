@@ -1,4 +1,4 @@
-// sox-workflow build hash: e0a5956\n
+// sox-workflow build hash: f1291a4\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37864,6 +37864,13 @@ function validateIntegration(params) {
   const isValid = errors.length === 0 && !!sourceValidation.isValid;
   return { sourceIntegrationId: id, sourceValidation, isValid, errors };
 }
+function skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload) {
+  const loyaltyCheckFailed = destinationPayload?.content?.payload?.loyaltyCheckFailed;
+  const failedTrue = Validators._areValuesEqual(loyaltyCheckFailed, true) || Validators._areValuesEqual(loyaltyCheckFailed, "true");
+  const is15_1_1_to_19_1 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_1_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_1);
+  const is15_2_1_to_19_2 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_2_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_2);
+  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2);
+}
 function filterACRS(content) {
   if (Object.keys(content).length > 0) {
     const { confirmationIds } = content?.payload;
@@ -37892,16 +37899,6 @@ function validateIntegrationPair(params) {
   if (acrsFilterIntegrations.includes(srcId)) {
     sourcePayload.content = filterACRS(sourcePayload.content);
   }
-  if (destinationPayload?.content?.payload?.loyaltyCheckFailed === true && (srcId === "int15-1-1" && destId === "int19-1" || srcId === "int15-2-2" && destId === "int19-2")) {
-    return {
-      sourceIntegrationId: srcId,
-      destinationIntegrationId: destId,
-      sourceValidation: { isValid: true, errorMessages: [], failures: [] },
-      destinationValidation: { isValid: true, errorMessages: [], failures: [] },
-      isValid: true,
-      errors: []
-    };
-  }
   const srcWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[srcId];
   if (srcWrapperValidator) {
     const r = srcWrapperValidator(sourcePayload);
@@ -37923,6 +37920,15 @@ function validateIntegrationPair(params) {
     sourceValidation = Validators.validatePayloadWithRules(sourceRules, sourcePayload);
     if (!sourceValidation.isValid) errors.push(`Source payload rule validation failed (${srcId})`);
   }
+  if (skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload))
+    return {
+      sourceIntegrationId: srcId,
+      destinationIntegrationId: destId,
+      sourceValidation,
+      destinationValidation: { isValid: true, errorMessages: [], failures: [] },
+      isValid: true,
+      errors: []
+    };
   if (destinationRules) {
     destinationValidation = Validators.validatePayloadWithRules(destinationRules, destinationPayload);
     if (!destinationValidation.isValid) errors.push(`Destination payload rule validation failed (${destId})`);
