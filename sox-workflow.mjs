@@ -1,4 +1,4 @@
-// sox-workflow build hash: f1291a4\n
+// sox-workflow build hash: b059e92\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35857,7 +35857,7 @@ var INT1521FieldRegexMap = {
   // RES-2: Field Structure & Compare
   "confirmationNumber.provider": REGEX.ALPHANUMERIC,
   // LOY-2: Field Structure & Compare - This field is required in IC-27, but not required in IC-10
-  "travelers<array>.altCustID": REGEX.ALPHANUMERIC,
+  "travelers<array>.altCustID": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-3: Field Structure & Compare
   "confirmationNumber.value": REGEX.ALPHANUMERIC,
   // RES-4: Field Structure & Compare
@@ -36090,7 +36090,7 @@ var INT26FieldRegexMap = {
 // src/integration/int25.field.rules.ts
 var INT25FieldRegexMap = {
   // RES-3: Field Structure & Compare
-  "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.data.hotelReservation.reservationIds.cfNumber": REGEX.ALPHANUMERIC,
   // RES-8: Field Structure & Compare
   "request.request_body.data.hotelReservation.hotels<array>.propertyCode": REGEX.ALPHANUMERIC,
   // RES-9: Field Structure & Compare (Optional) - INT25 does not use .value wrapper
@@ -36645,55 +36645,55 @@ var INT1521_TO_INT192_FieldPathMap = {
 // src/integration-pair/source.int15-2-2.dest.int15-2-1.map.rules.ts
 var INT1522_TO_INT521_FieldPathMap = {
   // RES-1: Field Structure & Compare
-  "hotelReservation.confirmationNumber.id": "hotelReservation.confirmationNumber.id",
+  "confirmationNumber.id": "confirmationNumber.id",
   // RES-2: Field Structure & Compare
-  "hotelReservation.confirmationNumber.provider": "hotelReservation.confirmationNumber.provider",
+  "confirmationNumber.provider": "confirmationNumber.provider",
   // RES-3: Field Structure & Compare
-  "hotelReservation.confirmationNumber.value": "hotelReservation.confirmationNumber.value",
+  "confirmationNumber.value": "confirmationNumber.value",
   // RES-4: Field Structure & Compare
-  "hotelReservation.reservationStatusEnum": "hotelReservation.reservationStatusEnum",
+  "reservationStatusEnum": "reservationStatusEnum",
   // RES-5: Field Structure & Compare
-  "hotelReservation.sourceCRSEnum": "hotelReservation.sourceCRSEnum",
+  "sourceCRSEnum": "sourceCRSEnum",
   // RES-6: Field Structure & Compare
-  "hotelReservation.timespan.start": "hotelReservation.timespan.start",
+  "timespan.start": "timespan.start",
   // RES-7: Field Structure & Compare
-  "hotelReservation.timespan.end": "hotelReservation.timespan.end",
+  "timespan.end": "timespan.end",
   // RES-8: Field Structure & Compare
-  "hotelReservation.hotels<array>.propertyCode.code": "hotelReservation.hotels<array>.propertyCode.code",
+  "hotels<array>.propertyCode.code": "hotels<array>.propertyCode.code",
   // RES-9: Field Structure & Compare (Optional)
-  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  "totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
   // RES-10: Field Structure & Compare (Optional)
-  "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  "totalOfActiveSegments<array>.rateAmount.bsAmt.value": "totalOfActiveSegments<array>.rateAmount.bsAmt.value",
   // RES-11: Field Structure & Compare (Optional)
-  "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  "totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
   // RES-12: Field Structure & Compare
-  "hotelReservation.segments<array>.id": "hotelReservation.segments<array>.id",
+  "segments<array>.id": "segments<array>.id",
   // RES-13: Field Structure & Compare
-  "hotelReservation.segments<array>.timespan.start": "hotelReservation.segments<array>.timespan.start",
+  "segments<array>.timespan.start": "segments<array>.timespan.start",
   // RES-14: Field Structure & Compare
-  "hotelReservation.segments<array>.timespan.end": "hotelReservation.segments<array>.timespan.end",
+  "segments<array>.timespan.end": "segments<array>.timespan.end",
   // RES-15: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.consolidatedSegmentStatusEnum": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  "segments<array>.consolidatedSegmentStatusEnum": "segments<array>.consolidatedSegmentStatusEnum",
   // RES-16: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.propertyCode.code": "hotelReservation.segments<array>.propertyCode.code",
+  "segments<array>.propertyCode.code": "segments<array>.propertyCode.code",
   // RES-17: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  "segments<array>.lateArrivalTime": "segments<array>.lateArrivalTime",
   // RES-18: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
   // RES-19: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
   // RES-20: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.value": "segments<array>.offer.nightlyCorpMarketSegments<array>.value",
   // RES-21: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  "segments<array>.offer.productUses<array>.dayUseInd": "segments<array>.offer.productUses<array>.dayUseInd",
   // RES-25: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-26: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
   // RES-28: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
 // src/integration-pair/source.int15-2-2.dest.int24-1.map.rules.ts
@@ -36999,7 +36999,7 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int11-2" && dest === "int11") {
     return INT112_TO_INT11_FieldPathMap;
   }
-  if (source === "int15-2-2" && dest === "int5-2-1") {
+  if (source === "int15-2-2" && dest === "int15-2-1") {
     return INT1522_TO_INT521_FieldPathMap;
   }
   if (source === "int26" && dest === "int30") {
@@ -37869,7 +37869,8 @@ function skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload) {
   const failedTrue = Validators._areValuesEqual(loyaltyCheckFailed, true) || Validators._areValuesEqual(loyaltyCheckFailed, "true");
   const is15_1_1_to_19_1 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_1_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_1);
   const is15_2_1_to_19_2 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_2_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_2);
-  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2);
+  const is15_3_1_to_19_3 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_3_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_3);
+  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2 || is15_3_1_to_19_3);
 }
 function filterACRS(content) {
   if (Object.keys(content).length > 0) {

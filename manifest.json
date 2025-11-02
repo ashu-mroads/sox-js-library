@@ -1,12 +1,12 @@
 {
-  "hash": "f1291a4",
-  "builtAt": "2025-11-01T21:53:52.028Z",
+  "hash": "b059e92",
+  "builtAt": "2025-11-02T16:17:54.694Z",
   "files": {
     "hashed": {
-      "js": "sox-workflow.f1291a4.mjs",
-      "map": "sox-workflow.f1291a4.mjs.map",
-      "minJs": "sox-workflow.f1291a4.min.mjs",
-      "minMap": "sox-workflow.f1291a4.min.mjs.map"
+      "js": "sox-workflow.b059e92.mjs",
+      "map": "sox-workflow.b059e92.mjs.map",
+      "minJs": "sox-workflow.b059e92.min.mjs",
+      "minMap": "sox-workflow.b059e92.min.mjs.map"
     },
     "stable": {
       "js": "sox-workflow.mjs",
