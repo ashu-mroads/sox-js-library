@@ -1,4 +1,4 @@
-// sox-workflow build hash: b059e92\n
+// sox-workflow build hash: d940377\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36821,38 +36821,38 @@ var INT21_TO_INT22_FieldPathMap = {
 // src/integration-pair/source.int25.dest.int26.map.rules.ts
 var INT25_TO_INT26_FieldPathMap = {
   // RES-3: cfNumber -> confirmationNumber.value
-  "request.request_body.data.hotelReservation.reservationIds<array>.cfNumber": "hotelReservation.confirmationNumber.value",
+  "request.request_body.data.hotelReservation.reservationIds.cfNumber": "request.request_body.confirmationNumber.value",
   // RES-5: destination only (source never present) — no mapping
   // RES-6/7: destination only (date combine backlog MGPSOX-1201) — no mapping
   // RES-8: propertyCode (flat) -> propertyCode.code
-  "request.request_body.data.hotelReservation.hotels<array>.propertyCode": "hotelReservation.hotels<array>.propertyCode.code",
+  "request.request_body.data.hotelReservation.hotels<array>.propertyCode": "request.request_body.hotels<array>.propertyCode.code",
   // RES-9: amtBfTx (no .value in INT25) -> rateAmount.amtBfTx.value
-  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtBfTx": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtBfTx": "request.request_body.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
   // RES-10: bsAmt -> rateAmount.bsAmt.value
-  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.bsAmt": "hotelReservation.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.bsAmt": "request.request_body.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
   // RES-11: amtAfTx -> rateAmount.amtAfTx.value
-  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtAfTx": "hotelReservation.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  "request.request_body.data.hotelReservation.totalOfActiveSegments<array>.amtAfTx": "request.request_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
   // RES-12: segments[].id excluded per IC-15 — no mapping
   // RES-13/14: destination only (post-launch backlog) — no mapping
   // RES-15: consolidatedSegmentStatus -> consolidatedSegmentStatusEnum
-  "request.request_body.data.hotelReservation.segments<array>.consolidatedSegmentStatus": "hotelReservation.segments<array>.consolidatedSegmentStatusEnum",
+  "request.request_body.data.hotelReservation.segments<array>.consolidatedSegmentStatus": "request.request_body.segments<array>.consolidatedSegmentStatusEnum",
   // RES-16: segments.propertyCode (flat) -> propertyCode.code
-  "request.request_body.data.hotelReservation.segments<array>.propertyCode": "hotelReservation.segments<array>.propertyCode.code",
+  "request.request_body.data.hotelReservation.segments<array>.propertyCode": "request.request_body.segments<array>.propertyCode.code",
   // RES-17: lateArrivalTime -> lateArrivalTime
-  "request.request_body.data.hotelReservation.segments<array>.lateArrivalTime": "hotelReservation.segments<array>.lateArrivalTime",
+  "request.request_body.data.hotelReservation.segments<array>.lateArrivalTime": "request.request_body.segments<array>.lateArrivalTime",
   // RES-18/19: destination only (post-launch backlog) — no mapping
   // RES-20: nightlyCorpMarketSegments.value -> value
-  "request.request_body.data.hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  "request.request_body.data.hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
   // RES-21: isDayUse -> dayUseInd
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": "hotelReservation.segments<array>.offer.productUses<array>.dayUseInd",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": "request.request_body.segments<array>.offer.productUses<array>.dayUseInd",
   // RES-25: productRates.dailyRates...bsAmt.value -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-26: packageRates.dailyRates...bsAmt.value -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: ...dailyBaseOccRateDetails.rateAmount.bsAmt -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
   // RES-28: ...dailyTotalRate.bsAmt -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
 // src/integration-pair/source.int26.dest.int30.map.rules.ts
