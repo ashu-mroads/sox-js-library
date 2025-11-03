@@ -1,4 +1,4 @@
-// sox-workflow build hash: 1668eb6\n
+// sox-workflow build hash: bdf2a87\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36632,8 +36632,8 @@ var INT122_TO_INT121_FieldPathMap = {
 
 // src/integration-pair/source.int15-1-1.dest.int19-1.map.rules.ts
 var INT1511_TO_INT191_FieldPathMap = {
-  "confirmationIds<array>.value": "resConfirmationNumber",
-  "customerId": "acid"
+  "confirmationIds<array>.value": "resConfirmationNumber"
+  // 'customerId': 'acid',
 };
 
 // src/integration-pair/source.int15-2-1.dest.int19-2.map.rules.ts
@@ -37571,6 +37571,22 @@ function mergeInt31Files(files) {
   mainFile = { ...mainFile, content };
   return mainFile;
 }
+function handleDecimals(soxData) {
+  const { request, success, response } = JSON.parse(soxData.content);
+  const { totalOfActiveSegments } = request.request_body;
+  const numberOfDecimals = 2;
+  const divisor = Math.pow(10, numberOfDecimals);
+  const activeSegments = totalOfActiveSegments.map((segment) => {
+    segment.rateAmount.amtBfTx.value = (segment.rateAmount.amtBfTx.value / divisor).toFixed(numberOfDecimals);
+    segment.rateAmount.bsAmt.value = (segment.rateAmount.bsAmt.value / divisor).toFixed(numberOfDecimals);
+    segment.rateAmount.amtAfTx.value = (segment.rateAmount.amtAfTx.value / divisor).toFixed(numberOfDecimals);
+    return segment;
+  });
+  request.request_body.totalOfActiveSegments = activeSegments;
+  const content = JSON.stringify({ success, response, request });
+  soxData = { ...soxData, content };
+  return soxData;
+}
 
 // src/reporting/anomaly-alarmdoc-data.ts
 function getReportAlarmData(dtResult, dynatraceDashboardUrl) {
@@ -37988,7 +38004,7 @@ async function processMatchedPair({
     (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey
   );
   let destinationPayload;
-  if (destKey === "int31") {
+  if (destKey.toLowerCase() === INTEGRATIONS.INT31.toLowerCase()) {
     const payloadArr = dataArr.filter(
       (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
     );
@@ -37997,6 +38013,9 @@ async function processMatchedPair({
     destinationPayload = dataArr.find(
       (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
     );
+  }
+  if (destKey.toLowerCase() === INTEGRATIONS.INT26.toLowerCase()) {
+    destinationPayload = handleDecimals(destinationPayload);
   }
   if (!sourcePayload) {
     throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
@@ -38159,4 +38178,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.1668eb6.mjs.map
+//# sourceMappingURL=sox-workflow.bdf2a87.mjs.map
