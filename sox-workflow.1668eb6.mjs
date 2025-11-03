@@ -1,4 +1,4 @@
-// sox-workflow build hash: 4a0cf81\n
+// sox-workflow build hash: 1668eb6\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36066,7 +36066,7 @@ var INT26FieldRegexMap = {
   // RES-15: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-16: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "request.request_body.segments<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-17: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.lateArrivalTime": { regex: REGEX.EXTENDED_ALPHANUMERIC, optional: true },
   // RES-18: Field Structure & Compare (Optional)
@@ -36837,7 +36837,7 @@ var INT25_TO_INT26_FieldPathMap = {
   // RES-15: consolidatedSegmentStatus -> consolidatedSegmentStatusEnum
   "request.request_body.data.hotelReservation.segments<array>.consolidatedSegmentStatus": "request.request_body.segments<array>.consolidatedSegmentStatusEnum",
   // RES-16: segments.propertyCode (flat) -> propertyCode.code
-  "request.request_body.data.hotelReservation.segments<array>.propertyCode": "request.request_body.segments<array>.propertyCode.code",
+  "request.request_body.data.hotelReservation.segments<array>.propertyCode": "request.request_body.segments<array>.propertyCode",
   // RES-17: lateArrivalTime -> lateArrivalTime
   "request.request_body.data.hotelReservation.segments<array>.lateArrivalTime": "request.request_body.segments<array>.lateArrivalTime",
   // RES-18/19: destination only (post-launch backlog) — no mapping
@@ -38159,4 +38159,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.4a0cf81.mjs.map
+//# sourceMappingURL=sox-workflow.1668eb6.mjs.map
