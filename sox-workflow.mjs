@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7c7484a\n
+// sox-workflow build hash: 55e9e60\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34614,7 +34614,7 @@ var INT192FieldRegexMap = {
 
 // src/integration/int19-3.field.rules.ts
 var INT193FieldRegexMap = {
-  "request.request_body<array>.resConfirmationNumber": REGEX.ALPHANUMERIC
+  "resConfirmationNumber": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int20.field.rules.ts
