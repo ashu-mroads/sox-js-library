@@ -1,4 +1,4 @@
-// sox-workflow build hash: d940377\n
+// sox-workflow build hash: 7c7484a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36633,13 +36633,13 @@ var INT122_TO_INT121_FieldPathMap = {
 // src/integration-pair/source.int15-1-1.dest.int19-1.map.rules.ts
 var INT1511_TO_INT191_FieldPathMap = {
   "confirmationIds<array>.value": "resConfirmationNumber",
-  "customerId": "request.request_body.acid"
+  "customerId": "acid"
 };
 
 // src/integration-pair/source.int15-2-1.dest.int19-2.map.rules.ts
 var INT1521_TO_INT192_FieldPathMap = {
-  "confirmationNumber.value": "request.request_body.resConfirmationNumber",
-  "travelers<array>.altCustID": "request.request_body.acid"
+  "confirmationNumber.value": "resConfirmationNumber",
+  "travelers<array>.altCustID": "acid"
 };
 
 // src/integration-pair/source.int15-2-2.dest.int15-2-1.map.rules.ts
@@ -36752,7 +36752,7 @@ var INT1522_TO_INT241_FieldPathMap = {
 
 // src/integration-pair/source.int15-3-1.dest.int19-3.map.rules.ts
 var INT1531_TO_INT193_FieldPathMap = {
-  "confirmationIds<array>.value": "request.request_body<array>.resConfirmationNumber"
+  "confirmationIds<array>.value": "resConfirmationNumber"
 };
 
 // src/integration-pair/source.int15-3-2.dest.int15-3-1.map.rules.ts
@@ -38152,4 +38152,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.d940377.mjs.map
+//# sourceMappingURL=sox-workflow.7c7484a.mjs.map
