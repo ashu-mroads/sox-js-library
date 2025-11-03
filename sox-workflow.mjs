@@ -1,4 +1,4 @@
-// sox-workflow build hash: 55e9e60\n
+// sox-workflow build hash: 4a0cf81\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37254,10 +37254,17 @@ var Validators = {
           anomalyCategory: "Field Level Anomaly",
           anomalyType: "Missing Field"
         });
+        errorMessages.push(`Missing value: ${rulePath}`);
+        failures.push({
+          rulePath,
+          actualPath: rulePath,
+          value: void 0,
+          anomalyCategory: "Field Level Anomaly",
+          anomalyType: "Missing Value"
+        });
         continue;
       } else if (isRequired && rulePath.indexOf("array") > -1) {
         const pathSplit = rulePath.split(".");
-        const value = pathSplit[pathSplit.length - 1];
         const { isValid } = this._checkAllArrayValuesPresent(flat, rulePath);
         if (!isValid) {
           errorMessages.push(`Missing field: ${rulePath}`);
