@@ -1,4 +1,4 @@
-// sox-workflow build hash: 83407a2\n
+// sox-workflow build hash: c94655b\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36171,6 +36171,60 @@ var INT30FieldRegexMap = {
   "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
 };
 
+// src/integration/int24-1.field.rules.ts
+var INT241FieldRegexMap = {
+  // RES-1: Field Structure & Compare
+  "confirmationNumber.id": REGEX.ALPHANUMERIC,
+  // RES-2: Field Structure & Compare
+  "confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  // RES-3: Field Structure & Compare
+  "confirmationNumber.value": REGEX.ALPHANUMERIC,
+  // RES-4: Field Structure & Compare
+  "reservationStatusEnum": REGEX.ALPHANUMERIC,
+  // RES-5: Field Structure & Compare
+  "sourceCRSEnum": REGEX.ALPHANUMERIC,
+  // RES-6: Field Structure & Compare
+  "timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-7: Field Structure & Compare
+  "timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-8: Field Structure & Compare
+  "hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  // RES-9: Field Structure & Compare (Optional)
+  "totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-10: Field Structure & Compare (Optional)
+  "totalOfActiveSegments<array>.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-11: Field Structure & Compare (Optional)
+  "totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-12: Field Structure & Compare
+  "segments<array>.id": REGEX.ALPHANUMERIC,
+  // RES-13: Field Structure & Compare
+  "segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  // RES-14: Field Structure & Compare
+  "segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  // RES-15: Field Structure & Compare (Optional)
+  "segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-16: Field Structure & Compare (Optional)
+  "segments<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-17: Field Structure & Compare (Optional)
+  "segments<array>.lateArrivalTime": { regex: REGEX.EXTENDED_ALPHANUMERIC, optional: true },
+  // RES-18: Field Structure & Compare (Optional)
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-19: Field Structure & Compare (Optional)
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
+  // RES-20: Field Structure & Compare (Optional)
+  "segments<array>.offer.nightlyCorpMarketSegments<array>.value": { regex: REGEX.ALPHANUMERIC, optional: true },
+  // RES-21: Field Structure & Compare (Optional)
+  "segments<array>.offer.productUses<array>.dayUseInd": { regex: REGEX.BOOLEAN_STRING, optional: true },
+  // RES-25: Field Structure & Compare (Optional)
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-26: Field Structure & Compare (Optional)
+  "segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  // RES-27: Field Structure & Compare (Optional)
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  // RES-28: Field Structure & Compare (Optional)
+  "segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+};
+
 // src/common/field-rules-registry.ts
 var FIELD_RULES_REGISTRY = {
   "int15-3-1": INT1531FieldRegexMap,
@@ -36208,7 +36262,8 @@ var FIELD_RULES_REGISTRY = {
   "int5-2-1": INT521FieldRegexMap,
   int26: INT26FieldRegexMap,
   int25: INT25FieldRegexMap,
-  int30: INT30FieldRegexMap
+  int30: INT30FieldRegexMap,
+  "int24-1": INT241FieldRegexMap
 };
 
 // src/integration-pair/source.int03-1.dest.int04.map.rules.ts
@@ -38178,4 +38233,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.83407a2.mjs.map
+//# sourceMappingURL=sox-workflow.c94655b.mjs.map
