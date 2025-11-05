@@ -1,4 +1,4 @@
-// sox-workflow build hash: c94655b\n
+// sox-workflow build hash: d4637f1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35648,7 +35648,7 @@ var INT122FieldRegexMap = int122FieldRegexMapData;
 // src/integration/int21.field.rules.ts
 var INT21FieldRegexMap = {
   // LOY-1 (test path retained): confirmation number
-  "request.request_body.redemptionReservations<array>.confirmationNumber": REGEX.ALPHANUMERIC,
+  "request.request_body.redemptionReservations<array>.confirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
   // LOY-2 (destination-only in comparison)
   "request.request_body.memberAccount.memberAccountNumber": REGEX.ALPHANUMERIC,
   // LOY-3: property code required
@@ -37322,13 +37322,13 @@ var Validators = {
         const pathSplit = rulePath.split(".");
         const { isValid } = this._checkAllArrayValuesPresent(flat, rulePath);
         if (!isValid) {
-          errorMessages.push(`Missing field: ${rulePath}`);
+          errorMessages.push(`Missing value: ${rulePath}`);
           failures.push({
             rulePath,
             actualPath: rulePath,
             value: void 0,
             anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Missing Field"
+            anomalyType: "Missing Value"
           });
           continue;
         }
@@ -38233,4 +38233,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.c94655b.mjs.map
+//# sourceMappingURL=sox-workflow.d4637f1.mjs.map
