@@ -1,4 +1,4 @@
-// sox-workflow build hash: 3a9dd59\n
+// sox-workflow build hash: 7c8bcc4\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37181,7 +37181,7 @@ var Validators = {
     if (response == null || typeof response !== "object" || Array.isArray(response)) {
       errors.push("Missing or invalid: content.response");
     } else {
-      const httpCode = response.http_response_code.slice(0, 3);
+      const httpCode = response?.http_response_code?.slice(0, 3);
       if (!/^\d{3}$/.test(httpCode ?? "")) {
         errors.push("Missing or invalid: content.response.http_response_code (must be 3 digits)");
       }
@@ -38484,4 +38484,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.3a9dd59.mjs.map
+//# sourceMappingURL=sox-workflow.7c8bcc4.mjs.map
