@@ -1,4 +1,4 @@
-// sox-workflow build hash: d4637f1\n
+// sox-workflow build hash: 3a9dd59\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34280,7 +34280,6 @@ async function createSoxBusinessEvent(params) {
     srcEventTime,
     sourcePayload
   } = params;
-  console.log("params", params);
   const { anomalyCategory, anomalyType, anomalySummary } = summarizeAnomalies(validationResult, sourcePayload);
   let sourceData;
   let destinationData;
@@ -35691,7 +35690,7 @@ var INT29FieldRegexMap = {
 // src/integration/int11.field.rules.ts
 var INT11FieldRegexMap = {
   // RES-1: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.id": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-2: Field Structure & Compare
   "response.response_body.reservationList<array>.confirmationNumber.provider": REGEX.ALPHANUMERIC,
   // RES-3: Field Structure & Compare
@@ -35701,11 +35700,11 @@ var INT11FieldRegexMap = {
   // RES-5: Field Structure & Compare
   "response.response_body.reservationList<array>.sourceCRSEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-6: Field Structure & Compare
-  "response.response_body.reservationList<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-7: Field Structure & Compare
-  "response.response_body.reservationList<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-8: Field Structure & Compare
-  "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-9: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-10: Field Structure & Compare (Optional)
@@ -35751,13 +35750,13 @@ var INT112FieldRegexMap = {
   // RES-3: Field Structure & Compare
   "response.response_body.reservationList<array>.confirmationNumber.value": REGEX.ALPHANUMERIC,
   // RES-4: Field Structure & Compare
-  "response.response_body.reservationList<array>.reservationStatusEnum": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.reservationStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-5: Field Structure & Compare
   "response.response_body.reservationList<array>.sourceCRSEnum": REGEX.ALPHANUMERIC,
   // RES-6: Field Structure & Compare
-  "response.response_body.reservationList<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-7: Field Structure & Compare
-  "response.response_body.reservationList<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-8: Field Structure & Compare
   "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
   // RES-9: Field Structure & Compare (Optional)
@@ -35769,9 +35768,9 @@ var INT112FieldRegexMap = {
   // RES-12: Field Structure & Compare
   "response.response_body.reservationList<array>.segments<array>.id": REGEX.ALPHANUMERIC,
   // RES-13: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.segments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-14: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.segments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-15: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-16: Field Structure & Compare (Optional)
@@ -36539,55 +36538,55 @@ var INT04_TO_INT1511_FieldPathMap = {
 // src/integration-pair/source.int11-2.dest.int11.map.rules.ts
 var INT112_TO_INT11_FieldPathMap = {
   // RES-1: Field Structure & Compare
-  "response.response_body.confirmationNumber.id": "response.response_body.confirmationNumber.id",
+  //'response.response_body.reservationList<array>.confirmationNumber.id': 'response.response_body.reservationList<array>.confirmationNumber.id',
   // RES-2: Field Structure & Compare
-  "response.response_body.confirmationNumber.provider": "response.response_body.confirmationNumber.provider",
+  "response.response_body.reservationList<array>.confirmationNumber.provider": "response.response_body.reservationList<array>.confirmationNumber.provider",
   // RES-3: Field Structure & Compare
-  "response.response_body.confirmationNumber.value": "response.response_body.confirmationNumber.value",
+  "response.response_body.reservationList<array>.confirmationNumber.value": "response.response_body.reservationList<array>.confirmationNumber.value",
   // RES-4: Field Structure & Compare
   // 'response.response_body.reservationStatusEnum': 'response.response_body.reservationStatusEnum',
   // RES-5: Field Structure & Compare
   // 'response.response_body.sourceCRSEnum': 'response.response_body.sourceCRSEnum',
   // RES-6: Field Structure & Compare
-  "response.response_body.timespan.start": "response.response_body.timespan.start",
+  "response.response_body.reservationList<array>.timespan.start": "response.response_body.reservationList<array>.timespan.start",
   // RES-7: Field Structure & Compare
-  "response.response_body.timespan.end": "response.response_body.timespan.end",
+  "response.response_body.reservationList<array>.timespan.end": "response.response_body.reservationList<array>.timespan.end",
   // RES-8: Field Structure & Compare
-  "response.response_body.hotels<array>.propertyCode.code": "response.response_body.hotels<array>.propertyCode.code",
+  "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": "response.response_body.reservationList<array>.hotels<array>.propertyCode.code",
   // RES-9: Field Structure & Compare (Optional)
-  "response.response_body.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "response.response_body.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
+  "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtBfTx.value",
   // RES-10: Field Structure & Compare (Optional)
-  "response.response_body.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "response.response_body.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
+  "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.bsAmt.value": "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.bsAmt.value",
   // RES-11: Field Structure & Compare (Optional)
-  "response.response_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "response.response_body.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
+  "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtAfTx.value",
   // RES-12: Field Structure & Compare
-  "response.response_body.segments<array>.id": "response.response_body.segments<array>.id",
+  "response.response_body.reservationList<array>.segments<array>.id": "response.response_body.reservationList<array>.segments<array>.id",
   // RES-13: Field Structure & Compare
-  "response.response_body.segments<array>.timespan.start": "response.response_body.segments<array>.timespan.start",
+  "response.response_body.reservationList<array>.segments<array>.timespan.start": "response.response_body.reservationList<array>.segments<array>.timespan.start",
   // RES-14: Field Structure & Compare
-  "response.response_body.segments<array>.timespan.end": "response.response_body.segments<array>.timespan.end",
+  "response.response_body.reservationList<array>.segments<array>.timespan.end": "response.response_body.reservationList<array>.segments<array>.timespan.end",
   // RES-15: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.consolidatedSegmentStatusEnum": "response.response_body.segments<array>.consolidatedSegmentStatusEnum",
+  "response.response_body.reservationList<array>.segments<array>.consolidatedSegmentStatusEnum": "response.response_body.reservationList<array>.segments<array>.consolidatedSegmentStatusEnum",
   // RES-16: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.propertyCode.code": "response.response_body.segments<array>.propertyCode.code",
+  "response.response_body.reservationList<array>.segments<array>.propertyCode.code": "response.response_body.reservationList<array>.segments<array>.propertyCode.code",
   // RES-17: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.lateArrivalTime": "response.response_body.segments<array>.lateArrivalTime",
+  "response.response_body.reservationList<array>.segments<array>.lateArrivalTime": "response.response_body.reservationList<array>.segments<array>.lateArrivalTime",
   // RES-18: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
+  "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start": "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.start",
   // RES-19: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
+  "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end": "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.timespan.end",
   // RES-20: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "response.response_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
+  "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "response.response_body.reservationList<array>.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
   // RES-21: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.productUses<array>.dayUseInd": "response.response_body.segments<array>.offer.productUses<array>.dayUseInd",
+  "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.dayUseInd": "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.dayUseInd",
   // RES-25: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-26: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "response.response_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
   // RES-28: Field Structure & Compare (Optional)
-  "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "response.response_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "response.response_body.reservationList<array>.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
 // src/integration-pair/source.int12-2.dest.int12-1.map.rules.ts
@@ -37207,18 +37206,18 @@ var Validators = {
   },
   _flattenToPathValueMap(root) {
     const out = {};
-    const walk = (val, path) => {
+    const walk = (val, path2) => {
       if (val === null || val === void 0) {
-        out[path] = val;
+        out[path2] = val;
         return;
       }
       if (Array.isArray(val)) {
         if (val.length === 0) {
-          out[path] = val;
+          out[path2] = val;
           return;
         }
         val.forEach((item, idx) => {
-          const p = path ? `${path}<array${idx + 1}>` : `<array${idx + 1}>`;
+          const p = path2 ? `${path2}<array${idx + 1}>` : `<array${idx + 1}>`;
           walk(item, p);
         });
         return;
@@ -37226,22 +37225,22 @@ var Validators = {
       if (typeof val === "object") {
         const keys = Object.keys(val);
         if (keys.length === 0) {
-          out[path] = val;
+          out[path2] = val;
           return;
         }
         keys.forEach((k) => {
-          const p = path ? `${path}.${k}` : k;
+          const p = path2 ? `${path2}.${k}` : k;
           walk(val[k], p);
         });
         return;
       }
-      out[path] = val;
+      out[path2] = val;
     };
     walk(root, "");
     return out;
   },
-  _checkAllArrayValuesPresent(payload, path) {
-    const [variableName, requiredField] = path.split("<array>.");
+  _checkAllArrayValuesPresent(payload, path2) {
+    const [variableName, requiredField] = path2.split("<array>.");
     const keys = Object.keys(payload);
     const arrayMap = {};
     keys.forEach((key) => {
@@ -37262,7 +37261,7 @@ var Validators = {
         isValid = false;
       }
     }
-    return { isValid, path };
+    return { isValid, path: path2 };
   },
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
@@ -37318,20 +37317,6 @@ var Validators = {
           anomalyType: "Missing Value"
         });
         continue;
-      } else if (isRequired && rulePath.indexOf("array") > -1) {
-        const pathSplit = rulePath.split(".");
-        const { isValid } = this._checkAllArrayValuesPresent(flat, rulePath);
-        if (!isValid) {
-          errorMessages.push(`Missing value: ${rulePath}`);
-          failures.push({
-            rulePath,
-            actualPath: rulePath,
-            value: void 0,
-            anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Missing Value"
-          });
-          continue;
-        }
       }
       matching.forEach(([actualPath, value]) => {
         if (this.isEmpty(value) && isRequired) {
@@ -37537,8 +37522,8 @@ var INTEGRATIONS = {
   INT03_2: "INT03-2",
   INT04: "INT04",
   INT31: "INT31",
+  INT11: "INT11",
   INT11_2: "INT11-2",
-  INT11_1: "INT11-1",
   INT12_2: "INT12-2",
   INT12_1: "INT12-1",
   INT15_1_1: "INT15-1-1",
@@ -37580,7 +37565,7 @@ var IntegrationPairs = [
   { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04 },
   { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04 },
   { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31 },
-  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11_1 },
+  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11 },
   { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1 },
   { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1 },
   { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2 },
@@ -37603,45 +37588,6 @@ var IntegrationPairs = [
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2 },
   { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
 ];
-
-// src/test-utils/fileReaders.ts
-function mergeInt31Files(files) {
-  let headerPayload = {};
-  let detailPayload = {};
-  let mainFile = {};
-  let fileSuccess = "1";
-  for (const file of files) {
-    const { payload, success } = JSON.parse(file.content);
-    if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
-      mainFile = file;
-      headerPayload = payload;
-    }
-    if (payload?.folioTransDetailList) {
-      detailPayload = payload;
-    }
-    success == "0" && (fileSuccess = "0");
-  }
-  const mergedPayload = { ...headerPayload, ...detailPayload };
-  const content = JSON.stringify({ success: fileSuccess, payload: mergedPayload });
-  mainFile = { ...mainFile, content };
-  return mainFile;
-}
-function handleDecimals(soxData) {
-  const { request, success, response } = JSON.parse(soxData.content);
-  const { totalOfActiveSegments } = request.request_body;
-  const numberOfDecimals = 2;
-  const divisor = Math.pow(10, numberOfDecimals);
-  const activeSegments = totalOfActiveSegments.map((segment) => {
-    segment.rateAmount.amtBfTx.value = (segment.rateAmount.amtBfTx.value / divisor).toFixed(numberOfDecimals);
-    segment.rateAmount.bsAmt.value = (segment.rateAmount.bsAmt.value / divisor).toFixed(numberOfDecimals);
-    segment.rateAmount.amtAfTx.value = (segment.rateAmount.amtAfTx.value / divisor).toFixed(numberOfDecimals);
-    return segment;
-  });
-  request.request_body.totalOfActiveSegments = activeSegments;
-  const content = JSON.stringify({ success, response, request });
-  soxData = { ...soxData, content };
-  return soxData;
-}
 
 // src/reporting/anomaly-alarmdoc-data.ts
 function getReportAlarmData(dtResult, dynatraceDashboardUrl) {
@@ -37735,8 +37681,8 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
     const err = r.Errors ?? 0;
     const tot = r["Total Records"] ?? 0;
     const pct = r["Error Percentage"] != null ? Number(r["Error Percentage"]).toFixed(2) : "n/a";
-    const path = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
-    return `${path} |Errors: ${err}/${tot} (${pct}%)`;
+    const path2 = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
+    return `${path2} |Errors: ${err}/${tot} (${pct}%)`;
   };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
@@ -37829,6 +37775,328 @@ function formatSoxAnomalyReportPeriod(dtResult, alarmCode) {
   return `${alarmCode} | Sox Anomaly Analysis Reporting Period ${start} to ${end}`;
 }
 
+// src/common/preprocessorutils.ts
+function mergeInt31Files(records) {
+  let headerPayload = {};
+  let detailPayload = {};
+  let mainRecord = {};
+  let recordSuccess = "1";
+  for (const record of records) {
+    const { payload, success } = JSON.parse(record.content || record.parsed.content);
+    if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
+      mainRecord = record;
+      headerPayload = payload;
+    }
+    if (payload?.folioTransDetailList) {
+      detailPayload = payload;
+    }
+    success == "0" && (recordSuccess = "0");
+  }
+  const mergedPayload = { ...headerPayload, ...detailPayload };
+  const content = JSON.stringify({ success: recordSuccess, payload: mergedPayload });
+  mainRecord = { ...mainRecord, content };
+  return mainRecord;
+}
+function handleDecimals(soxData) {
+  const { request, success, response } = JSON.parse(soxData.content);
+  const { totalOfActiveSegments } = request.request_body;
+  const numberOfDecimals = 2;
+  const divisor = Math.pow(10, numberOfDecimals);
+  const activeSegments = totalOfActiveSegments.map((segment) => {
+    segment.rateAmount.amtBfTx.value = (segment.rateAmount.amtBfTx.value / divisor).toFixed(numberOfDecimals);
+    segment.rateAmount.bsAmt.value = (segment.rateAmount.bsAmt.value / divisor).toFixed(numberOfDecimals);
+    segment.rateAmount.amtAfTx.value = (segment.rateAmount.amtAfTx.value / divisor).toFixed(numberOfDecimals);
+    return segment;
+  });
+  request.request_body.totalOfActiveSegments = activeSegments;
+  const content = JSON.stringify({ success, response, request });
+  soxData = { ...soxData, content };
+  return soxData;
+}
+function isObject(v) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
+function clone(v) {
+  return isObject(v) ? JSON.parse(JSON.stringify(v)) : v;
+}
+function getByPath(obj, path2) {
+  if (!obj || !path2) return void 0;
+  return path2.split(".").reduce((o, k) => o ? o[k] : void 0, obj);
+}
+function setByPath(obj, path2, value) {
+  const parts = path2.split(".");
+  let cur = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const p = parts[i];
+    if (!isObject(cur[p])) cur[p] = {};
+    cur = cur[p];
+  }
+  cur[parts[parts.length - 1]] = value;
+}
+function deepMergeObjects(target, source) {
+  if (Array.isArray(target) && Array.isArray(source)) {
+    return [...target, ...source];
+  }
+  if (isObject(target) && isObject(source)) {
+    const out = { ...target };
+    for (const key of Object.keys(source)) {
+      if (key in out) {
+        out[key] = deepMergeObjects(out[key], source[key]);
+      } else {
+        out[key] = clone(source[key]);
+      }
+    }
+    return out;
+  }
+  return source !== void 0 ? clone(source) : clone(target);
+}
+function parseMaybeRecord(recordOrJson) {
+  if (!recordOrJson) return { root: void 0 };
+  if (typeof recordOrJson.content === "string") {
+    try {
+      return { root: JSON.parse(recordOrJson.content), recordRef: recordOrJson };
+    } catch {
+      return { root: void 0, recordRef: recordOrJson };
+    }
+  }
+  if (typeof recordOrJson === "string") {
+    try {
+      return { root: JSON.parse(recordOrJson) };
+    } catch {
+      return { root: void 0 };
+    }
+  }
+  if (isObject(recordOrJson)) {
+    return { root: recordOrJson };
+  }
+  return { root: void 0 };
+}
+function sortArrayItems(items, sortby) {
+  if (!sortby || !Array.isArray(items)) return items;
+  return [...items].sort((a, b) => {
+    const av = getByPath(a, sortby);
+    const bv = getByPath(b, sortby);
+    if (av === bv) return 0;
+    if (av === void 0) return 1;
+    if (bv === void 0) return -1;
+    return av < bv ? -1 : 1;
+  });
+}
+function mergeJsonData(records, options = {}) {
+  const { selectPath, sortby } = options;
+  let firstParsedRoot;
+  let firstRecordRef;
+  const parsedRoots = [];
+  const recordRefs = [];
+  const consoleLogArray = [];
+  const perRecordCounts = [];
+  let totalInputCount = 0;
+  for (let i = 0; i < (records?.length ?? 0); i++) {
+    const rec = records[i];
+    const { root, recordRef } = parseMaybeRecord(rec);
+    if (root) {
+      if (!firstParsedRoot) firstParsedRoot = clone(root);
+      parsedRoots.push(root);
+      if (selectPath) {
+        const arr = getByPath(root, selectPath);
+        const count = Array.isArray(arr) ? arr.length : 0;
+        totalInputCount += count;
+        const label = recordRef?.fileName || recordRef?.sox_integration || `#${i + 1}`;
+        perRecordCounts.push({ index: i, label, count });
+        consoleLogArray.push(`[mergeJsonData] Record ${label}: ${count} items at selectPath='${selectPath}'`);
+      }
+    }
+    if (recordRef) recordRefs.push(recordRef);
+    if (!firstRecordRef && recordRef) firstRecordRef = recordRef;
+  }
+  if (parsedRoots.length === 0) {
+    return firstRecordRef ? { ...firstRecordRef, content: JSON.stringify({}) } : {};
+  }
+  let merged;
+  if (selectPath) {
+    const base = firstParsedRoot ? clone(firstParsedRoot) : {};
+    const allItems = [];
+    for (const r of parsedRoots) {
+      const arr = getByPath(r, selectPath);
+      if (Array.isArray(arr)) allItems.push(...arr);
+    }
+    const sorted = sortArrayItems(allItems, sortby);
+    setByPath(base, selectPath, sorted);
+    merged = base;
+    const transactionId = firstRecordRef?.sox_transaction_id || firstParsedRoot?.sox_transaction_id || "";
+    consoleLogArray.push(`[mergeJsonData] Total items for ${transactionId} at selectPath='${selectPath}' across ${parsedRoots.length} record(s): input=${totalInputCount}, merged=${sorted.length}`);
+    console.table(consoleLogArray);
+  } else {
+    merged = parsedRoots.reduce((acc, cur) => deepMergeObjects(acc, cur), {});
+  }
+  return firstRecordRef ? { ...firstRecordRef, content: JSON.stringify(merged) } : merged;
+}
+
+// src/test-utils/fileReaders.ts
+import * as fs from "fs";
+import * as path from "path";
+function safeParseContent(record) {
+  if (!record) return void 0;
+  if (typeof record.content === "string") {
+    try {
+      return JSON.parse(record.content);
+    } catch {
+      return record.content;
+    }
+  }
+  return record?.content;
+}
+function buildPreprocessOutputObject(srcId, destId, sourcePayload, destinationPayload) {
+  return {
+    meta: {
+      sourceIntegration: srcId,
+      destinationIntegration: destId,
+      sourceTimestamp: sourcePayload?.sox_transaction_timestamp,
+      destinationTimestamp: destinationPayload?.sox_transaction_timestamp
+    },
+    source: {
+      raw: sourcePayload,
+      parsedContent: safeParseContent(sourcePayload)
+    },
+    destination: {
+      raw: destinationPayload,
+      parsedContent: safeParseContent(destinationPayload)
+    }
+  };
+}
+function writePreprocessOutput(params) {
+  const { transactionId, srcId, destId, sourcePayload, destinationPayload } = params;
+  const outDir = params.outDir?.trim() || process.env.PREPROCESS_LOG_DIR?.trim() || process.env.BASE_DATA_FOLDER?.trim() || "out";
+  if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir, { recursive: true });
+  }
+  const rawName = params.fileName || `preprocessed_${String(srcId).toLowerCase()}_${String(destId).toLowerCase()}_${transactionId}.json`;
+  const fileName = rawName.replace(/[^\w.\-]/g, "_");
+  const fullPath = path.join(outDir, fileName);
+  const data = buildPreprocessOutputObject(srcId, destId, sourcePayload, destinationPayload);
+  fs.writeFileSync(fullPath, JSON.stringify(data, null, 2), "utf8");
+  return fullPath;
+}
+
+// src/common/preprocessors.ts
+function isObject2(v) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
+function selectAll(dataArr, key) {
+  return dataArr.filter((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === key);
+}
+function toEpoch(ts) {
+  try {
+    const n = Date.parse(String(ts));
+    return Number.isNaN(n) ? 0 : n;
+  } catch (e) {
+    return 0;
+  }
+}
+function pickMostRecent(records) {
+  if (!Array.isArray(records) || records.length === 0) return void 0;
+  let best = records[0];
+  let bestEpoch = toEpoch(best?.sox_transaction_timestamp);
+  for (let i = 1; i < records.length; i++) {
+    const e = toEpoch(records[i]?.sox_transaction_timestamp);
+    if (e > bestEpoch) {
+      best = records[i];
+      bestEpoch = e;
+    }
+  }
+  return best;
+}
+function filterACRS(content) {
+  if (content && isObject2(content) && isObject2(content.payload)) {
+    const confirmationIds = content?.payload?.confirmationIds;
+    if (Array.isArray(confirmationIds)) {
+      const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
+      content.payload.confirmationIds = stripped;
+    }
+  } else if (typeof content === "string") {
+    const parsed = JSON.parse(content);
+    const confirmationIds = parsed?.payload?.confirmationIds;
+    if (Array.isArray(confirmationIds)) {
+      const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
+      parsed.payload.confirmationIds = stripped;
+    }
+    content = JSON.stringify(parsed);
+  }
+  return content;
+}
+var INTEGRATION_PREPROCESSORS = {
+  // pick record with most recent sox_transaction_timestamp
+  __default__: (records) => pickMostRecent(records),
+  // INT15.*: filter ACRS confirmationIds on the selected record
+  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT11.toLowerCase()]: (records) => {
+    return mergeJsonData(records, {
+      selectPath: "response.response_body.reservationList",
+      sortby: "confirmationNumber.value"
+    });
+  },
+  [INTEGRATIONS.INT11_2.toLowerCase()]: (records) => {
+    return mergeJsonData(records, {
+      selectPath: "response.response_body.reservationList",
+      sortby: "confirmationNumber.value"
+    });
+  },
+  [INTEGRATIONS.INT12_2.toLowerCase()]: (records) => {
+    return mergeJsonData(records, {
+      selectPath: "response.response_body.reservationList",
+      sortby: "confirmationNumber.value"
+    });
+  },
+  // INT26: decimals normalization on the selected record
+  [INTEGRATIONS.INT26.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    return selected ? handleDecimals(selected) : selected;
+  },
+  // INT31: merge multiple logs (header + detail); fallback to most recent
+  [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
+    return mergeInt31Files(records);
+  }
+};
+function applyIntegrationPreprocessors(srcId, destId, dataArr) {
+  const sKey = String(srcId).toLowerCase();
+  const dKey = String(destId).toLowerCase();
+  const arr = Array.isArray(dataArr) ? dataArr : [];
+  const sourceRecords = selectAll(arr, sKey);
+  const destRecords = selectAll(arr, dKey);
+  const sPre = INTEGRATION_PREPROCESSORS[sKey] ?? INTEGRATION_PREPROCESSORS.__default__;
+  const dPre = INTEGRATION_PREPROCESSORS[dKey] ?? INTEGRATION_PREPROCESSORS.__default__;
+  const sourcePayload = sPre ? sPre(sourceRecords) : void 0;
+  const destinationPayload = dPre ? dPre(destRecords) : void 0;
+  const transactionId = sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || "";
+  try {
+    const fullPath = writePreprocessOutput({
+      transactionId,
+      srcId: sKey,
+      destId: dKey,
+      sourcePayload,
+      destinationPayload
+    });
+    console.log("Preprocess output written:", fullPath);
+  } catch (err) {
+    console.error("Failed to write preprocess output:", err);
+  }
+  return { sourcePayload, destinationPayload };
+}
+
 // src/common/integration-validation.types.ts
 var httpSoxKeys = [
   "int11-2",
@@ -37851,8 +38119,11 @@ var httpSoxKeys = [
   // API/DB
   "int21",
   // API/API
-  "int22"
+  "int22",
   // API/API
+  "int11",
+  "int11-1"
+  // DB
 ];
 var asyncSoxKeys = [
   "int03-1",
@@ -37863,8 +38134,6 @@ var asyncSoxKeys = [
   // EH/EH
   "int31",
   // EH/DB
-  "int11-1",
-  // DB
   "int12-1",
   // DB
   "int15-1-1",
@@ -37950,18 +38219,8 @@ function skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload) {
   const is15_3_1_to_19_3 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_3_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_3);
   return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2 || is15_3_1_to_19_3);
 }
-function filterACRS(content) {
-  if (Object.keys(content).length > 0) {
-    const { confirmationIds } = content?.payload;
-    const strippedIds = confirmationIds?.filter((confirmationId) => {
-      return confirmationId.provider === "ACRS";
-    });
-    content.payload.confirmationIds = strippedIds;
-  }
-  return content;
-}
 function validateIntegrationPair(params) {
-  const {
+  let {
     sourceIntegrationId,
     destinationIntegrationId,
     sourcePayload,
@@ -37974,10 +38233,6 @@ function validateIntegrationPair(params) {
   const srcId = sourceIntegrationId.toLowerCase();
   const destId = destinationIntegrationId.toLowerCase();
   const errors = [];
-  const acrsFilterIntegrations = ["int15-1-1", "int15-2-1", "int15-3-1"];
-  if (acrsFilterIntegrations.includes(srcId)) {
-    sourcePayload.content = filterACRS(sourcePayload.content);
-  }
   const srcWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[srcId];
   if (srcWrapperValidator) {
     const r = srcWrapperValidator(sourcePayload);
@@ -38029,7 +38284,6 @@ function validateIntegrationPair(params) {
       }
     }
   }
-  console.log(`Validation result for ${srcId} -> ${destId}:`, { errors, sourceValidation, destinationValidation, mappingComparison });
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
   return {
     sourceIntegrationId: srcId,
@@ -38055,23 +38309,15 @@ async function processMatchedPair({
   }
   const srcKey = String(srcIntegration).toLowerCase();
   const destKey = String(destIntegration).toLowerCase();
-  const sourcePayload = dataArr.find(
+  let sourcePayload = dataArr.find(
     (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey
   );
-  let destinationPayload;
-  if (destKey.toLowerCase() === INTEGRATIONS.INT31.toLowerCase()) {
-    const payloadArr = dataArr.filter(
-      (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
-    );
-    destinationPayload = mergeInt31Files(payloadArr);
-  } else {
-    destinationPayload = dataArr.find(
-      (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
-    );
-  }
-  if (destKey.toLowerCase() === INTEGRATIONS.INT26.toLowerCase()) {
-    destinationPayload = handleDecimals(destinationPayload);
-  }
+  let destinationPayload = dataArr.find(
+    (p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey
+  );
+  const pre = applyIntegrationPreprocessors(srcKey, destKey, dataArr);
+  sourcePayload = pre.sourcePayload ?? sourcePayload;
+  destinationPayload = pre.destinationPayload ?? destinationPayload;
   if (!sourcePayload) {
     throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
   }
@@ -38089,7 +38335,16 @@ async function processMatchedPair({
     sourcePayload,
     destinationPayload
   });
-  console.log("processMatchedPair validationResult:", validationResult);
+  console.log(
+    "processMatchedPair summary:",
+    JSON.stringify({
+      sourceIntegrationId: validationResult.sourceIntegrationId,
+      destinationIntegrationId: validationResult.destinationIntegrationId,
+      sourceErrorCount: validationResult.sourceValidation?.failures.length || 0,
+      destinationErrorCount: validationResult.destinationValidation?.failures.length || 0,
+      mappingErrorCount: validationResult.mappingComparison?.mismatches.length || 0
+    })
+  );
   const ingestResult = await createSoxBusinessEvent({
     validationResult,
     transactionId,
@@ -38098,7 +38353,6 @@ async function processMatchedPair({
     sourcePayload,
     destinationPayload
   });
-  console.log("processMatchedPair ingestResult:", ingestResult);
   return ingestResult;
 }
 async function processSingleIntegration({ loopItemValue }) {
@@ -38113,14 +38367,12 @@ async function processSingleIntegration({ loopItemValue }) {
     sourceIntegrationId,
     payload: soxData
   });
-  console.log("processSingleIntegration validationResult:", validationResult);
   const ingestResult = await createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
     sourcePayload: soxData
   });
-  console.log("processSingleIntegration ingestResult:", ingestResult);
   return ingestResult;
 }
 async function processMissingTransaction({ loopItemValue }) {
@@ -38152,7 +38404,6 @@ async function processMissingTransaction({ loopItemValue }) {
     srcEventTime,
     sourcePayload: payload
   });
-  console.log("processIntegrationFailure ingestResult:", ingestResult);
   return ingestResult;
 }
 function processReportData(dtResult, dynatraceDashboardUrl) {
