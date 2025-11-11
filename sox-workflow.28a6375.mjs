@@ -1,4 +1,4 @@
-// sox-workflow build hash: 7c8bcc4\n
+// sox-workflow build hash: 28a6375\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34618,13 +34618,13 @@ var INT193FieldRegexMap = {
 
 // src/integration/int20.field.rules.ts
 var INT20FieldRegexMap = {
-  "request.request_body.staysDetails.reservationConfirmationNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.acid": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.staysDetails.totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
-  "request.request_body.staysDetails.folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.pmsAccountSetupDate": { regex: REGEX.DATE_YYYY_MM_DD, optional: true }
+  "reservationConfirmationNumber": REGEX.ALPHANUMERIC,
+  "acid": REGEX.ALPHANUMERIC,
+  "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
+  "folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "pmsAccountSetupDate": { regex: REGEX.DATE_YYYY_MM_DD, optional: true }
 };
 
 // src/integration/int04.field.rules.ts
@@ -36826,17 +36826,17 @@ var INT16_TO_INT17_FieldPathMap = {
   // 'request.request_body.staysDetails.pmsAccountSetupDate': 'request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate',
 };
 
-// src/integration-pair/source.int16.dest.int20.map.rules.ts
-var INT16_TO_INT20_FieldPathMap = {
+// src/integration-pair/source.int20.dest.int16.map.rules.ts
+var INT20_TO_INT16_FieldPathMap = {
   // LOY-2: acid extracted from request_endpoint by preprocessing in both INT16 and INT20
-  "request.request_body.acid": "request.request_body.acid",
+  "acid": "request.request_body.acid",
   // Destination fields in INT20 are sourced from response.response_body.memberAccountEarnTransaction
-  "request.request_body.staysDetails.reservationConfirmationNumber": "response.response_body.memberAccountEarnTransaction.reservationConfirmationNumber",
-  "request.request_body.staysDetails.propertyCode": "response.response_body.memberAccountEarnTransaction.propertyCode",
-  "request.request_body.staysDetails.paymentTypeIdentifier": "response.response_body.memberAccountEarnTransaction.paymentTypeIdentifier",
-  "request.request_body.staysDetails.totalEligibleRevenue": "response.response_body.memberAccountEarnTransaction.totalEligibleRevenue",
-  "request.request_body.staysDetails.folioNumber": "response.response_body.memberAccountEarnTransaction.folioNumber",
-  "request.request_body.staysDetails.pmsAccountSetupDate": "response.response_body.memberAccountEarnTransaction.pmsAccountSetupDate"
+  "reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
+  "propertyCode": "request.request_body.staysDetails.propertyCode",
+  "paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
+  "totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
+  "folioNumber": "request.request_body.staysDetails.folioNumber",
+  "pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
 };
 
 // src/integration-pair/source.int17.dest.int18.map.rules.ts
@@ -36850,16 +36850,16 @@ var INT17_TO_INT18_FieldPathMap = {
   "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate"
 };
 
-// src/integration-pair/source.int19-1.dest.int16.map.rules.ts
-var INT191_TO_INT16_FieldPathMap = {
-  "resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "acid": "request.acid"
+// src/integration-pair/source.int19-1.dest.int20.map.rules.ts
+var INT191_TO_INT20_FieldPathMap = {
+  "resConfirmationNumber": "reservationConfirmationNumber",
+  "acid": "acid"
 };
 
-// src/integration-pair/source.int19-2.dest.int16.map.rules.ts
-var INT192_TO_INT16_FieldPathMap = {
-  "resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "acid": "request.acid"
+// src/integration-pair/source.int19-2.dest.int20.map.rules.ts
+var INT192_TO_INT20_FieldPathMap = {
+  "resConfirmationNumber": "reservationConfirmationNumber",
+  "acid": "acid"
 };
 
 // src/integration-pair/source.int21.dest.int22.map.rules.ts
@@ -37020,11 +37020,11 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int17" && dest === "int18") {
     return INT17_TO_INT18_FieldPathMap;
   }
-  if (source === "int19-2" && dest === "int16") {
-    return INT192_TO_INT16_FieldPathMap;
+  if (source === "int19-2" && dest === "int20") {
+    return INT192_TO_INT20_FieldPathMap;
   }
-  if (source === "int19-1" && dest === "int16") {
-    return INT191_TO_INT16_FieldPathMap;
+  if (source === "int19-1" && dest === "int20") {
+    return INT191_TO_INT20_FieldPathMap;
   }
   if (source === "int03-2" && dest === "int04") {
     return INT032_TO_INT04_FieldPathMap;
@@ -37041,8 +37041,8 @@ function resolveFieldPathMap(source, dest) {
   if (source === "int04" && dest === "int15-1-1") {
     return INT04_TO_INT1511_FieldPathMap;
   }
-  if (source === "int16" && dest === "int20") {
-    return INT16_TO_INT20_FieldPathMap;
+  if (source === "int20" && dest === "int16") {
+    return INT20_TO_INT16_FieldPathMap;
   }
   if (source === "int27" && dest === "int28") {
     return INT27_TO_INT28_FieldPathMap;
@@ -37782,7 +37782,9 @@ function mergeInt31Files(records) {
   let mainRecord = {};
   let recordSuccess = "1";
   for (const record of records) {
-    const { payload, success } = JSON.parse(record.content || record.parsed.content);
+    const raw = record.content || record.parsed?.content;
+    if (!raw) continue;
+    const { payload, success } = safeParse(raw);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainRecord = record;
       headerPayload = payload;
@@ -37797,20 +37799,35 @@ function mergeInt31Files(records) {
   mainRecord = { ...mainRecord, content };
   return mainRecord;
 }
-function handleDecimals(soxData) {
-  const { request, success, response } = JSON.parse(soxData.content);
-  const { totalOfActiveSegments } = request.request_body;
+function safeParse(str) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return {};
+  }
+}
+function handleDecimals(soxData, intId) {
   const numberOfDecimals = 2;
   const divisor = Math.pow(10, numberOfDecimals);
-  const activeSegments = totalOfActiveSegments.map((segment) => {
-    segment.rateAmount.amtBfTx.value = (segment.rateAmount.amtBfTx.value / divisor).toFixed(numberOfDecimals);
-    segment.rateAmount.bsAmt.value = (segment.rateAmount.bsAmt.value / divisor).toFixed(numberOfDecimals);
-    segment.rateAmount.amtAfTx.value = (segment.rateAmount.amtAfTx.value / divisor).toFixed(numberOfDecimals);
+  const adjustSegmentValues = (segment) => {
+    const keys = ["amtBfTx", "bsAmt", "amtAfTx"];
+    keys.forEach((key) => {
+      segment.rateAmount[key].value = (segment.rateAmount[key].value / divisor).toFixed(numberOfDecimals);
+    });
     return segment;
-  });
-  request.request_body.totalOfActiveSegments = activeSegments;
-  const content = JSON.stringify({ success, response, request });
-  soxData = { ...soxData, content };
+  };
+  const parsedContent = safeParse(soxData.content);
+  if (intId === INTEGRATIONS.INT26) {
+    const { request, success, response } = parsedContent;
+    const { totalOfActiveSegments } = request.request_body;
+    request.request_body.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
+    soxData.content = JSON.stringify({ success, response, request });
+  } else if (intId === INTEGRATIONS.INT30) {
+    const { success, payload } = parsedContent;
+    const { totalOfActiveSegments } = payload?.hotelReservation;
+    payload.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
+    soxData.content = JSON.stringify({ success, payload });
+  }
   return soxData;
 }
 function isObject(v) {
@@ -38064,7 +38081,12 @@ var INTEGRATION_PREPROCESSORS = {
   // INT26: decimals normalization on the selected record
   [INTEGRATIONS.INT26.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    return selected ? handleDecimals(selected) : selected;
+    return selected ? handleDecimals(selected, INTEGRATIONS.INT26) : selected;
+  },
+  // INT30: decimals normalization on the selected record
+  [INTEGRATIONS.INT30.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    return selected ? handleDecimals(selected, INTEGRATIONS.INT30) : selected;
   },
   // INT31: merge multiple logs (header + detail); fallback to most recent
   [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
@@ -38484,4 +38506,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.7c8bcc4.mjs.map
+//# sourceMappingURL=sox-workflow.28a6375.mjs.map
