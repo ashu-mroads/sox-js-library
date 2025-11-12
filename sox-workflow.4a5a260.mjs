@@ -1,4 +1,4 @@
-// sox-workflow build hash: 5c914a9\n
+// sox-workflow build hash: 4a5a260\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38042,19 +38042,19 @@ var INTEGRATION_PREPROCESSORS = {
   // pick record with most recent sox_transaction_timestamp
   __default__: (records) => pickMostRecent(records),
   // INT15.*: filter ACRS confirmationIds on the selected record
-  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected && destId == INTEGRATIONS.INT19_1) selected.content = filterACRS(selected.content);
     return selected;
   },
-  [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected && destId == INTEGRATIONS.INT19_2) selected.content = filterACRS(selected.content);
     return selected;
   },
-  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected && destId == INTEGRATIONS.INT19_3) selected.content = filterACRS(selected.content);
     return selected;
   },
   [INTEGRATIONS.INT11.toLowerCase()]: (records) => {
@@ -38098,7 +38098,7 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
   const destRecords = selectAll(arr, dKey);
   const sPre = INTEGRATION_PREPROCESSORS[sKey] ?? INTEGRATION_PREPROCESSORS.__default__;
   const dPre = INTEGRATION_PREPROCESSORS[dKey] ?? INTEGRATION_PREPROCESSORS.__default__;
-  const sourcePayload = sPre ? sPre(sourceRecords) : void 0;
+  const sourcePayload = sPre ? sPre(sourceRecords, dKey) : void 0;
   const destinationPayload = dPre ? dPre(destRecords) : void 0;
   const transactionId = sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || "";
   try {
@@ -38503,4 +38503,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.5c914a9.mjs.map
+//# sourceMappingURL=sox-workflow.4a5a260.mjs.map
