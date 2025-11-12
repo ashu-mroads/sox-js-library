@@ -1,4 +1,4 @@
-// sox-workflow build hash: 28a6375\n
+// sox-workflow build hash: 16efde7\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37825,7 +37825,7 @@ function handleDecimals(soxData, intId) {
   } else if (intId === INTEGRATIONS.INT30) {
     const { success, payload } = parsedContent;
     const { totalOfActiveSegments } = payload?.hotelReservation;
-    payload.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
+    payload.hotelReservation.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
     soxData.content = JSON.stringify({ success, payload });
   }
   return soxData;
@@ -38506,4 +38506,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.28a6375.mjs.map
+//# sourceMappingURL=sox-workflow.16efde7.mjs.map
