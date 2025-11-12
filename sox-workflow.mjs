@@ -1,4 +1,4 @@
-// sox-workflow build hash: d1c6c32\n
+// sox-workflow build hash: 1f9fc93\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37195,18 +37195,18 @@ var Validators = {
   },
   _flattenToPathValueMap(root) {
     const out = {};
-    const walk = (val, path2) => {
+    const walk = (val, path) => {
       if (val === null || val === void 0) {
-        out[path2] = val;
+        out[path] = val;
         return;
       }
       if (Array.isArray(val)) {
         if (val.length === 0) {
-          out[path2] = val;
+          out[path] = val;
           return;
         }
         val.forEach((item, idx) => {
-          const p = path2 ? `${path2}<array${idx + 1}>` : `<array${idx + 1}>`;
+          const p = path ? `${path}<array${idx + 1}>` : `<array${idx + 1}>`;
           walk(item, p);
         });
         return;
@@ -37214,22 +37214,22 @@ var Validators = {
       if (typeof val === "object") {
         const keys = Object.keys(val);
         if (keys.length === 0) {
-          out[path2] = val;
+          out[path] = val;
           return;
         }
         keys.forEach((k) => {
-          const p = path2 ? `${path2}.${k}` : k;
+          const p = path ? `${path}.${k}` : k;
           walk(val[k], p);
         });
         return;
       }
-      out[path2] = val;
+      out[path] = val;
     };
     walk(root, "");
     return out;
   },
-  _checkAllArrayValuesPresent(payload, path2) {
-    const [variableName, requiredField] = path2.split("<array>.");
+  _checkAllArrayValuesPresent(payload, path) {
+    const [variableName, requiredField] = path.split("<array>.");
     const keys = Object.keys(payload);
     const arrayMap = {};
     keys.forEach((key) => {
@@ -37250,7 +37250,7 @@ var Validators = {
         isValid = false;
       }
     }
-    return { isValid, path: path2 };
+    return { isValid, path };
   },
   validatePayloadWithRules(ruleMap, payload) {
     const errorMessages = [];
@@ -37670,8 +37670,8 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
     const err = r.Errors ?? 0;
     const tot = r["Total Records"] ?? 0;
     const pct = r["Error Percentage"] != null ? Number(r["Error Percentage"]).toFixed(2) : "n/a";
-    const path2 = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
-    return `${path2} |Errors: ${err}/${tot} (${pct}%)`;
+    const path = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
+    return `${path} |Errors: ${err}/${tot} (${pct}%)`;
   };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
@@ -37825,12 +37825,12 @@ function isObject(v) {
 function clone(v) {
   return isObject(v) ? JSON.parse(JSON.stringify(v)) : v;
 }
-function getByPath(obj, path2) {
-  if (!obj || !path2) return void 0;
-  return path2.split(".").reduce((o, k) => o ? o[k] : void 0, obj);
+function getByPath(obj, path) {
+  if (!obj || !path) return void 0;
+  return path.split(".").reduce((o, k) => o ? o[k] : void 0, obj);
 }
-function setByPath(obj, path2, value) {
-  const parts = path2.split(".");
+function setByPath(obj, path, value) {
+  const parts = path.split(".");
   let cur = obj;
   for (let i = 0; i < parts.length - 1; i++) {
     const p = parts[i];
@@ -38031,52 +38031,6 @@ function mergeInt12FolioRecords(records) {
   };
 }
 
-// src/test-utils/fileReaders.ts
-import * as fs from "fs";
-import * as path from "path";
-function safeParseContent(record) {
-  if (!record) return void 0;
-  if (typeof record.content === "string") {
-    try {
-      return JSON.parse(record.content);
-    } catch {
-      return record.content;
-    }
-  }
-  return record?.content;
-}
-function buildPreprocessOutputObject(srcId, destId, sourcePayload, destinationPayload) {
-  return {
-    meta: {
-      sourceIntegration: srcId,
-      destinationIntegration: destId,
-      sourceTimestamp: sourcePayload?.sox_transaction_timestamp,
-      destinationTimestamp: destinationPayload?.sox_transaction_timestamp
-    },
-    source: {
-      raw: sourcePayload,
-      parsedContent: safeParseContent(sourcePayload)
-    },
-    destination: {
-      raw: destinationPayload,
-      parsedContent: safeParseContent(destinationPayload)
-    }
-  };
-}
-function writePreprocessOutput(params) {
-  const { transactionId, srcId, destId, sourcePayload, destinationPayload } = params;
-  const outDir = params.outDir?.trim() || process.env.PREPROCESS_LOG_DIR?.trim() || process.env.BASE_DATA_FOLDER?.trim() || "out";
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
-  }
-  const rawName = params.fileName || `preprocessed_${String(srcId).toLowerCase()}_${String(destId).toLowerCase()}_${transactionId}.json`;
-  const fileName = rawName.replace(/[^\w.\-]/g, "_");
-  const fullPath = path.join(outDir, fileName);
-  const data = buildPreprocessOutputObject(srcId, destId, sourcePayload, destinationPayload);
-  fs.writeFileSync(fullPath, JSON.stringify(data, null, 2), "utf8");
-  return fullPath;
-}
-
 // src/common/preprocessors.ts
 function isObject2(v) {
   return v && typeof v === "object" && !Array.isArray(v);
@@ -38188,18 +38142,6 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
   const sourcePayload = sPre ? sPre(sourceRecords, dKey) : void 0;
   const destinationPayload = dPre ? dPre(destRecords) : void 0;
   const transactionId = sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || "";
-  try {
-    const fullPath = writePreprocessOutput({
-      transactionId,
-      srcId: sKey,
-      destId: dKey,
-      sourcePayload,
-      destinationPayload
-    });
-    console.log("Preprocess output written:", fullPath);
-  } catch (err) {
-    console.error("Failed to write preprocess output:", err);
-  }
   return { sourcePayload, destinationPayload };
 }
 
