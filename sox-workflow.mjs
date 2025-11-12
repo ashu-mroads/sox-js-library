@@ -1,4 +1,4 @@
-// sox-workflow build hash: 16efde7\n
+// sox-workflow build hash: 5c914a9\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34498,10 +34498,9 @@ var INT16FieldRegexMap = {
   "request.acid": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
+  "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
-  "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
-  "request.request_body.staysDetails.pmsAccountSetupDate": { regex: REGEX.DATE_YYYY_MM_DD, optional: true }
+  "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC
 };
 
 // src/integration/int17.field.rules.ts
@@ -34623,8 +34622,7 @@ var INT20FieldRegexMap = {
   "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
-  "folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "pmsAccountSetupDate": { regex: REGEX.DATE_YYYY_MM_DD, optional: true }
+  "folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
 
 // src/integration/int04.field.rules.ts
@@ -36829,14 +36827,13 @@ var INT16_TO_INT17_FieldPathMap = {
 // src/integration-pair/source.int20.dest.int16.map.rules.ts
 var INT20_TO_INT16_FieldPathMap = {
   // LOY-2: acid extracted from request_endpoint by preprocessing in both INT16 and INT20
-  "acid": "request.request_body.acid",
+  "acid": "request.acid",
   // Destination fields in INT20 are sourced from response.response_body.memberAccountEarnTransaction
   "reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
   "propertyCode": "request.request_body.staysDetails.propertyCode",
   "paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
   "totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
-  "folioNumber": "request.request_body.staysDetails.folioNumber",
-  "pmsAccountSetupDate": "request.request_body.staysDetails.pmsAccountSetupDate"
+  "folioNumber": "request.request_body.staysDetails.folioNumber"
 };
 
 // src/integration-pair/source.int17.dest.int18.map.rules.ts
