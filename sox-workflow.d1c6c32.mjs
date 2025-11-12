@@ -1,4 +1,4 @@
-// sox-workflow build hash: f999c61\n
+// sox-workflow build hash: d1c6c32\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -35690,9 +35690,9 @@ var INT11FieldRegexMap = {
   // RES-1: Field Structure & Compare
   "response.response_body.reservationList<array>.confirmationNumber.id": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-2: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.provider": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-3: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.value": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-4: Field Structure & Compare
   "response.response_body.reservationList<array>.reservationStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-5: Field Structure & Compare
@@ -35710,11 +35710,11 @@ var INT11FieldRegexMap = {
   // RES-11: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-12: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.id": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.segments<array>.id": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-13: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.timespan.start": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.segments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-14: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.timespan.end": REGEX.DATE_YYYY_MM_DD,
+  "response.response_body.reservationList<array>.segments<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-15: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.segments<array>.consolidatedSegmentStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-16: Field Structure & Compare (Optional)
@@ -35742,21 +35742,21 @@ var INT11FieldRegexMap = {
 // src/integration/int11-2.field.rules.ts
 var INT112FieldRegexMap = {
   // RES-1: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.id": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.id": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-2: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.provider": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.provider": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-3: Field Structure & Compare
-  "response.response_body.reservationList<array>.confirmationNumber.value": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.confirmationNumber.value": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-4: Field Structure & Compare
   "response.response_body.reservationList<array>.reservationStatusEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-5: Field Structure & Compare
-  "response.response_body.reservationList<array>.sourceCRSEnum": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.sourceCRSEnum": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-6: Field Structure & Compare
   "response.response_body.reservationList<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-7: Field Structure & Compare
   "response.response_body.reservationList<array>.timespan.end": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-8: Field Structure & Compare
-  "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.hotels<array>.propertyCode.code": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-9: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtBfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-10: Field Structure & Compare (Optional)
@@ -35764,7 +35764,7 @@ var INT112FieldRegexMap = {
   // RES-11: Field Structure & Compare (Optional)
   "response.response_body.reservationList<array>.totalOfActiveSegments<array>.rateAmount.amtAfTx.value": { regex: REGEX.NUMBER, optional: true },
   // RES-12: Field Structure & Compare
-  "response.response_body.reservationList<array>.segments<array>.id": REGEX.ALPHANUMERIC,
+  "response.response_body.reservationList<array>.segments<array>.id": { regex: REGEX.ALPHANUMERIC, optional: true },
   // RES-13: Field Structure & Compare
   "response.response_body.reservationList<array>.segments<array>.timespan.start": { regex: REGEX.DATE_YYYY_MM_DD, optional: true },
   // RES-14: Field Structure & Compare
@@ -38590,4 +38590,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.f999c61.mjs.map
+//# sourceMappingURL=sox-workflow.d1c6c32.mjs.map
