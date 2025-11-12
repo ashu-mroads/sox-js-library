@@ -1,4 +1,4 @@
-// sox-workflow build hash: 4a5a260\n
+// sox-workflow build hash: f999c61\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34620,7 +34620,7 @@ var INT20FieldRegexMap = {
   "reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "acid": REGEX.ALPHANUMERIC,
   "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
+  "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": { regex: REGEX.ALPHANUMERIC, optional: true },
   "totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
   "folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
@@ -34945,7 +34945,7 @@ var int121FieldRegexMapData = {
   "response.response_body.data<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // Transaction Data Fields (Folio Transaction Details Fields)
   // Payment Details Fields
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.pmtSeqNum": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -34953,7 +34953,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -34961,7 +34961,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
@@ -34969,7 +34969,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -34977,7 +34977,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -34985,12 +34985,12 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
   // Folio Payment Auth Details Fields
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -34998,7 +34998,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35006,7 +35006,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35014,7 +35014,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -35022,7 +35022,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.directBillNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35030,7 +35030,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.acctReceivableId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35039,7 +35039,7 @@ var int121FieldRegexMapData = {
     }]
   },
   // Folio Transaction Details Fields
-  "response.response_body.data<array>.folioTransactionDetails<array>.folioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35047,7 +35047,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35055,7 +35055,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transType": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transType": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35063,7 +35063,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35071,7 +35071,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35079,7 +35079,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35087,7 +35087,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.propertyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.propertyCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35095,7 +35095,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transactionTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35103,7 +35103,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.businessTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.businessTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35111,7 +35111,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transDesc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transDesc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35119,7 +35119,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transRefNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transRefNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
@@ -35131,7 +35131,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -35139,23 +35139,23 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.value": {
     regex: REGEX.NUMBER,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.currExchngeRate": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.currExchngeRate": {
     regex: REGEX.NUMBER,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transPostingSrc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transPostingSrc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transferFlag": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transferFlag": {
     regex: REGEX.BOOLEAN_STRING,
     optional: true,
     overrides: [{
@@ -35163,7 +35163,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.banquetChkFlag": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkFlag": {
     regex: REGEX.BOOLEAN_STRING,
     optional: true,
     overrides: [{
@@ -35171,7 +35171,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.banquetChkRefNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkRefNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35179,7 +35179,7 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.postedBy.agentId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.postedBy.agentId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35188,11 +35188,11 @@ var int121FieldRegexMapData = {
     }]
   },
   // Transfer Details Fields
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromfolioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromfolioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.transferTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.transferTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35200,11 +35200,11 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromLineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromLineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.id": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.id": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35212,31 +35212,31 @@ var int121FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromPropCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromPropCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToFolioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToFolioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToLineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToLineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.id": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.id": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToPropCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToPropCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   }
@@ -35344,7 +35344,7 @@ var int122FieldRegexMapData = {
   "response.response_body.data<array>.propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   // Transaction Data Fields (Folio Transaction Details Fields)
   // Payment Details Fields
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.pmtSeqNum": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35352,7 +35352,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35360,7 +35360,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": {
     regex: REGEX.NUMBER,
     optional: true,
     overrides: [{
@@ -35368,7 +35368,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -35376,7 +35376,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.paymentTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35384,12 +35384,12 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
   // Folio Payment Auth Details Fields
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35397,7 +35397,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35405,7 +35405,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35413,7 +35413,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -35421,7 +35421,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.directBillNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35429,7 +35429,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransPaymentDetails<array>.acctReceivableId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35438,7 +35438,7 @@ var int122FieldRegexMapData = {
     }]
   },
   // Folio Transaction Details Fields
-  "response.response_body.data<array>.folioTransactionDetails<array>.folioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.folioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35446,7 +35446,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.lineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.lineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35454,7 +35454,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transType": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transType": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35462,7 +35462,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35470,7 +35470,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35478,7 +35478,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35486,7 +35486,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.propertyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.propertyCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35494,7 +35494,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transactionTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35502,7 +35502,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.businessTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.businessTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35510,7 +35510,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transDesc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transDesc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35518,7 +35518,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transRefNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transRefNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
@@ -35530,7 +35530,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true,
     overrides: [{
@@ -35538,23 +35538,23 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.value": {
     regex: REGEX.NUMBER,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.currencyCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.currencyCode": {
     regex: REGEX.CURRENCY_CODE,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.currExchngeRate": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.currExchngeRate": {
     regex: REGEX.NUMBER,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transPostingSrc": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transPostingSrc": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.transferFlag": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transferFlag": {
     regex: REGEX.BOOLEAN_STRING,
     optional: true,
     overrides: [{
@@ -35562,7 +35562,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.banquetChkFlag": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkFlag": {
     regex: REGEX.BOOLEAN_STRING,
     optional: true,
     overrides: [{
@@ -35570,7 +35570,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.banquetChkRefNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkRefNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35578,7 +35578,7 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransactionDetails<array>.postedBy.agentId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.postedBy.agentId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35587,11 +35587,11 @@ var int122FieldRegexMapData = {
     }]
   },
   // Transfer Details Fields
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromfolioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromfolioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.transferTS": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.transferTS": {
     regex: REGEX.DATE_TIME_MS,
     optional: true,
     overrides: [{
@@ -35599,11 +35599,11 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromLineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromLineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.id": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.id": {
     regex: REGEX.ALPHANUMERIC,
     optional: true,
     overrides: [{
@@ -35611,31 +35611,31 @@ var int122FieldRegexMapData = {
       set: { required: true }
     }]
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromPropCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromPropCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToFolioId": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToFolioId": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToLineItemNo": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToLineItemNo": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.id": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.id": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToPropCode": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToPropCode": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   },
-  "response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value": {
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.value": {
     regex: REGEX.ALPHANUMERIC,
     optional: true
   }
@@ -36589,97 +36589,89 @@ var INT112_TO_INT11_FieldPathMap = {
 
 // src/integration-pair/source.int12-2.dest.int12-1.map.rules.ts
 var INT122_TO_INT121_FieldPathMap = {
-  //  Request fields
-  // 'request.request_endpoint': 'request.request_endpoint',
-  // 'request.request_querystring': 'request.request_querystring',
-  // 'request.request_body.folioId': 'request.request_body.folioId',
-  // 'request.request_body.folioTypeCodes<array>': 'request.request_body.folioTypeCodes<array>',
-  // 'request.request_body.propertyCode': 'request.request_body.propertyCode',
-  // 'request.request_body.resState': 'request.request_body.resState',
-  // 'request.request_body.resCloseDate': 'request.request_body.resCloseDate',
-  // 'request.request_body.filterAttributes<array>': 'request.request_body.filterAttributes<array>',
-  // 'request.request_body.nextId': 'request.request_body.nextId',
-  // // Response fields
-  // 'response.http_response_code': 'response.http_response_code',
-  // 'response.response_error_message': 'response.response_error_message',
-  // 'response.response_body.nextId': 'response.response_body.nextId',
-  // // Root Fields
-  // 'response.response_body.data<array>.confirmationIds<array>.id': 'response.response_body.data<array>.confirmationIds<array>.id',
-  // 'response.response_body.data<array>.folioNumber': 'response.response_body.data<array>.folioNumber',
-  // 'response.response_body.data<array>.folioId': 'response.response_body.data<array>.folioId',
-  // 'response.response_body.data<array>.customerId': 'response.response_body.data<array>.customerId',
-  // 'response.response_body.data<array>.balance.value': 'response.response_body.data<array>.balance.value',
-  // 'response.response_body.data<array>.balance.currencyCode': 'response.response_body.data<array>.balance.currencyCode',
-  // 'response.response_body.data<array>.creationTS': 'response.response_body.data<array>.creationTS',
-  // 'response.response_body.data<array>.folioStatus': 'response.response_body.data<array>.folioStatus',
-  // 'response.response_body.data<array>.totalChargeAmt.value': 'response.response_body.data<array>.totalChargeAmt.value',
-  // 'response.response_body.data<array>.totalChargeAmt.currencyCode': 'response.response_body.data<array>.totalChargeAmt.currencyCode',
-  // 'response.response_body.data<array>.totalCreditAmt.value': 'response.response_body.data<array>.totalCreditAmt.value',
-  // 'response.response_body.data<array>.totalCreditAmt.currencyCode': 'response.response_body.data<array>.totalCreditAmt.currencyCode',
-  // 'response.response_body.data<array>.folioType.folioTypeCode': 'response.response_body.data<array>.folioType.folioTypeCode',
-  // 'response.response_body.data<array>.folioWindowId': 'response.response_body.data<array>.folioWindowId',
-  // 'response.response_body.data<array>.groupCode': 'response.response_body.data<array>.groupCode',
-  // 'response.response_body.data<array>.groupCreateTS': 'response.response_body.data<array>.groupCreateTS',
-  // 'response.response_body.data<array>.invoiceFlag': 'response.response_body.data<array>.invoiceFlag',
-  // 'response.response_body.data<array>.invoiceNumber': 'response.response_body.data<array>.invoiceNumber',
-  // 'response.response_body.data<array>.propertyCode': 'response.response_body.data<array>.propertyCode',
-  // // Folio Transaction Details Fields
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.folioId': 'response.response_body.data<array>.folioTransactionDetails<array>.folioId',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.lineItemNo': 'response.response_body.data<array>.folioTransactionDetails<array>.lineItemNo',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transType': 'response.response_body.data<array>.folioTransactionDetails<array>.transType',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode': 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc': 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent': 'response.response_body.data<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.propertyCode': 'response.response_body.data<array>.folioTransactionDetails<array>.propertyCode',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transactionTS': 'response.response_body.data<array>.folioTransactionDetails<array>.transactionTS',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.businessTS': 'response.response_body.data<array>.folioTransactionDetails<array>.businessTS',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transDesc': 'response.response_body.data<array>.folioTransactionDetails<array>.transDesc',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transRefNo': 'response.response_body.data<array>.folioTransactionDetails<array>.transRefNo',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.value': 'response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.value',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.currencyCode': 'response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.currencyCode',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.value': 'response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.value',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.currencyCode': 'response.response_body.data<array>.folioTransactionDetails<array>.transForexAmt.currencyCode',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.currExchngeRate': 'response.response_body.data<array>.folioTransactionDetails<array>.currExchngeRate',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transPostingSrc': 'response.response_body.data<array>.folioTransactionDetails<array>.transPostingSrc',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.transferFlag': 'response.response_body.data<array>.folioTransactionDetails<array>.transferFlag',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.banquetChkFlag': 'response.response_body.data<array>.folioTransactionDetails<array>.banquetChkFlag',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.banquetChkRefNo': 'response.response_body.data<array>.folioTransactionDetails<array>.banquetChkRefNo',
-  // 'response.response_body.data<array>.folioTransactionDetails<array>.postedBy.agentId': 'response.response_body.data<array>.folioTransactionDetails<array>.postedBy.agentId',
-  // // Payment details fields
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.pmtSeqNum': 'response.response_body.data<array>.folioTransPaymentDetails<array>.pmtSeqNum',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.lineItemNo': 'response.response_body.data<array>.folioTransPaymentDetails<array>.lineItemNo',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.value': 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.value',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode': 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentTS': 'response.response_body.data<array>.folioTransPaymentDetails<array>.paymentTS',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId': 'response.response_body.data<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.pmtInstType': 'response.response_body.data<array>.folioTransPaymentDetails<array>.pmtInstType',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.ccTypeCode': 'response.response_body.data<array>.folioTransPaymentDetails<array>.ccTypeCode',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.cardAcctNo': 'response.response_body.data<array>.folioTransPaymentDetails<array>.cardAcctNo',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.expireDate': 'response.response_body.data<array>.folioTransPaymentDetails<array>.expireDate',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.voucher.seriesCode': 'response.response_body.data<array>.folioTransPaymentDetails<array>.voucher',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId': 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo': 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value': 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode': 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authCode': 'response.response_body.data<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authCode',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.directBillNo': 'response.response_body.data<array>.folioTransPaymentDetails<array>.directBillNo',
-  // 'response.response_body.data<array>.folioTransPaymentDetails<array>.acctReceivableId': 'response.response_body.data<array>.folioTransPaymentDetails<array>.acctReceivableId',
-  // // Transfer details fields
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromfolioId': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromfolioId',
-  // 'response.response_body.data<array>.folioTransferDetails.transferTS': 'response.response_body.data<array>.folioTransferDetails.transferTS',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromLineItemNo': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromLineItemNo',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.id': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.id',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromPropCode': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromPropCode',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToFolioId': 'response.response_body.data<array>.folioTransferDetails.trnsfrToFolioId',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToLineItemNo': 'response.response_body.data<array>.folioTransferDetails.trnsfrToLineItemNo',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.id': 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.id',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToPropCode': 'response.response_body.data<array>.folioTransferDetails.trnsfrToPropCode',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromRoomNo': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromRoomNo',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrByUser.agentId': 'response.response_body.data<array>.folioTransferDetails.trnsfrByUser.agentId',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.provider': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.provider',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value': 'response.response_body.data<array>.folioTransferDetails.trnsfrFromConfIds.value',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.provider': 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.provider',
-  // 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value': 'response.response_body.data<array>.folioTransferDetails.trnsfrToConfIds.value'
+  // Request fields
+  "request.request_endpoint": "request.request_endpoint",
+  "request.request_querystring": "request.request_querystring",
+  "request.request_body.folioId": "request.request_body.folioId",
+  "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
+  "request.request_body.propertyCode": "request.request_body.propertyCode",
+  "request.request_body.resState": "request.request_body.resState",
+  "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
+  "request.request_body.resCloseDate": "request.request_body.resCloseDate",
+  "request.request_body.nextId": "request.request_body.nextId",
+  // Response fields
+  "response.http_response_code": "response.http_response_code",
+  "response.response_error_message": "response.response_error_message",
+  "response.response_body.nextId": "response.response_body.nextId",
+  // Root fields
+  "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
+  "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
+  "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
+  "response.response_body.data<array>.customerId": "response.response_body.data<array>.customerId",
+  "response.response_body.data<array>.balance.value": "response.response_body.data<array>.balance.value",
+  "response.response_body.data<array>.balance.currencyCode": "response.response_body.data<array>.balance.currencyCode",
+  "response.response_body.data<array>.creationTS": "response.response_body.data<array>.creationTS",
+  "response.response_body.data<array>.folioStatus": "response.response_body.data<array>.folioStatus",
+  "response.response_body.data<array>.totalChargeAmt.value": "response.response_body.data<array>.totalChargeAmt.value",
+  "response.response_body.data<array>.totalChargeAmt.currencyCode": "response.response_body.data<array>.totalChargeAmt.currencyCode",
+  "response.response_body.data<array>.totalCreditAmt.value": "response.response_body.data<array>.totalCreditAmt.value",
+  "response.response_body.data<array>.totalCreditAmt.currencyCode": "response.response_body.data<array>.totalCreditAmt.currencyCode",
+  "response.response_body.data<array>.folioType.folioTypeCode": "response.response_body.data<array>.folioType.folioTypeCode",
+  "response.response_body.data<array>.folioWindowId": "response.response_body.data<array>.folioWindowId",
+  "response.response_body.data<array>.groupCode": "response.response_body.data<array>.groupCode",
+  "response.response_body.data<array>.groupCreateTS": "response.response_body.data<array>.groupCreateTS",
+  "response.response_body.data<array>.invoiceFlag": "response.response_body.data<array>.invoiceFlag",
+  "response.response_body.data<array>.invoiceNumber": "response.response_body.data<array>.invoiceNumber",
+  "response.response_body.data<array>.propertyCode": "response.response_body.data<array>.propertyCode",
+  // Payment details fields
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmtSeqNum",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.lineItemNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.value",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentAmt.currencyCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.paymentTS",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.loyaltyRedeemTransId",
+  // Payment auth details fields
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.folioId",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.lineItemNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.value",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.folioPaymentAuthDetails<array>.authAmt.currencyCode",
+  // Direct bill fields
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.directBillNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransPaymentDetails<array>.acctReceivableId",
+  // Folio transaction details fields
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.folioId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.folioId",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.lineItemNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.lineItemNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transType": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transType",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeDesc",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.revenueType.revenueTypeCodeParent",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.propertyCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.propertyCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionTS": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionTS",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.businessTS": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.businessTS",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transDesc": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transDesc",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transRefNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transRefNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.value": "response.response_body.data<array>.folioTransactionDetails<array>.transactionAmt.value",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionAmt.currencyCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transactionAmt.currencyCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.value": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.value",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.currencyCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transForexAmt.currencyCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.currExchngeRate": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.currExchngeRate",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transPostingSrc": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transPostingSrc",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transferFlag": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.transferFlag",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkFlag": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkFlag",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkRefNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.banquetChkRefNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.postedBy.agentId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransactionDetails<array>.postedBy.agentId",
+  // Transfer details fields
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromfolioId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromfolioId",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.transferTS": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.transferTS",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromLineItemNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromLineItemNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.id": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.id",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromPropCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromPropCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToFolioId": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToFolioId",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToLineItemNo": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToLineItemNo",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.id": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.id",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToPropCode": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToPropCode",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.value": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrFromConfIds.value",
+  "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.value": "response.response_body.data<array>.folioTransactionDetails<array>.folioTransferDetails.trnsfrToConfIds.value"
 };
 
 // src/integration-pair/source.int15-1-1.dest.int19-1.map.rules.ts
@@ -36831,7 +36823,7 @@ var INT20_TO_INT16_FieldPathMap = {
   // Destination fields in INT20 are sourced from response.response_body.memberAccountEarnTransaction
   "reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
   "propertyCode": "request.request_body.staysDetails.propertyCode",
-  "paymentTypeIdentifier": "request.request_body.staysDetails.paymentTypeIdentifier",
+  "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": "request.request_body.staysDetails.paymentTypeIdentifier",
   "totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
   "folioNumber": "request.request_body.staysDetails.folioNumber"
 };
@@ -37945,6 +37937,99 @@ function mergeJsonData(records, options = {}) {
   }
   return firstRecordRef ? { ...firstRecordRef, content: JSON.stringify(merged) } : merged;
 }
+function mergeInt12FolioRecords(records) {
+  const folioMap = {};
+  let successFlag = "1";
+  let baseRecord = records?.[0] || {};
+  let headerReq;
+  let headerRespCode;
+  let headerRespErr;
+  let headerNextId;
+  let headerPagination;
+  const tryExtractRR = (obj) => {
+    const req = obj?.request;
+    const resp = obj?.response;
+    const body = resp?.response_body;
+    const data = body?.data;
+    const endpoint = req?.request_endpoint;
+    const isHeaders = typeof endpoint === "string" && endpoint.toLowerCase().includes("/folios/fetch-headers/query");
+    const isTransactions = typeof endpoint === "string" && endpoint.toLowerCase().includes("/folios/fetch-transactions/query");
+    return { req, resp, body, data, isHeaders, isTransactions };
+  };
+  const extractPayload = (rec) => {
+    const raw = rec?.content || rec?.parsed?.content || rec;
+    if (typeof raw === "string") {
+      return safeParse(raw);
+    }
+    return raw;
+  };
+  for (const rec of records ?? []) {
+    const obj = extractPayload(rec);
+    if (!obj || typeof obj !== "object") continue;
+    if (obj.success === "0") successFlag = "0";
+    const { req, resp, body, data, isHeaders, isTransactions } = tryExtractRR(obj);
+    if (isHeaders && headerReq === void 0) {
+      headerReq = req;
+      headerRespCode = resp?.http_response_code ?? "200";
+      headerRespErr = resp?.response_error_message ?? "";
+      headerNextId = body?.nextId ?? "0";
+      headerPagination = body?.pagination ?? null;
+    }
+    if (Array.isArray(data) && (isHeaders || isTransactions)) {
+      for (const item of data) {
+        const folioId2 = item?.folioId;
+        if (!folioId2) continue;
+        const bucket = folioMap[folioId2] || { header: void 0, transactions: [] };
+        if (isHeaders) {
+          bucket.header = bucket.header ? { ...bucket.header, ...item } : item;
+        } else if (isTransactions) {
+          bucket.transactions.push(item);
+        }
+        folioMap[folioId2] = bucket;
+      }
+      continue;
+    }
+    const folioId = obj?.folioId;
+    if (folioId) {
+      const isTxn = !!obj?.lineItemNo;
+      const bucket = folioMap[folioId] || { header: void 0, transactions: [] };
+      if (isTxn) bucket.transactions.push(obj);
+      else bucket.header = bucket.header ? { ...bucket.header, ...obj } : obj;
+      folioMap[folioId] = bucket;
+    }
+  }
+  const mergedData = Object.entries(folioMap).map(([folioId, { header, transactions }]) => {
+    const safeHeader = header || { folioId };
+    const out = { ...safeHeader };
+    const detailsKey = "folioTransactionDetails";
+    const existing = out[detailsKey];
+    out[detailsKey] = Array.isArray(existing) ? [...existing, ...transactions] : transactions;
+    return out;
+  });
+  const requestOut = headerReq ?? {
+    request_endpoint: "HTTP POST /folios/fetch-headers/query",
+    request_querystring: "",
+    request_body: {}
+  };
+  const responseOut = {
+    http_response_code: headerRespCode ?? "200",
+    response_error_message: headerRespErr ?? "",
+    response_body: {
+      nextId: headerNextId ?? "0",
+      pagination: headerPagination ?? null,
+      data: mergedData
+    }
+  };
+  const contentObj = {
+    success: successFlag,
+    request: requestOut,
+    response: responseOut
+  };
+  return {
+    ...baseRecord,
+    content: JSON.stringify(contentObj)
+  };
+}
 
 // src/test-utils/fileReaders.ts
 import * as fs from "fs";
@@ -38057,6 +38142,7 @@ var INTEGRATION_PREPROCESSORS = {
     if (selected && destId == INTEGRATIONS.INT19_3) selected.content = filterACRS(selected.content);
     return selected;
   },
+  // INT11.*: merge reservationList JSON array, sorted by confirmationNumber.value
   [INTEGRATIONS.INT11.toLowerCase()]: (records) => {
     return mergeJsonData(records, {
       selectPath: "response.response_body.reservationList",
@@ -38069,11 +38155,12 @@ var INTEGRATION_PREPROCESSORS = {
       sortby: "confirmationNumber.value"
     });
   },
+  // NEW: Merge folio headers + transaction details for INT12_1 by folioId
+  [INTEGRATIONS.INT12_1.toLowerCase()]: (records) => {
+    return mergeInt12FolioRecords(records);
+  },
   [INTEGRATIONS.INT12_2.toLowerCase()]: (records) => {
-    return mergeJsonData(records, {
-      selectPath: "response.response_body.reservationList",
-      sortby: "confirmationNumber.value"
-    });
+    return mergeInt12FolioRecords(records);
   },
   // INT26: decimals normalization on the selected record
   [INTEGRATIONS.INT26.toLowerCase()]: (records) => {
@@ -38503,4 +38590,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.4a5a260.mjs.map
+//# sourceMappingURL=sox-workflow.f999c61.mjs.map
