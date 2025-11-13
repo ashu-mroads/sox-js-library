@@ -1,4 +1,4 @@
-// sox-workflow build hash: 1f9fc93\n
+// sox-workflow build hash: 0c0e212\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36590,8 +36590,6 @@ var INT112_TO_INT11_FieldPathMap = {
 // src/integration-pair/source.int12-2.dest.int12-1.map.rules.ts
 var INT122_TO_INT121_FieldPathMap = {
   // Request fields
-  "request.request_endpoint": "request.request_endpoint",
-  "request.request_querystring": "request.request_querystring",
   "request.request_body.folioId": "request.request_body.folioId",
   "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
   "request.request_body.propertyCode": "request.request_body.propertyCode",
