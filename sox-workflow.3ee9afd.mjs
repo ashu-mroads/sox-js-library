@@ -1,4 +1,4 @@
-// sox-workflow build hash: 0c0e212\n
+// sox-workflow build hash: 3ee9afd\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -34617,7 +34617,7 @@ var INT193FieldRegexMap = {
 
 // src/integration/int20.field.rules.ts
 var INT20FieldRegexMap = {
-  "reservationConfirmationNumber": REGEX.ALPHANUMERIC,
+  "resConfirmationNumber": REGEX.ALPHANUMERIC,
   "acid": REGEX.ALPHANUMERIC,
   "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": { regex: REGEX.ALPHANUMERIC, optional: true },
@@ -36819,7 +36819,7 @@ var INT20_TO_INT16_FieldPathMap = {
   // LOY-2: acid extracted from request_endpoint by preprocessing in both INT16 and INT20
   "acid": "request.acid",
   // Destination fields in INT20 are sourced from response.response_body.memberAccountEarnTransaction
-  "reservationConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
+  "resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
   "propertyCode": "request.request_body.staysDetails.propertyCode",
   "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": "request.request_body.staysDetails.paymentTypeIdentifier",
   "totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
@@ -36839,13 +36839,13 @@ var INT17_TO_INT18_FieldPathMap = {
 
 // src/integration-pair/source.int19-1.dest.int20.map.rules.ts
 var INT191_TO_INT20_FieldPathMap = {
-  "resConfirmationNumber": "reservationConfirmationNumber",
+  "resConfirmationNumber": "resConfirmationNumber",
   "acid": "acid"
 };
 
 // src/integration-pair/source.int19-2.dest.int20.map.rules.ts
 var INT192_TO_INT20_FieldPathMap = {
-  "resConfirmationNumber": "reservationConfirmationNumber",
+  "resConfirmationNumber": "resConfirmationNumber",
   "acid": "acid"
 };
 
@@ -38530,4 +38530,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.0c0e212.mjs.map
+//# sourceMappingURL=sox-workflow.3ee9afd.mjs.map
