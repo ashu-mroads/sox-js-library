@@ -1,4 +1,4 @@
-// sox-workflow build hash: 3ee9afd\n
+// sox-workflow build hash: 0b36274\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37067,6 +37067,82 @@ function resolveFieldPathMap(source, dest) {
   return null;
 }
 
+// src/common/integrations.ts
+var INTEGRATIONS = {
+  INT03_1: "INT03-1",
+  INT03_2: "INT03-2",
+  INT04: "INT04",
+  INT31: "INT31",
+  INT11: "INT11",
+  INT11_2: "INT11-2",
+  INT12_2: "INT12-2",
+  INT12_1: "INT12-1",
+  INT15_1_1: "INT15-1-1",
+  INT15_2_1: "INT15-2-1",
+  INT15_2_2: "INT15-2-2",
+  INT15_3_2: "INT15-3-2",
+  INT15_3_1: "INT15-3-1",
+  INT27: "INT27",
+  INT28: "INT28",
+  INT17: "INT17",
+  INT18: "INT18",
+  INT29: "INT29",
+  INT25: "INT25",
+  INT26: "INT26",
+  INT30: "INT30",
+  INT32_2: "INT32-2",
+  INT32_1: "INT32-1",
+  INT33_2: "INT33-2",
+  INT33_1: "INT33-1",
+  INT24_1: "INT24-1",
+  INT21: "INT21",
+  INT22: "INT22",
+  INT19_1: "INT19-1",
+  INT19_2: "INT19-2",
+  INT19_3: "INT19-3",
+  INT16: "INT16",
+  INT20: "INT20",
+  INT08_1: "INT08-1",
+  INT09_1: "INT09-1",
+  INT10_1: "INT10-1",
+  NA: "N/A"
+};
+var SingleIntegrations = [
+  { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA },
+  { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA },
+  { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA }
+];
+var IntegrationPairs = [
+  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04 },
+  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04 },
+  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31 },
+  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11 },
+  { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1 },
+  { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1 },
+  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2 },
+  { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1 },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28 },
+  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18 },
+  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29 },
+  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26 },
+  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30 },
+  { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1 },
+  { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1 },
+  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1 },
+  { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22 },
+  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20 },
+  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20 },
+  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20 },
+  { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17 },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16 },
+  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1 },
+  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2 },
+  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
+];
+var IntegrationResponseCodes = {
+  SUCCESS: ["200", "200 OK"]
+};
+
 // src/common/validators.ts
 var Validators = {
   isEmpty(value) {
@@ -37076,6 +37152,9 @@ var Validators = {
     if (typeof value === "object") return Object.keys(value).length === 0;
     return false;
   },
+  isSuccessCode(value) {
+    return typeof value === "string" && IntegrationResponseCodes.SUCCESS.includes(value);
+  },
   /**
    * Case-insensitive & structural equality used by mapping comparison.
    * - Primitives compared directly
@@ -37084,6 +37163,9 @@ var Validators = {
    */
   _areValuesEqual(a, b) {
     if (a === b) return true;
+    if (this.isSuccessCode(a) && this.isSuccessCode(b)) {
+      return true;
+    }
     const toFixed2IfNumeric = (v) => {
       if (typeof v === "number" && Number.isFinite(v)) {
         return v.toFixed(2);
@@ -37503,79 +37585,6 @@ var Validators = {
   }
 };
 
-// src/common/integrations.ts
-var INTEGRATIONS = {
-  INT03_1: "INT03-1",
-  INT03_2: "INT03-2",
-  INT04: "INT04",
-  INT31: "INT31",
-  INT11: "INT11",
-  INT11_2: "INT11-2",
-  INT12_2: "INT12-2",
-  INT12_1: "INT12-1",
-  INT15_1_1: "INT15-1-1",
-  INT15_2_1: "INT15-2-1",
-  INT15_2_2: "INT15-2-2",
-  INT15_3_2: "INT15-3-2",
-  INT15_3_1: "INT15-3-1",
-  INT27: "INT27",
-  INT28: "INT28",
-  INT17: "INT17",
-  INT18: "INT18",
-  INT29: "INT29",
-  INT25: "INT25",
-  INT26: "INT26",
-  INT30: "INT30",
-  INT32_2: "INT32-2",
-  INT32_1: "INT32-1",
-  INT33_2: "INT33-2",
-  INT33_1: "INT33-1",
-  INT24_1: "INT24-1",
-  INT21: "INT21",
-  INT22: "INT22",
-  INT19_1: "INT19-1",
-  INT19_2: "INT19-2",
-  INT19_3: "INT19-3",
-  INT16: "INT16",
-  INT20: "INT20",
-  INT08_1: "INT08-1",
-  INT09_1: "INT09-1",
-  INT10_1: "INT10-1",
-  NA: "N/A"
-};
-var SingleIntegrations = [
-  { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA },
-  { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA },
-  { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA }
-];
-var IntegrationPairs = [
-  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04 },
-  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04 },
-  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31 },
-  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11 },
-  { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1 },
-  { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1 },
-  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2 },
-  { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1 },
-  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28 },
-  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18 },
-  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29 },
-  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26 },
-  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30 },
-  { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1 },
-  { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1 },
-  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1 },
-  { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22 },
-  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20 },
-  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20 },
-  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20 },
-  { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17 },
-  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16 },
-  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1 },
-  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2 },
-  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
-];
-
 // src/reporting/anomaly-alarmdoc-data.ts
 function getReportAlarmData(dtResult, dynatraceDashboardUrl) {
   const recordsRaw = Array.isArray(dtResult?.records) ? dtResult.records : [];
@@ -37935,99 +37944,6 @@ function mergeJsonData(records, options = {}) {
   }
   return firstRecordRef ? { ...firstRecordRef, content: JSON.stringify(merged) } : merged;
 }
-function mergeInt12FolioRecords(records) {
-  const folioMap = {};
-  let successFlag = "1";
-  let baseRecord = records?.[0] || {};
-  let headerReq;
-  let headerRespCode;
-  let headerRespErr;
-  let headerNextId;
-  let headerPagination;
-  const tryExtractRR = (obj) => {
-    const req = obj?.request;
-    const resp = obj?.response;
-    const body = resp?.response_body;
-    const data = body?.data;
-    const endpoint = req?.request_endpoint;
-    const isHeaders = typeof endpoint === "string" && endpoint.toLowerCase().includes("/folios/fetch-headers/query");
-    const isTransactions = typeof endpoint === "string" && endpoint.toLowerCase().includes("/folios/fetch-transactions/query");
-    return { req, resp, body, data, isHeaders, isTransactions };
-  };
-  const extractPayload = (rec) => {
-    const raw = rec?.content || rec?.parsed?.content || rec;
-    if (typeof raw === "string") {
-      return safeParse(raw);
-    }
-    return raw;
-  };
-  for (const rec of records ?? []) {
-    const obj = extractPayload(rec);
-    if (!obj || typeof obj !== "object") continue;
-    if (obj.success === "0") successFlag = "0";
-    const { req, resp, body, data, isHeaders, isTransactions } = tryExtractRR(obj);
-    if (isHeaders && headerReq === void 0) {
-      headerReq = req;
-      headerRespCode = resp?.http_response_code ?? "200";
-      headerRespErr = resp?.response_error_message ?? "";
-      headerNextId = body?.nextId ?? "0";
-      headerPagination = body?.pagination ?? null;
-    }
-    if (Array.isArray(data) && (isHeaders || isTransactions)) {
-      for (const item of data) {
-        const folioId2 = item?.folioId;
-        if (!folioId2) continue;
-        const bucket = folioMap[folioId2] || { header: void 0, transactions: [] };
-        if (isHeaders) {
-          bucket.header = bucket.header ? { ...bucket.header, ...item } : item;
-        } else if (isTransactions) {
-          bucket.transactions.push(item);
-        }
-        folioMap[folioId2] = bucket;
-      }
-      continue;
-    }
-    const folioId = obj?.folioId;
-    if (folioId) {
-      const isTxn = !!obj?.lineItemNo;
-      const bucket = folioMap[folioId] || { header: void 0, transactions: [] };
-      if (isTxn) bucket.transactions.push(obj);
-      else bucket.header = bucket.header ? { ...bucket.header, ...obj } : obj;
-      folioMap[folioId] = bucket;
-    }
-  }
-  const mergedData = Object.entries(folioMap).map(([folioId, { header, transactions }]) => {
-    const safeHeader = header || { folioId };
-    const out = { ...safeHeader };
-    const detailsKey = "folioTransactionDetails";
-    const existing = out[detailsKey];
-    out[detailsKey] = Array.isArray(existing) ? [...existing, ...transactions] : transactions;
-    return out;
-  });
-  const requestOut = headerReq ?? {
-    request_endpoint: "HTTP POST /folios/fetch-headers/query",
-    request_querystring: "",
-    request_body: {}
-  };
-  const responseOut = {
-    http_response_code: headerRespCode ?? "200",
-    response_error_message: headerRespErr ?? "",
-    response_body: {
-      nextId: headerNextId ?? "0",
-      pagination: headerPagination ?? null,
-      data: mergedData
-    }
-  };
-  const contentObj = {
-    success: successFlag,
-    request: requestOut,
-    response: responseOut
-  };
-  return {
-    ...baseRecord,
-    content: JSON.stringify(contentObj)
-  };
-}
 
 // src/common/preprocessors.ts
 function isObject2(v) {
@@ -38108,12 +38024,12 @@ var INTEGRATION_PREPROCESSORS = {
     });
   },
   // NEW: Merge folio headers + transaction details for INT12_1 by folioId
-  [INTEGRATIONS.INT12_1.toLowerCase()]: (records) => {
-    return mergeInt12FolioRecords(records);
-  },
-  [INTEGRATIONS.INT12_2.toLowerCase()]: (records) => {
-    return mergeInt12FolioRecords(records);
-  },
+  // [INTEGRATIONS.INT12_1.toLowerCase()]: (records) => {
+  //   return mergeInt12FolioRecords(records);
+  // },
+  // [INTEGRATIONS.INT12_2.toLowerCase()]: (records) => {
+  //   return mergeInt12FolioRecords(records);
+  // },
   // INT26: decimals normalization on the selected record
   [INTEGRATIONS.INT26.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
@@ -38331,6 +38247,7 @@ function validateIntegrationPair(params) {
     }
   }
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
+  console.log("Validation isValid:", { isValid, errors });
   return {
     sourceIntegrationId: srcId,
     destinationIntegrationId: destId,
@@ -38530,4 +38447,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.3ee9afd.mjs.map
+//# sourceMappingURL=sox-workflow.0b36274.mjs.map
