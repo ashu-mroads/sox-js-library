@@ -1,4 +1,4 @@
-// sox-workflow build hash: 0b36274\n
+// sox-workflow build hash: fa91535\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37140,7 +37140,7 @@ var IntegrationPairs = [
   { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
 ];
 var IntegrationResponseCodes = {
-  SUCCESS: ["200", "200 OK"]
+  SUCCESS: ["200", "200 OK", "204 NO_CONTENT"]
 };
 
 // src/common/validators.ts
@@ -38447,4 +38447,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.0b36274.mjs.map
+//# sourceMappingURL=sox-workflow.fa91535.mjs.map
