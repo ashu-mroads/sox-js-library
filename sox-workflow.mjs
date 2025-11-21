@@ -1,4 +1,4 @@
-// sox-workflow build hash: fa91535\n
+// sox-workflow build hash: ef3fc3b\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -7,6 +7,10 @@ var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -33,7 +37,7 @@ var require_cjs = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -47,7 +51,7 @@ var require_cjs = __commonJS({
     };
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
-    __export(src_exports, {
+    __export2(src_exports, {
       ErrorType: () => ErrorType,
       addGlobalErrorSerializer: () => addGlobalErrorSerializer,
       isGlobalErrorSerializerSupported: () => isGlobalErrorSerializerSupported
@@ -84,7 +88,7 @@ var require_cjs2 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -98,7 +102,7 @@ var require_cjs2 = __commonJS({
     };
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
-    __export(src_exports, {
+    __export2(src_exports, {
       PlatformAbortController: () => AbortController,
       PlatformAbortSignal: () => AbortSignal,
       PlatformBaseError: () => BaseError,
@@ -922,7 +926,7 @@ var require_cjs3 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -936,7 +940,7 @@ var require_cjs3 = __commonJS({
     };
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
-    __export(src_exports, {
+    __export2(src_exports, {
       ApiClientError: () => ApiClientError,
       ApiGatewayError: () => ApiGatewayError,
       ClientRequestError: () => ClientRequestError,
@@ -1023,7 +1027,7 @@ var require_cjs4 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -1037,7 +1041,7 @@ var require_cjs4 = __commonJS({
     };
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
-    __export(src_exports, {
+    __export2(src_exports, {
       Encoding: () => Encoding,
       apiGatewayErrorsHandler: () => apiGatewayErrorsHandler,
       getErrorMessage: () => getErrorMessage,
@@ -1336,7 +1340,7 @@ var require_cjs5 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -1350,7 +1354,7 @@ var require_cjs5 = __commonJS({
     };
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var src_exports = {};
-    __export(src_exports, {
+    __export2(src_exports, {
       AbstractCredentialsResponseElementScope: () => AbstractCredentialsResponseElementScope,
       AbstractCredentialsResponseElementType: () => AbstractCredentialsResponseElementType,
       AbstractSloAlertDtoAlertType: () => AbstractSloAlertDtoAlertType,
@@ -1613,7 +1617,7 @@ var require_cjs5 = __commonJS({
       activeGatesClient: () => activeGatesClient,
       attacksClient: () => attacksClient,
       auditLogsClient: () => auditLogsClient,
-      businessEventsClient: () => businessEventsClient2,
+      businessEventsClient: () => businessEventsClient3,
       credentialVaultClient: () => credentialVaultClient,
       davisSecurityAdvisorClient: () => davisSecurityAdvisorClient,
       eventsClient: () => eventsClient,
@@ -7449,7 +7453,7 @@ var require_cjs5 = __commonJS({
         }
       }
     };
-    var businessEventsClient2 = /* @__PURE__ */ new BusinessEventsClient(import_http_client11.httpClient);
+    var businessEventsClient3 = /* @__PURE__ */ new BusinessEventsClient(import_http_client11.httpClient);
     var import_http_client12 = require_cjs2();
     var import_shared_client_utils12 = require_cjs4();
     var import_shared_errors14 = require_cjs3();
@@ -34131,6 +34135,1956 @@ var require_cjs5 = __commonJS({
   }
 });
 
+// node_modules/@dynatrace-sdk/client-query/cjs/index.js
+var require_cjs6 = __commonJS({
+  "node_modules/@dynatrace-sdk/client-query/cjs/index.js"(exports, module) {
+    "use strict";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var src_exports = {};
+    __export2(src_exports, {
+      ApiClientError: () => import_shared_errors5.ApiClientError,
+      ApiGatewayError: () => import_shared_errors5.ApiGatewayError,
+      ClientRequestError: () => import_shared_errors5.ClientRequestError,
+      DQLNodeNodeType: () => DQLNodeNodeType,
+      ErrorEnvelopeError: () => ErrorEnvelopeError,
+      FieldTypeType: () => FieldTypeType,
+      InsufficientPermission: () => InsufficientPermission,
+      InvalidResponseError: () => import_shared_errors5.InvalidResponseError,
+      QueryAssistanceClient: () => QueryAssistanceClient,
+      QueryExecutionClient: () => QueryExecutionClient,
+      QueryState: () => QueryState,
+      TokenType: () => TokenType,
+      isApiClientError: () => import_shared_errors5.isApiClientError,
+      isApiGatewayError: () => import_shared_errors5.isApiGatewayError,
+      isClientRequestError: () => import_shared_errors5.isClientRequestError,
+      isErrorEnvelopeError: () => isErrorEnvelopeError,
+      isInsufficientPermission: () => isInsufficientPermission,
+      isInvalidResponseError: () => import_shared_errors5.isInvalidResponseError,
+      queryAssistanceClient: () => queryAssistanceClient,
+      queryExecutionClient: () => queryExecutionClient2
+    });
+    module.exports = __toCommonJS(src_exports);
+    var import_http_client = require_cjs2();
+    var import_shared_errors3 = require_cjs3();
+    var import_shared_errors = require_cjs3();
+    async function apiGatewayErrorsHandler(response) {
+      if (response.headers?.["dynatrace-response-source"] === "API Gateway") {
+        const responseBody = await response.body("json");
+        throw new import_shared_errors.ApiGatewayError(response, responseBody);
+      }
+    }
+    var import_shared_errors2 = require_cjs3();
+    var ErrorEnvelopeError = class extends import_shared_errors2.ClientRequestError {
+      isErrorEnvelopeError = true;
+    };
+    function isErrorEnvelopeError(e) {
+      return e?.isApiClientError === true && e?.isClientRequestError === true && e?.isErrorEnvelopeError === true && e instanceof Error;
+    }
+    function serializeData(data) {
+      try {
+        return JSON.stringify(data);
+      } catch (e) {
+        return String(data);
+      }
+    }
+    function getMessagesFromErrorDetails(details) {
+      const messages = [];
+      Object.entries(details).forEach(([name, data]) => {
+        if (!data)
+          return;
+        const serializedData = serializeData(data);
+        switch (name) {
+          case "missingScopes":
+            messages.push(`Missing scopes: ${serializedData}`);
+            break;
+          default:
+            messages.push(`${name}: ${serializedData}`);
+        }
+      }, []);
+      return messages;
+    }
+    function getErrorMessage(errorBody, defaultMessage) {
+      const error = errorBody;
+      const msg = error?.error?.message || defaultMessage;
+      const details = error?.error?.details || {};
+      return [msg, ...getMessagesFromErrorDetails(details)].join(". ");
+    }
+    var defaultRuleConfig = {
+      force: false,
+      datetime: false
+    };
+    function mergeKeys(key1, key2) {
+      if (!key1)
+        return key2;
+      if (!key2)
+        return key1;
+      return `${key1}.${key2}`;
+    }
+    function matchKey(key, rules, cache) {
+      if (cache.has(key)) {
+        return cache.get(key);
+      }
+      for (const rule of rules) {
+        const pattern = Array.isArray(rule) ? rule[0] : rule;
+        const config = Array.isArray(rule) ? rule[1] : defaultRuleConfig;
+        if (key === pattern) {
+          const result = [pattern, config];
+          cache.set(key, result);
+          return result;
+        }
+        let i = 0;
+        let j = 0;
+        const keyLen = key.length;
+        const patternLen = pattern.length;
+        let isMatch = true;
+        while (i < keyLen && j < patternLen) {
+          let keyPartEnd = key.indexOf(".", i);
+          let patternPartEnd = pattern.indexOf(".", j);
+          if (keyPartEnd === -1)
+            keyPartEnd = keyLen;
+          if (patternPartEnd === -1)
+            patternPartEnd = patternLen;
+          const keyPart = key.slice(i, keyPartEnd);
+          const patternPart = pattern.slice(j, patternPartEnd);
+          if (patternPart !== "*" && patternPart !== "**" && keyPart !== patternPart) {
+            isMatch = false;
+            break;
+          }
+          i = keyPartEnd + 1;
+          j = patternPartEnd + 1;
+        }
+        if (isMatch) {
+          if (j < patternLen) {
+            const remaining = pattern.slice(j);
+            if (remaining !== "**" && remaining !== "*") {
+              isMatch = false;
+            }
+          }
+          if (i < keyLen && pattern.slice(j - 1) !== "**") {
+            isMatch = false;
+          }
+        }
+        if (isMatch) {
+          const result = [pattern, config];
+          cache.set(key, result);
+          return result;
+        }
+      }
+      cache.set(key, null);
+      return null;
+    }
+    var potentialMatchForRoot = (pattern, key) => pattern.startsWith(key) || pattern.startsWith("*") || pattern.startsWith("**");
+    var potentialMatch = (pattern, key) => pattern.startsWith(key) || pattern.includes("*") || pattern.includes("**");
+    function partialMatch(key, keyPatterns) {
+      const keyPatternsLen = keyPatterns.length;
+      if (!key.includes(".")) {
+        for (let i = 0; i < keyPatternsLen; i++) {
+          const pattern = keyPatterns[i];
+          if (potentialMatchForRoot(pattern, key))
+            return true;
+        }
+        return false;
+      }
+      let dotIndex = -1;
+      let currentKeyEnd = 0;
+      while ((dotIndex = key.indexOf(".", currentKeyEnd)) !== -1) {
+        const currentKey = key.slice(0, dotIndex);
+        const isRoot = !currentKey.includes(".");
+        for (let i = 0; i < keyPatternsLen; i++) {
+          const pattern = keyPatterns[i];
+          if (isRoot) {
+            if (potentialMatchForRoot(pattern, currentKey))
+              return true;
+          } else if (potentialMatch(pattern, currentKey))
+            return true;
+        }
+        currentKeyEnd = dotIndex + 1;
+      }
+      for (let i = 0; i < keyPatternsLen; i++) {
+        const pattern = keyPatterns[i];
+        if (potentialMatch(pattern, key))
+          return true;
+      }
+      return false;
+    }
+    var dateTimePattern = /^(\d{4}-\d{2}-\d{2})(T\d{2}:\d{2}:\d{2}(?:\.\d+)?(Z|[+-]\d{2}:\d{2})?)?$/i;
+    function isDateLike(value) {
+      if (typeof value === "string") {
+        return dateTimePattern.test(value);
+      }
+      return false;
+    }
+    function transformValue(value, rules, direction) {
+      const { force, datetime } = rules;
+      if (direction === "to") {
+        return force || isDateLike(value) ? new Date(value) : value;
+      }
+      if (value instanceof Date) {
+        const iso = value.toISOString();
+        return datetime ? iso : iso.split("T")[0];
+      }
+      return value;
+    }
+    function walk(obj, direction, rules, rulesCache, keyPatterns, currentKey = "") {
+      if (rules.length <= 0) {
+        return obj;
+      }
+      if (!partialMatch(currentKey, keyPatterns)) {
+        return obj;
+      }
+      if (Array.isArray(obj)) {
+        const match = matchKey(currentKey, rules, rulesCache);
+        obj.forEach((item, idx) => {
+          if (typeof item === "object" && item !== null) {
+            walk(item, direction, rules, rulesCache, keyPatterns, currentKey);
+          } else if (match) {
+            obj[idx] = transformValue(obj[idx], match[1], direction);
+          }
+        });
+      }
+      if (typeof obj === "object" && obj !== null && !Array.isArray(obj)) {
+        for (const key of Object.keys(obj)) {
+          const mergedKey = mergeKeys(currentKey, key);
+          const match = matchKey(mergedKey, rules, rulesCache);
+          if (match) {
+            obj[key] = transformValue(obj[key], match[1], direction);
+          }
+          walk(obj[key], direction, rules, rulesCache, keyPatterns, mergedKey);
+        }
+      }
+      return obj;
+    }
+    function flattenKeyPatterns(keyPatterns) {
+      return keyPatterns.map((k) => Array.isArray(k) ? k[0] : k);
+    }
+    function transform(direction, object, rules) {
+      const flatKeyPatterns = flattenKeyPatterns(rules);
+      const rulesCache = /* @__PURE__ */ new Map();
+      return walk(object, direction, rules, rulesCache, flatKeyPatterns);
+    }
+    function transformRequest(object, rules) {
+      return transform("from", object, rules);
+    }
+    function transformResponse(object, rules) {
+      return transform("to", object, rules);
+    }
+    var QueryAssistanceClient = class {
+      httpClient;
+      shouldTransformDates = true;
+      /**
+       * @param {HttpClient} httpClientImplementation - You can provide custom http client as a parameter to constructor of a QueryAssistanceClient. Custom http client should implement {HttpClient} interface.
+       * @param {ApiClientOptions} [options] - Optional configuration for SDK Client.
+       * @example
+       * const queryAssistanceClientNodeJs = new QueryAssistanceClient(yourCustomImplementation);
+       */
+      constructor(httpClientImplementation, options) {
+        this.httpClient = httpClientImplementation;
+        this.shouldTransformDates = options?.transformDates ?? true;
+      }
+      /**
+       * Verifies a query without executing it.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ## Overview
+       *
+       * Verifies the supplied query string and other query parameters for lack of any errors, but without actually
+       * submitting the query for execution.
+       *
+       * @returns {Promise<VerifyResponse>} Supplied query and parameters were verified.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryAssistanceClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryAssistanceClient.queryVerify({
+       *   body: {
+       *     query:
+       *       'fetch events | filter event.type == "davis" AND davis.status != "CLOSED" | fields timestamp, davis.title, davis.underMaintenance, davis.status | sort timestamp | limit 10',
+       *   },
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. | An internal server error has occurred.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryVerify(config) {
+        if (!config) {
+          throw new import_shared_errors3.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const encodedBody = this.shouldTransformDates ? transformRequest(config.body, []) : config.body;
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:verify`,
+            method: "POST",
+            requestBodyType: "json",
+            body: encodedBody,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200].includes(status);
+            }
+          });
+          const responseValue = await response.body("json");
+          try {
+            return this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+          } catch (err) {
+            throw new import_shared_errors3.InvalidResponseError(
+              `QueryAssistanceClient.query:verify:200`,
+              err,
+              responseValue,
+              void 0,
+              void 0,
+              response
+            );
+          }
+        } catch (e) {
+          if ((0, import_http_client.isHttpClientAbortError)(e) || (0, import_shared_errors3.isInvalidResponseError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors3.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "The supplied request is wrong."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:verify:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:verify:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors3.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  ),
+                  e
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors3.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors3.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        }
+      }
+      /**
+       * Get a structured tree of the canonical form of the query.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ## Overview
+       *
+       * Returns the parsed query as a tree, containing the structure of the canonical query. Tree-nodes can contain references to
+       * the token position where they originate from. This may help to provide hover effects, show canonical forms, mark
+       * optional items, and more.
+       *
+       * ## Details
+       *
+       * The query tree consists of nodes that contain different additional information (everything optional):
+       *
+       * ### General Fields
+       *
+       * Field | Mandatory |  Description
+       * ----------------------- | --- | ----------------------------------------------------------------------------------------
+       * tokenPosition           | no  | optional. If present, it represents the position within the query string where the node refers to.
+       * isOptional              | no  | whether this node could be left out and the result would still be the same query (semantically).
+       *
+       * #### tokenPosition
+       *
+       * contains `start` (inclusive) and `end` (inclusive), both contain `index` (0 based; fur substrings), `line`
+       * and `column` (both 1-based; for readability).
+       *
+       * * If `tokenPosition` is present, it always contains start and end with all fields
+       * * If `tokenPosition` is not present, there might still be nested nodes that do contain a position
+       * * If `start == end`, the position refers to a single character
+       * * If `start > end`, we know for sure that something was inserted.
+       *
+       * We can always check whether the canonical representation of a node matches the text in the tokenPosition to see whether
+       * something was inserted, removed, or changed.
+       *
+       * #### isOptional
+       *
+       * only present if it is true.
+       *
+       * Optional nodes can e.g. be optional braces that make a query more readable, but are not necessary. This could be used to
+       * enter *ghost braces* and *implicit functions* in the user's input field; maybe with different formatting
+       * (using the tokenPosition of sibling nodes we can also check whether the user wrote these or not).
+       *
+       * ### Advanced Token Types
+       *
+       * each node is of one of following types and may contain more fields:
+       *
+       * * Terminal Node
+       * * ContainerNode
+       * * Alternative Node
+       *
+       * #### Terminal Node
+       *
+       * can be identified by checking whether `canonicalString` is present
+       *
+       * Field | Mandatory |  Description
+       * ------------------------ | --- | ---------------------------------------------------------------------------------------
+       * type                     | yes | the type of the terminal node - do not confuse with the type of container nodes
+       * canonicalString          | yes | the canonical string representation. Concatenating the canonicalString of all nested terminal nodes provides the canonical form of the query.
+       * isMandatoryOnUserOrder   | no  | may only be present if (`type="BRACE_OPEN"` or `type="BRACE_CLOSE"`) and `isOptional=true`. For usage see section [Special node type: PARAMETERS](#special-node-type-parameters)
+       *
+       * ##### Current types of terminal nodes (list might grow):
+       *
+       * * SPACE
+       * * LINEBREAK
+       * * INDENT
+       * * PIPE
+       * * DOT
+       * * COLON
+       * * COMMA
+       * * BRACE_OPEN
+       * * BRACE_CLOSE
+       * * BRACKET_OPEN
+       * * BRACKET_CLOSE
+       * * PARENTHESIS_OPEN
+       * * PARENTHESIS_CLOSE
+       * * QUOTE
+       * * SLASH
+       * * BOOLEAN_TRUE
+       * * BOOLEAN_FALSE
+       * * NULL
+       * * COMMAND_NAME
+       * * PARAMETER_KEY
+       * * PARAMETER_VALUE_SCOPE
+       * * FUNCTION_NAME
+       * * OPERATOR
+       * * TRAVERSAL_OPERATOR
+       * * TRAVERSAL_RELATION_NAME
+       * * TRAVERSAL_HOP_COUNT
+       * * SIMPLE_IDENTIFIER
+       * * NUMBER
+       * * STRING
+       * * TIME_UNIT
+       * * TIMESTAMP_VALUE
+       * * METRIC_KEY
+       * * VARIABLE
+       *
+       * #### ContainerNode
+       *
+       * can be identified by checking whether `children` is present
+       *
+       * Field | Mandatory |  Description
+       * ----------------------- | --- | ----------------------------------------------------------------------------------------
+       * type                    | yes | the type of the container node - do not confuse with the type of terminal nodes
+       * children                | yes | the children for the node. might be of any type
+       *
+       * ##### Current types of container nodes (list might grow):
+       *
+       * * QUERY
+       * * EXECUTION_BLOCK
+       * * COMMAND
+       * * COMMAND_SEPARATOR
+       * * PARAMETER_WITH_KEY
+       * * GROUP
+       * * PARAMETERS - check examples further down
+       * * PARAMETER_NAMING
+       * * PARAMETER_SEPARATOR
+       * * FUNCTION
+       * * FUNCTION_PART - check examples further down
+       * * EXPRESSION
+       * * IDENTIFIER
+       * * SOURCE_ID
+       * * DURATION
+       * * TIMESTAMP
+       * * TIMEFRAME
+       * * TRAVERSAL_PATH
+       * * TRAVERSAL_STEP
+       *
+       * ##### Special node type: PARAMETERS
+       *
+       * can contain children representing the parameters. Every second child is of type PARAMETER_SEPARATOR.
+       *
+       * You may reorder the children based on their tokenPosition to get the user order. However, in this case,
+       * you need to consider `isMandatoryOnUserOrder` to determine whether the grouping braces are mandatory or not.
+       *
+       * ###### Example
+       *
+       * For the query `SORT a, {direction:"descending", b}`, the canonical form is:
+       *
+       * `SORT a, {b, direction:"descending"}`
+       *
+       * This is the order, in which the parameters are returned in the query tree.
+       * Parameters are {a} and {{b} and {direction:"descending"}}. In this case, the braces are optional.
+       *
+       * `SORT a, {b, direction:"descending"}` is equivalent to `SORT a, b, direction:"descending"`
+       *
+       * However, if you reorder the children by tokenPosition, the braces are not optional, because
+       *
+       * `SORT a, direction:"descending", b` is interpreted as `SORT {a, direction:"descending"}, b`
+       *
+       * So, if the children in PARAMETERS are re-ordered by tokenPosition, braces (or in general: TerminalNodes)
+       * are only optional if `isOptional && !isMandatoryOnUserOrder`.
+       *
+       * ##### Special node type: FUNCTION_PART
+       *
+       * A container node of type `FUNCTION` may contain nodes of type `FUNCTION_PART`.
+       *
+       * If those `FUNCTION_PART`s are marked as optional, this means you have to either include *all* or *none* of these
+       * optional function parts.
+       *
+       * *Example*:
+       *
+       * `filter anyMatch(a.b == 1, input:a)`
+       *
+       * The optional function parts are `anyMatch(` and `, input:a)`. If you leave out both, the command will still work:
+       * `filter a.b == 1` and return the same result. Using one of these optional function parts and removing the other will lead
+       * to an invalid query.
+       *
+       * #### Alternative Node
+       *
+       * can be identified by checking whether `alternatives` is present
+       *
+       * Field | Mandatory |  Description
+       * ----------------------- | --- | ----------------------------------------------------------------------------------------
+       * alternatives            | yes | Type: Map&lt;AlternativeType, DQLNode&gt;
+       *
+       * When displaying the query, pick one option. You may use the other options for hovering, replacing, and more.
+       *
+       * ##### Current values of AlternativeType (list might grow):
+       *
+       * * CANONICAL: This node is the one we will use for our canonical form
+       * * USER: An alternative that is also valid, but not canonical; and this version was picked by the user.
+       * * INFO: only if the canonical version is not present
+       *
+       * *Examples*:
+       *
+       * * `CANONICAL` is not present, `USER` is present: user's nodes are optional, but not canonical (usually optional nodes
+       *   are still canonical)
+       * * `CANONICAL` is present, `USER` is not present: same as if the canonical node was optional. If this happens, it is
+       *   likely that there is also an `INFO` node
+       * * `CANONICAL` is present, `USER` is present: there are different alternatives
+       * * `INFO` is present: usually if `CANONICAL` is not present (e.g. the parameter key for `FILTER a == 1`), there is an info node
+       *   for `FILTER condition:a == 1`. This `condition:` was neither written by the user nor is it canonical; but it might be
+       *   used to help the user understand what this parameter means.
+       *
+       * @returns {Promise<DQLNode>} A node containing more nodes,  a node offering different (semantically equivalent) versions of the query parts, or a terminal node that shows the canonical form.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryAssistanceClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryAssistanceClient.queryParse({
+       *   body: {
+       *     query:
+       *       'fetch events | filter event.type == "davis" AND davis.status != "CLOSED" | fields timestamp, davis.title, davis.underMaintenance, davis.status | sort timestamp | limit 10',
+       *   },
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. Either the query itself or other parameters are wrong. | An internal server error has occurred.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryParse(config) {
+        if (!config) {
+          throw new import_shared_errors3.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const encodedBody = this.shouldTransformDates ? transformRequest(config.body, []) : config.body;
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:parse`,
+            method: "POST",
+            requestBodyType: "json",
+            body: encodedBody,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200].includes(status);
+            }
+          });
+          const responseValue = await response.body("json");
+          try {
+            return this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+          } catch (err) {
+            throw new import_shared_errors3.InvalidResponseError(
+              `QueryAssistanceClient.query:parse:200`,
+              err,
+              responseValue,
+              void 0,
+              void 0,
+              response
+            );
+          }
+        } catch (e) {
+          if ((0, import_http_client.isHttpClientAbortError)(e) || (0, import_shared_errors3.isInvalidResponseError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors3.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(
+                    errorBody,
+                    "The supplied request is wrong. Either the query itself or other parameters are wrong."
+                  ),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:parse:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:parse:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors3.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  ),
+                  e
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors3.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors3.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        }
+      }
+      /**
+       * Get a structured list of suggestions for the query at the given position.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ## Overview
+       *
+       * We provide a list of suggestions that may be used after the cursor position. The following queries will all provide the
+       * same results:
+       *
+       * * `query: "f"`
+       * * `query: "f", cursorPosition:1`
+       * * `query: "fetch ", cursorPosition:1`
+       *
+       * Available fields:
+       *
+       * | Field       | Description                                                                                                                                                                             |
+       * |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+       * | suggestions | a list of suggestions. Each item is a separate possible suggestion, despite they might have the same outputs.                                                                           |
+       * | optional    | whether the suggestion is optional. If `true`, the query until the cursor position might work. If `false`, the query is definitely incomplete or invalid if cut at the cursor position. |
+       *
+       * Fields in the `suggestions`
+       *
+       * | Field                  | Description                                                                                                |
+       * |------------------------|------------------------------------------------------------------------------------------------------------|
+       * | suggestion             | a string representing the whole suggestion. This information could also be derived from the parts.         |
+       * | alreadyTypedCharacters | how many characters of this suggestion have already been typed (and will be overridden by the suggestion). |
+       * | parts                  | a list of semantically enriched information on what are the parts of a suggestion.                         |
+       *
+       * Fields in `parts`
+       *
+       * | Field      | Description                                               |
+       * |------------|-----------------------------------------------------------|
+       * | suggestion | a string representing the current part of the suggestion. |
+       * | type       | current types: SPACE, PIPE, COMMAND (may be extended)     |
+       *
+       * The `type` helps to treat specific parts of the suggestion different to others; either by a different visualization,
+       * a link to docs, etc.
+       *
+       * @returns {Promise<AutocompleteResponse>} A list of structured autocomplete suggestions.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryAssistanceClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryAssistanceClient.queryAutocomplete({
+       *   body: {
+       *     query:
+       *       'fetch events | filter event.type == "davis" AND davis.status != "CLOSED" | fields timestamp, davis.title, davis.underMaintenance, davis.status | sort timestamp | limit 10',
+       *   },
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. Either the query itself or other parameters are wrong. | An internal server error has occurred.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryAutocomplete(config) {
+        if (!config) {
+          throw new import_shared_errors3.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const encodedBody = this.shouldTransformDates ? transformRequest(config.body, []) : config.body;
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) },
+          ...config.enforceQueryConsumptionLimit !== void 0 && {
+            "enforce-query-consumption-limit": String(config.enforceQueryConsumptionLimit)
+          }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:autocomplete`,
+            method: "POST",
+            requestBodyType: "json",
+            body: encodedBody,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200].includes(status);
+            }
+          });
+          const responseValue = await response.body("json");
+          try {
+            return this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+          } catch (err) {
+            throw new import_shared_errors3.InvalidResponseError(
+              `QueryAssistanceClient.query:autocomplete:200`,
+              err,
+              responseValue,
+              void 0,
+              void 0,
+              response
+            );
+          }
+        } catch (e) {
+          if ((0, import_http_client.isHttpClientAbortError)(e) || (0, import_shared_errors3.isInvalidResponseError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors3.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(
+                    errorBody,
+                    "The supplied request is wrong. Either the query itself or other parameters are wrong."
+                  ),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:autocomplete:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors3.InvalidResponseError(
+                  `QueryAssistanceClient.query:autocomplete:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors3.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  ),
+                  e
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors3.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors3.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        }
+      }
+    };
+    var queryAssistanceClient = /* @__PURE__ */ new QueryAssistanceClient(import_http_client.httpClient);
+    var import_http_client2 = require_cjs2();
+    var import_shared_errors4 = require_cjs3();
+    var InsufficientPermission = class extends ErrorEnvelopeError {
+      isInsufficientPermission = true;
+      name = "InsufficientPermission";
+    };
+    function isInsufficientPermission(e) {
+      return e?.isApiClientError === true && e?.isClientRequestError === true && e?.isErrorEnvelopeError === true && e?.isInsufficientPermission === true && e instanceof Error;
+    }
+    function mimeTypeToEncoding(mimeType, defaultEncoding) {
+      const shortMimeType = mimeType.split(";")[0];
+      switch (shortMimeType) {
+        case "application/json":
+        case "application/cloudevent+json":
+        case "application/cloudevent-batch+json":
+          return "json";
+        case "text/plain":
+          return "text";
+        case "application/octet-stream":
+          return "binary";
+        case "multipart/form-data":
+          return "form-data";
+        default:
+          if (defaultEncoding)
+            return defaultEncoding;
+          else
+            throw new Error(`${shortMimeType} mime type is not yet supported`);
+      }
+    }
+    var encodeQueryParam = (key, value) => {
+      const encodedKey = encodeURIComponent(key);
+      return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : String(value))}`;
+    };
+    var addExplodedArrayQueryParam = (query, key) => {
+      const arrayValue = query[key];
+      return arrayValue.map((value) => encodeQueryParam(key, value)).join("&");
+    };
+    var addNonExplodedArrayQueryParams = (query, key) => {
+      const encodedKey = encodeURIComponent(key);
+      const encodedParamsList = query[key].map((value) => encodeURIComponent(typeof value === "number" ? value : String(value))).join(",");
+      return `${encodedKey}=${encodedParamsList}`;
+    };
+    var addQueryParam = (query, key) => encodeQueryParam(key, query[key]);
+    var arrayQueryParams = (query, key, explode) => {
+      return explode ? addExplodedArrayQueryParam(query, key) : addNonExplodedArrayQueryParams(query, key);
+    };
+    var toQueryString = (rawQuery, flags = {}) => {
+      const query = rawQuery || {};
+      const keys = Object.keys(query).filter((key) => typeof query[key] !== "undefined");
+      const queryString = keys.map(
+        (key) => Array.isArray(query[key]) ? arrayQueryParams(query, key, flags.explode?.hasOwnProperty(key) ? flags.explode[key] : true) : addQueryParam(query, key)
+      ).join("&");
+      return queryString ? `?${queryString}` : "";
+    };
+    var QueryExecutionClient = class {
+      httpClient;
+      shouldTransformDates = true;
+      /**
+       * @param {HttpClient} httpClientImplementation - You can provide custom http client as a parameter to constructor of a QueryExecutionClient. Custom http client should implement {HttpClient} interface.
+       * @param {ApiClientOptions} [options] - Optional configuration for SDK Client.
+       * @example
+       * const queryExecutionClientNodeJs = new QueryExecutionClient(yourCustomImplementation);
+       */
+      constructor(httpClientImplementation, options) {
+        this.httpClient = httpClientImplementation;
+        this.shouldTransformDates = options?.transformDates ?? true;
+      }
+      /**
+       * Retrieves query status and final result from Grail.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ### Overview:
+       *
+       * Polls the status of a Grail query. Returns the status of the query, including the result if the query finished.
+       *
+       * ### The response format:
+       * The json response will contain the state of the query. If the query succeeded, the result will be included.
+       *
+       * The result has two main sections:
+       * * The 'records' section contains the individual records, where each record consists of a set of fields and their corresponding values.
+       * * The 'types' section describes the corresponding data types that a record field has.
+       *
+       * Every record has an implicit 'index' according to the position in the 'records' JSON array.
+       * The types section has a list of 1..N possible type 'buckets'. Each such bucket has an 'indexRange' which indicates which
+       * records will find their field types in which bucket. The index range has two values start & end and can be thought of as [startIndex, endIndex).
+       *
+       * A field part of a record with index 'i' will find its corresponding field type by first locating the bucket that satisfies:
+       *
+       * ```text
+       * startIndex <= i <= endIndex
+       * ```
+       *
+       * Once the bucket is found the 'mappings' object has an entry for all the fields that are part of that record with index 'i'.
+       *
+       *
+       * Since enforcement of a particular schema is absent at ingestion time, it is possible to have records that share the same
+       * field name but their values are of a different type. This phenomenon will hence forth be named as a **"collision"**.
+       * When a collision does occur, we will create a new type 'bucket' that will have a different index range where
+       * the new record field types will be placed.
+       * It is guaranteed that every field of every record will have a corresponding type.
+       * **Clients should always take the included types into account when consuming records!**
+       *
+       * @returns {Promise<QueryPollResponse>} The current status and results of the supplied query.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryExecutionClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryExecutionClient.queryPoll({
+       *   requestToken: "...",
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. Either the query itself or other parameters are wrong. | An internal server error has occurred.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryPoll(config) {
+        if (!config) {
+          throw new import_shared_errors4.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const query = toQueryString(
+          {
+            "request-token": config.requestToken,
+            "request-timeout-milliseconds": config.requestTimeoutMilliseconds,
+            enrich: config.enrich
+          },
+          { explode: { "request-token": false, "request-timeout-milliseconds": false } }
+        );
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:poll${query}`,
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200].includes(status);
+            }
+          });
+          const responseValue = await response.body("json");
+          try {
+            return this.shouldTransformDates ? transformResponse(responseValue, [
+              ["result.records.*.start", { datetime: true }],
+              ["result.records.*.end", { datetime: true }],
+              ["result.records.**.start", { datetime: true }],
+              ["result.records.**.end", { datetime: true }],
+              ["result.records.*.start", { datetime: true }],
+              ["result.records.*.end", { datetime: true }],
+              ["result.metadata.grail.analysisTimeframe.start", { datetime: true }],
+              ["result.metadata.grail.analysisTimeframe.end", { datetime: true }]
+            ]) : responseValue;
+          } catch (err) {
+            throw new import_shared_errors4.InvalidResponseError(
+              `QueryExecutionClient.query:poll:200`,
+              err,
+              responseValue,
+              void 0,
+              void 0,
+              response
+            );
+          }
+        } catch (e) {
+          if ((0, import_http_client2.isHttpClientAbortError)(e) || (0, import_shared_errors4.isInvalidResponseError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client2.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors4.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(
+                    errorBody,
+                    "The supplied request is wrong. Either the query itself or other parameters are wrong."
+                  ),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:poll:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 410: {
+              const contentType = response.headers["content-type"];
+              const encoding = mimeTypeToEncoding(
+                contentType,
+                "text"
+                /* Text */
+              );
+              const responseValue = await response.body(encoding);
+              throw new import_shared_errors4.ClientRequestError(
+                `410`,
+                response,
+                responseValue,
+                getErrorMessage(responseValue, `The query for the given request-token is not available anymore.`)
+              );
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:poll:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors4.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  ),
+                  e
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors4.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors4.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        }
+      }
+      /**
+       * Starts a Grail query.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ### Overview:
+       *
+       * Executes a query and returns a list of records.
+       *
+       * For details about the query language see the [Dynatrace Query Language documentation](https://dt-url.net/bv03yk8).
+       *
+       * ### The response format:
+       *
+       * The json response will contain the state of the started query. If the query succeeded, the result will be included. Otherwise the response will contain a request token to reference the query in future polling requests.
+       *
+       * The result has two main sections:
+       * * The 'records' section contains the individual records, where each record consists of a set of fields and their corresponding values.
+       * * The 'types' section describes the corresponding data types that a record field has.
+       *
+       * Every record has an implicit 'index' according to the position in the 'records' JSON array.
+       * The types section has a list of 1..N possible type 'buckets'. Each such bucket has an 'indexRange' which indicates which
+       * records will find their field types in which bucket. The index range has two values start & end and can be thought of as [startIndex, endIndex).
+       *
+       * A field part of a record with index 'i' will find its corresponding field type by first locating the bucket that satisfies:
+       *
+       * ```text
+       * startIndex <= i <= endIndex
+       * ```
+       *
+       * Once the bucket is found the 'mappings' object has an entry for all the fields that are part of that record with index 'i'.
+       *
+       *
+       * Since enforcement of a particular schema is absent at ingestion time, it is possible to have records that share the same
+       * field name but their values are of a different type. This phenomenon will hence forth be named as a **"collision"**.
+       * When a collision does occur, we will create a new type 'bucket' that will have a different index range where
+       * the new record field types will be placed.
+       * It is guaranteed that every field of every record will have a corresponding type.
+       * **Clients should always take the included types into account when consuming records!**
+       *
+       * @returns {Promise<QueryStartResponse>} The final status and results of the supplied query if it finished within a supplied requestTimeoutMilliseconds. | The status of the query to start.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryExecutionClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryExecutionClient.queryExecute({
+       *   body: {
+       *     query:
+       *       'fetch events | filter event.type == "davis" AND davis.status != "CLOSED" | fields timestamp, davis.title, davis.underMaintenance, davis.status | sort timestamp | limit 10',
+       *   },
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. Either the query itself or other parameters are wrong. | Too many requests. | An internal server error has occurred. | Service is unavailable. | Client error. | Server error.
+       * @throws {InsufficientPermission} Insufficient permissions.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryExecute(config) {
+        if (!config) {
+          throw new import_shared_errors4.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const encodedBody = this.shouldTransformDates ? transformRequest(config.body, []) : config.body;
+        const query = toQueryString({ enrich: config.enrich });
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) },
+          ...config.enforceQueryConsumptionLimit !== void 0 && {
+            "enforce-query-consumption-limit": String(config.enforceQueryConsumptionLimit)
+          }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:execute${query}`,
+            method: "POST",
+            requestBodyType: "json",
+            body: encodedBody,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200, 202].includes(status);
+            }
+          });
+          switch (response.status) {
+            case 200: {
+              const responseValue = await response.body("json");
+              try {
+                return this.shouldTransformDates ? transformResponse(responseValue, [
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.records.**.start", { datetime: true }],
+                  ["result.records.**.end", { datetime: true }],
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.start", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.end", { datetime: true }]
+                ]) : responseValue;
+              } catch (err) {
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:${response.status}`,
+                  err,
+                  responseValue,
+                  void 0,
+                  void 0,
+                  void 0
+                );
+              }
+            }
+            case 202: {
+              const responseValue = await response.body("json");
+              try {
+                return this.shouldTransformDates ? transformResponse(responseValue, [
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.records.**.start", { datetime: true }],
+                  ["result.records.**.end", { datetime: true }],
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.start", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.end", { datetime: true }]
+                ]) : responseValue;
+              } catch (err) {
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:${response.status}`,
+                  err,
+                  responseValue,
+                  void 0,
+                  void 0,
+                  void 0
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors4.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  )
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors4.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors4.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        } catch (e) {
+          if ((0, import_http_client2.isHttpClientAbortError)(e) || (0, import_shared_errors4.isInvalidResponseError)(e) || (0, import_shared_errors4.isClientRequestError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client2.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors4.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(
+                    errorBody,
+                    "The supplied request is wrong. Either the query itself or other parameters are wrong."
+                  ),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 403: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new InsufficientPermission(
+                  `403`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "Insufficient permissions."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof InsufficientPermission) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:403`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 429: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `429`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "Too many requests."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:429`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 503: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `503`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "Service is unavailable."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:execute:503`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              if (response.status >= 400 && response.status <= 499) {
+                const responseValue = await response.body("json");
+                try {
+                  const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                  throw new ErrorEnvelopeError(
+                    `${response.status}`,
+                    response,
+                    errorBody,
+                    getErrorMessage(errorBody, "Client error."),
+                    e
+                  );
+                } catch (err) {
+                  if (err instanceof ErrorEnvelopeError) {
+                    throw err;
+                  }
+                  throw new import_shared_errors4.InvalidResponseError(
+                    `QueryExecutionClient.query:execute:${response.status}`,
+                    err,
+                    responseValue,
+                    "ErrorEnvelope",
+                    void 0,
+                    response
+                  );
+                }
+              } else if (response.status >= 500 && response.status <= 599) {
+                const responseValue = await response.body("json");
+                try {
+                  const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                  throw new ErrorEnvelopeError(
+                    `${response.status}`,
+                    response,
+                    errorBody,
+                    getErrorMessage(errorBody, "Server error."),
+                    e
+                  );
+                } catch (err) {
+                  if (err instanceof ErrorEnvelopeError) {
+                    throw err;
+                  }
+                  throw new import_shared_errors4.InvalidResponseError(
+                    `QueryExecutionClient.query:execute:${response.status}`,
+                    err,
+                    responseValue,
+                    "ErrorEnvelope",
+                    void 0,
+                    response
+                  );
+                }
+              } else {
+                try {
+                  const responseValue = await response.body("json");
+                  throw new import_shared_errors4.ClientRequestError(
+                    `${response.status}`,
+                    response,
+                    responseValue,
+                    getErrorMessage(
+                      responseValue,
+                      `Unexpected api response: code=${response.status} body="${responseValue}"`
+                    )
+                  );
+                } catch (error) {
+                  if (error instanceof import_shared_errors4.ClientRequestError) {
+                    throw error;
+                  }
+                  const responseValue = await response.body("text").catch(() => "");
+                  throw new import_shared_errors4.InvalidResponseError(
+                    `${response.status}`,
+                    error,
+                    responseValue,
+                    "json",
+                    "Unexpected api response",
+                    response
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+      /**
+       * Cancels the query and returns the result if the query was already finished, otherwise discards it.
+       *
+       * For information about the required permissions see the [Bucket and table permissions in Grail documentation](https://docs.dynatrace.com/docs/shortlink/assign-bucket-table-permissions).
+       *
+       * ### Overview:
+       *
+       * Cancels a running Grail query and returns a list of records if the query already finished.
+       *
+       * ### The response format:
+       *
+       * If the query was already finished, a response body including the result will be returned. Otherwise the response will contain no body.
+       *
+       * The result has three main sections:
+       * * the 'records' section contains the individual records, where each record consists of a set of fields and their corresponding values.
+       * * the 'types' section describes the corresponding data types that a record field has.
+       * * the 'metadata' section contains information about the query like 'analysisTimeframe', 'timezone' or 'locale'.
+       *
+       * Every record has an implicit 'index' according to the position in the 'records' JSON array.
+       * The types section has a list of 1..N possible type 'buckets'. Each such bucket has an 'indexRange' which indicates which
+       * records will find their field types in which bucket. The index range has two values start & end and can be thought of as [startIndex, endIndex).
+       *
+       * A field part of a record with index 'i' will find its corresponding field type by first locating the bucket that satisfies:
+       *
+       * ```text
+       * startIndex <= i <= endIndex
+       * ```
+       *
+       * Once the bucket is found the 'mappings' object has an entry for all the fields that are part of that record with index 'i'.
+       *
+       *
+       * Since enforcement of a particular schema is absent at ingestion time, it is possible to have records that share the same
+       * field name but their values are of a different type. This phenomenon will hence forth be named as a **"collision"**.
+       * When a collision does occur, we will create a new type 'bucket' that will have a different index range where
+       * the new record field types will be placed.
+       * It is guaranteed that every field of every record will have a corresponding type.
+       * **Clients should always take the included types into account when consuming records!**
+       *
+       * @returns {Promise<QueryPollResponse | void>} The query already finished.
+       *
+       * @example <caption>Code example</caption>
+       * import { queryExecutionClient } from "@dynatrace-sdk/client-query";
+       *
+       * const data = await queryExecutionClient.queryCancel({
+       *   requestToken: "...",
+       * });
+       *
+       * @throws {ErrorEnvelopeError} The supplied request is wrong. Either the query itself or other parameters are wrong. | An internal server error has occurred.
+       * @throws {InvalidResponseError}
+       * @throws {ApiClientError}
+       * @throws {ClientRequestError}
+       */
+      async queryCancel(config) {
+        if (!config) {
+          throw new import_shared_errors4.ApiClientError("API client error", "API client call is missing mandatory config parameter");
+        }
+        const query = toQueryString(
+          { "request-token": config.requestToken, enrich: config.enrich },
+          { explode: { "request-token": false } }
+        );
+        const headerParameters = {
+          ...config.dtClientContext !== void 0 && { "dt-client-context": String(config.dtClientContext) }
+        };
+        try {
+          const response = await this.httpClient.send({
+            url: `/platform/storage/query/v1/query:cancel${query}`,
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              ...headerParameters
+            },
+            abortSignal: config instanceof EventTarget ? config : config.abortSignal,
+            statusValidator: (status) => {
+              return [200, 202].includes(status);
+            }
+          });
+          switch (response.status) {
+            case 200: {
+              const responseValue = await response.body("json");
+              try {
+                return this.shouldTransformDates ? transformResponse(responseValue, [
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.records.**.start", { datetime: true }],
+                  ["result.records.**.end", { datetime: true }],
+                  ["result.records.*.start", { datetime: true }],
+                  ["result.records.*.end", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.start", { datetime: true }],
+                  ["result.metadata.grail.analysisTimeframe.end", { datetime: true }]
+                ]) : responseValue;
+              } catch (err) {
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:cancel:${response.status}`,
+                  err,
+                  responseValue,
+                  void 0,
+                  void 0,
+                  void 0
+                );
+              }
+            }
+            case 202: {
+              return;
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors4.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  )
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors4.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors4.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        } catch (e) {
+          if ((0, import_http_client2.isHttpClientAbortError)(e) || (0, import_shared_errors4.isInvalidResponseError)(e) || (0, import_shared_errors4.isClientRequestError)(e)) {
+            throw e;
+          }
+          if (!(0, import_http_client2.isHttpClientResponseError)(e)) {
+            throw new import_shared_errors4.ApiClientError("UnexpectedError", "Unexpected error", e);
+          }
+          const response = e.response;
+          await apiGatewayErrorsHandler(response);
+          switch (response.status) {
+            case 400: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `400`,
+                  response,
+                  errorBody,
+                  getErrorMessage(
+                    errorBody,
+                    "The supplied request is wrong. Either the query itself or other parameters are wrong."
+                  ),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:cancel:400`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            case 410: {
+              const contentType = response.headers["content-type"];
+              const encoding = mimeTypeToEncoding(
+                contentType,
+                "text"
+                /* Text */
+              );
+              const responseValue = await response.body(encoding);
+              throw new import_shared_errors4.ClientRequestError(
+                `410`,
+                response,
+                responseValue,
+                getErrorMessage(responseValue, `The query for the given request-token is not available anymore.`)
+              );
+            }
+            case 500: {
+              const responseValue = await response.body("json");
+              try {
+                const errorBody = this.shouldTransformDates ? transformResponse(responseValue, []) : responseValue;
+                throw new ErrorEnvelopeError(
+                  `500`,
+                  response,
+                  errorBody,
+                  getErrorMessage(errorBody, "An internal server error has occurred."),
+                  e
+                );
+              } catch (err) {
+                if (err instanceof ErrorEnvelopeError) {
+                  throw err;
+                }
+                throw new import_shared_errors4.InvalidResponseError(
+                  `QueryExecutionClient.query:cancel:500`,
+                  err,
+                  responseValue,
+                  "ErrorEnvelope",
+                  void 0,
+                  response
+                );
+              }
+            }
+            default: {
+              try {
+                const responseValue = await response.body("json");
+                throw new import_shared_errors4.ClientRequestError(
+                  `${response.status}`,
+                  response,
+                  responseValue,
+                  getErrorMessage(
+                    responseValue,
+                    `Unexpected api response: code=${response.status} body="${responseValue}"`
+                  ),
+                  e
+                );
+              } catch (error) {
+                if (error instanceof import_shared_errors4.ClientRequestError) {
+                  throw error;
+                }
+                const responseValue = await response.body("text").catch(() => "");
+                throw new import_shared_errors4.InvalidResponseError(
+                  `${response.status}`,
+                  error,
+                  responseValue,
+                  "json",
+                  "Unexpected api response",
+                  response
+                );
+              }
+            }
+          }
+        }
+      }
+    };
+    var queryExecutionClient2 = /* @__PURE__ */ new QueryExecutionClient(import_http_client2.httpClient);
+    var import_shared_errors5 = require_cjs3();
+    var DQLNodeNodeType = /* @__PURE__ */ ((DQLNodeNodeType2) => {
+      DQLNodeNodeType2["Terminal"] = "TERMINAL";
+      DQLNodeNodeType2["Container"] = "CONTAINER";
+      DQLNodeNodeType2["Alternative"] = "ALTERNATIVE";
+      return DQLNodeNodeType2;
+    })(DQLNodeNodeType || {});
+    var FieldTypeType = /* @__PURE__ */ ((FieldTypeType2) => {
+      FieldTypeType2["Boolean"] = "boolean";
+      FieldTypeType2["String"] = "string";
+      FieldTypeType2["Double"] = "double";
+      FieldTypeType2["Long"] = "long";
+      FieldTypeType2["Timestamp"] = "timestamp";
+      FieldTypeType2["Timeframe"] = "timeframe";
+      FieldTypeType2["Duration"] = "duration";
+      FieldTypeType2["Binary"] = "binary";
+      FieldTypeType2["IpAddress"] = "ip_address";
+      FieldTypeType2["GeoPoint"] = "geo_point";
+      FieldTypeType2["Array"] = "array";
+      FieldTypeType2["Record"] = "record";
+      FieldTypeType2["Uid"] = "uid";
+      FieldTypeType2["SmartscapeId"] = "smartscape_id";
+      FieldTypeType2["Undefined"] = "undefined";
+      return FieldTypeType2;
+    })(FieldTypeType || {});
+    var QueryState = /* @__PURE__ */ ((QueryState2) => {
+      QueryState2["NotStarted"] = "NOT_STARTED";
+      QueryState2["Running"] = "RUNNING";
+      QueryState2["Succeeded"] = "SUCCEEDED";
+      QueryState2["ResultGone"] = "RESULT_GONE";
+      QueryState2["Cancelled"] = "CANCELLED";
+      QueryState2["Failed"] = "FAILED";
+      return QueryState2;
+    })(QueryState || {});
+    var TokenType = /* @__PURE__ */ ((TokenType2) => {
+      TokenType2["Space"] = "SPACE";
+      TokenType2["Linebreak"] = "LINEBREAK";
+      TokenType2["Indent"] = "INDENT";
+      TokenType2["Pipe"] = "PIPE";
+      TokenType2["Dot"] = "DOT";
+      TokenType2["Colon"] = "COLON";
+      TokenType2["Comma"] = "COMMA";
+      TokenType2["Assignment"] = "ASSIGNMENT";
+      TokenType2["BraceOpen"] = "BRACE_OPEN";
+      TokenType2["BraceClose"] = "BRACE_CLOSE";
+      TokenType2["BracketOpen"] = "BRACKET_OPEN";
+      TokenType2["BracketClose"] = "BRACKET_CLOSE";
+      TokenType2["ParenthesisOpen"] = "PARENTHESIS_OPEN";
+      TokenType2["ParenthesisClose"] = "PARENTHESIS_CLOSE";
+      TokenType2["Quote"] = "QUOTE";
+      TokenType2["SingleQuote"] = "SINGLE_QUOTE";
+      TokenType2["Slash"] = "SLASH";
+      TokenType2["BooleanTrue"] = "BOOLEAN_TRUE";
+      TokenType2["BooleanFalse"] = "BOOLEAN_FALSE";
+      TokenType2["Null"] = "NULL";
+      TokenType2["CommandName"] = "COMMAND_NAME";
+      TokenType2["ParameterKey"] = "PARAMETER_KEY";
+      TokenType2["ParameterValueScope"] = "PARAMETER_VALUE_SCOPE";
+      TokenType2["FunctionName"] = "FUNCTION_NAME";
+      TokenType2["TimeseriesAggregation"] = "TIMESERIES_AGGREGATION";
+      TokenType2["TimeseriesAggregationExpression"] = "TIMESERIES_AGGREGATION_EXPRESSION";
+      TokenType2["Operator"] = "OPERATOR";
+      TokenType2["SearchOperator"] = "SEARCH_OPERATOR";
+      TokenType2["TraversalOperator"] = "TRAVERSAL_OPERATOR";
+      TokenType2["TraversalRelationName"] = "TRAVERSAL_RELATION_NAME";
+      TokenType2["TraversalHopCount"] = "TRAVERSAL_HOP_COUNT";
+      TokenType2["SimpleIdentifier"] = "SIMPLE_IDENTIFIER";
+      TokenType2["DataObject"] = "DATA_OBJECT";
+      TokenType2["Number"] = "NUMBER";
+      TokenType2["String"] = "STRING";
+      TokenType2["TimeUnit"] = "TIME_UNIT";
+      TokenType2["TimestampValue"] = "TIMESTAMP_VALUE";
+      TokenType2["MetricKey"] = "METRIC_KEY";
+      TokenType2["Variable"] = "VARIABLE";
+      TokenType2["EndComment"] = "END_COMMENT";
+      TokenType2["UidValue"] = "UID_VALUE";
+      TokenType2["ParsePattern"] = "PARSE_PATTERN";
+      TokenType2["FieldPattern"] = "FIELD_PATTERN";
+      TokenType2["SearchPattern"] = "SEARCH_PATTERN";
+      TokenType2["EntitySelectorPart"] = "ENTITY_SELECTOR_PART";
+      TokenType2["SavedTableName"] = "SAVED_TABLE_NAME";
+      TokenType2["TabularFileName"] = "TABULAR_FILE_NAME";
+      TokenType2["ParameterModifier"] = "PARAMETER_MODIFIER";
+      TokenType2["FieldModifier"] = "FIELD_MODIFIER";
+      TokenType2["EntityType"] = "ENTITY_TYPE";
+      TokenType2["EntityAttribute"] = "ENTITY_ATTRIBUTE";
+      TokenType2["SmartscapeIdValue"] = "SMARTSCAPE_ID_VALUE";
+      TokenType2["EnumString"] = "ENUM_STRING";
+      TokenType2["FieldPrefix"] = "FIELD_PREFIX";
+      TokenType2["Bucket"] = "BUCKET";
+      TokenType2["SmartscapeNodePattern"] = "SMARTSCAPE_NODE_PATTERN";
+      TokenType2["SmartscapeEdgePattern"] = "SMARTSCAPE_EDGE_PATTERN";
+      TokenType2["SmartscapeNodeType"] = "SMARTSCAPE_NODE_TYPE";
+      TokenType2["SmartscapeEdgeType"] = "SMARTSCAPE_EDGE_TYPE";
+      return TokenType2;
+    })(TokenType || {});
+  }
+});
+
 // src/common/dynatrace.bizevents.ts
 var import_client_classic_environment_v2 = __toESM(require_cjs5(), 1);
 var MAX_FIELD_BYTES = 31 * 1024;
@@ -34169,7 +36123,7 @@ function toCloudEvent(sox) {
     type: sox.eventType,
     time,
     category: sox.eventType,
-    provider: "SOX",
+    provider: sox.eventProvider,
     datacontenttype: "application/json",
     data: {
       transactionId: sox.transactionId,
@@ -37107,37 +39061,38 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
+var ChunkSizes = { XSMALL: "10", SMALL: "500", MEDIUM: "1000", LARGE: "5000" };
 var SingleIntegrations = [
-  { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA },
-  { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA },
-  { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA }
+  { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE }
 ];
 var IntegrationPairs = [
-  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04 },
-  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04 },
-  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31 },
-  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11 },
-  { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1 },
-  { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1 },
-  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2 },
-  { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1 },
-  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28 },
-  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18 },
-  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29 },
-  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26 },
-  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30 },
-  { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1 },
-  { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1 },
-  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1 },
-  { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22 },
-  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20 },
-  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20 },
-  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20 },
-  { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17 },
-  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16 },
-  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1 },
-  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2 },
-  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3 }
+  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.SMALL },
+  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.SMALL },
+  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31, chunkSize: ChunkSizes.SMALL },
+  { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11, chunkSize: ChunkSizes.SMALL },
+  { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1, chunkSize: ChunkSizes.XSMALL },
+  { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.MEDIUM }
 ];
 var IntegrationResponseCodes = {
   SUCCESS: ["200", "200 OK", "204 NO_CONTENT"]
@@ -38059,6 +40014,301 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
   return { sourcePayload, destinationPayload };
 }
 
+// src/common/workflow-helper.ts
+var workflow_helper_exports = {};
+__export(workflow_helper_exports, {
+  DEFAULT_WINDOW_MINUTES: () => DEFAULT_WINDOW_MINUTES,
+  DQL_MAX_POLLS: () => DQL_MAX_POLLS,
+  DQL_REQUEST_TIMEOUT_MS: () => DQL_REQUEST_TIMEOUT_MS,
+  ERROR_WAIT_HOURS_DEFAULT: () => ERROR_WAIT_HOURS_DEFAULT,
+  ERROR_WAIT_MS_DEFAULT: () => ERROR_WAIT_MS_DEFAULT,
+  EVENT_TYPE_AUDIT: () => EVENT_TYPE_AUDIT,
+  EVENT_TYPE_STATE: () => EVENT_TYPE_STATE,
+  INDEX_MAX_TOTAL_LOGS: () => INDEX_MAX_TOTAL_LOGS,
+  INDEX_PAGE_SIZE: () => INDEX_PAGE_SIZE,
+  MAX_TX_PER_CHUNK: () => MAX_TX_PER_CHUNK,
+  SAFE_BYTES_PER_CHUNK: () => SAFE_BYTES_PER_CHUNK,
+  WORKFLOW_EVENT_PROVIDER: () => WORKFLOW_EVENT_PROVIDER,
+  buildChunksFromIndex: () => buildChunksFromIndex,
+  buildIndexForPair: () => buildIndexForPair,
+  buildPairStateFromWorkflowAudit: () => buildPairStateFromWorkflowAudit,
+  buildStateEventsForPair: () => buildStateEventsForPair,
+  buildTxIdInList: () => buildTxIdInList,
+  computeWindowForPair: () => computeWindowForPair,
+  decideStatusForRow: () => decideStatusForRow,
+  ingestStateEvents: () => ingestStateEvents,
+  runDqlWithPolling: () => runDqlWithPolling
+});
+var import_client_query = __toESM(require_cjs6(), 1);
+var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
+var DQL_MAX_POLLS = 10;
+var DQL_REQUEST_TIMEOUT_MS = 1e4;
+var INDEX_PAGE_SIZE = 1e4;
+var INDEX_MAX_TOTAL_LOGS = 2e5;
+var SAFE_BYTES_PER_CHUNK = 3 * 1024 * 1024;
+var MAX_TX_PER_CHUNK = 100;
+var ERROR_WAIT_HOURS_DEFAULT = 24;
+var ERROR_WAIT_MS_DEFAULT = ERROR_WAIT_HOURS_DEFAULT * 60 * 60 * 1e3;
+var DEFAULT_WINDOW_MINUTES = 15;
+var WORKFLOW_EVENT_PROVIDER = "WORKFLOW";
+var EVENT_TYPE_STATE = "STATE";
+var EVENT_TYPE_AUDIT = "AUDIT";
+async function runDqlWithPolling(query, opts) {
+  const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
+  const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
+  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query } });
+  if (start.state === "SUCCEEDED") {
+    return start.result;
+  }
+  if (!start.requestToken) {
+    throw new Error(
+      `DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`
+    );
+  }
+  let lastPoll = start;
+  for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
+    lastPoll = await import_client_query.queryExecutionClient.queryPoll({
+      requestToken: start.requestToken,
+      requestTimeoutMilliseconds: requestTimeoutMs
+    });
+  }
+  if (lastPoll.state !== "SUCCEEDED") {
+    throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
+  }
+  return lastPoll.result;
+}
+async function buildPairStateFromWorkflowAudit(icPairs) {
+  const query = `
+    fetch bizevents
+    | filter event.provider == "${WORKFLOW_EVENT_PROVIDER}"
+      and event.type == "${EVENT_TYPE_AUDIT}"
+    | summarize lastProcessedTo = max(window_to)
+      by: sox_ic_pair
+  `;
+  const result = await runDqlWithPolling(query);
+  const rows = result?.records ?? [];
+  const stateMap = {};
+  for (const row of rows) {
+    if (!row) continue;
+    const pairId = String(row.sox_ic_pair ?? "");
+    if (!pairId) continue;
+    const lastProcessedToRaw = row.lastProcessedTo;
+    const lastProcessedTo = lastProcessedToRaw === null || lastProcessedToRaw === void 0 ? null : String(lastProcessedToRaw);
+    stateMap[pairId] = { lastProcessedTo };
+  }
+  for (const pair of icPairs) {
+    if (!stateMap[pair.id]) {
+      stateMap[pair.id] = { lastProcessedTo: null };
+    }
+  }
+  return stateMap;
+}
+function computeWindowForPair(pairId, pairState, now = /* @__PURE__ */ new Date(), minutes = DEFAULT_WINDOW_MINUTES) {
+  const nowIso = now.toISOString();
+  const prev = pairState[pairId]?.lastProcessedTo;
+  const windowMs = minutes * 60 * 1e3;
+  let fromTs;
+  if (prev) {
+    fromTs = prev;
+  } else {
+    fromTs = new Date(now.getTime() - windowMs).toISOString();
+  }
+  const toTs = nowIso;
+  return { fromTs, toTs };
+}
+async function buildIndexForPair(pairId, sourceInt, destInt, fromTs, toTs, pageSize = INDEX_PAGE_SIZE, maxTotalLogs = INDEX_MAX_TOTAL_LOGS) {
+  const indexMap = {};
+  let cursorFrom = fromTs;
+  let totalLogs = 0;
+  for (; ; ) {
+    const pageQuery = `
+      fetch logs, bucket:{"sox_logs"},
+        from: toTimestamp("${cursorFrom}"),
+        to:   toTimestamp("${toTs}")
+      | filter sox_ic_pair == "${pairId}"
+      | fields
+          timestamp,
+          sox_transaction_id,
+          sox_integration,
+          contentSize = stringLength(content),
+          isError = (loglevel == "ERROR" or sox_error == true)
+      | sort timestamp
+      | limit ${pageSize}
+    `;
+    const result = await runDqlWithPolling(pageQuery);
+    const records = result?.records ?? [];
+    if (records.length === 0) {
+      break;
+    }
+    totalLogs += records.length;
+    let lastTimestamp = cursorFrom;
+    for (const r of records) {
+      if (!r) continue;
+      const txId = String(r.sox_transaction_id ?? "");
+      if (!txId) continue;
+      const ts = String(r.timestamp ?? cursorFrom);
+      const bytes = r.contentSize === void 0 || r.contentSize === null ? 0 : Number(r.contentSize);
+      const isError = Boolean(r.isError);
+      const integ = String(r.sox_integration ?? "");
+      if (!indexMap[txId]) {
+        indexMap[txId] = {
+          sox_transaction_id: txId,
+          hasSource: false,
+          hasDest: false,
+          hasError: false,
+          firstTs: ts,
+          lastTs: ts,
+          logCount: 0,
+          bytes: 0
+        };
+      }
+      const agg = indexMap[txId];
+      if (integ === sourceInt) agg.hasSource = true;
+      if (integ === destInt) agg.hasDest = true;
+      if (isError) agg.hasError = true;
+      const tsMs = Date.parse(ts);
+      const firstMs = Date.parse(agg.firstTs);
+      const lastMsAgg = Date.parse(agg.lastTs);
+      if (tsMs < firstMs) {
+        agg.firstTs = ts;
+      }
+      if (tsMs > lastMsAgg) {
+        agg.lastTs = ts;
+      }
+      agg.logCount += 1;
+      agg.bytes += bytes;
+      if (tsMs > Date.parse(lastTimestamp)) {
+        lastTimestamp = ts;
+      }
+    }
+    const lastMs = Date.parse(lastTimestamp);
+    cursorFrom = new Date(lastMs + 1).toISOString();
+    if (totalLogs > maxTotalLogs) {
+      console.log(
+        `Stopping index paging early for ${pairId} after ${totalLogs} logs`
+      );
+      break;
+    }
+  }
+  const indexRows = Object.values(indexMap);
+  return { indexRows, totalLogs };
+}
+function buildChunksFromIndex(indexRows, safeBytesPerChunk = SAFE_BYTES_PER_CHUNK, maxTxPerChunk = MAX_TX_PER_CHUNK) {
+  const rows = [...indexRows];
+  rows.sort((a, b) => Date.parse(a.firstTs) - Date.parse(b.firstTs));
+  const chunks = [];
+  let current = {
+    fromTs: "",
+    toTs: "",
+    txIds: [],
+    bytes: 0
+  };
+  for (const row of rows) {
+    const txBytes = row.bytes ?? 0;
+    const wouldExceedBytes = current.bytes + txBytes > safeBytesPerChunk && current.txIds.length > 0;
+    const wouldExceedTx = current.txIds.length >= maxTxPerChunk && current.txIds.length > 0;
+    if (wouldExceedBytes || wouldExceedTx) {
+      chunks.push(current);
+      current = { fromTs: "", toTs: "", txIds: [], bytes: 0 };
+    }
+    if (!current.fromTs) {
+      current.fromTs = row.firstTs;
+    }
+    current.toTs = row.lastTs;
+    current.bytes += txBytes;
+    current.txIds.push(row.sox_transaction_id);
+  }
+  if (current.txIds.length > 0) {
+    chunks.push(current);
+  }
+  return chunks;
+}
+function decideStatusForRow(row, nowMs, errorWaitMs = ERROR_WAIT_MS_DEFAULT) {
+  const {
+    hasSource,
+    hasDest,
+    hasError,
+    prevStatus,
+    prevLastErrorAt,
+    lastTs
+  } = row;
+  if (hasSource && hasDest) {
+    return { status: "COMPLETE", lastErrorAt: null };
+  }
+  if (hasError) {
+    const lastErrMs = prevLastErrorAt ? Date.parse(prevLastErrorAt) : Date.parse(lastTs);
+    const ageMs = nowMs - lastErrMs;
+    if (ageMs >= errorWaitMs) {
+      return { status: "ERROR_EXPIRED", lastErrorAt: lastTs };
+    }
+    return { status: "ERROR_PENDING", lastErrorAt: lastTs };
+  }
+  if (hasSource && !hasDest && !hasError) {
+    if (prevStatus === "COMPLETE" || prevStatus === "ERROR_EXPIRED") {
+      return { status: prevStatus, lastErrorAt: prevLastErrorAt ?? null };
+    }
+    if (prevStatus === "ERROR_PENDING") {
+      return {
+        status: "ERROR_PENDING",
+        lastErrorAt: prevLastErrorAt ?? null
+      };
+    }
+    return { status: "PENDING_DEST", lastErrorAt: prevLastErrorAt ?? null };
+  }
+  if (prevStatus) {
+    return { status: prevStatus, lastErrorAt: prevLastErrorAt ?? null };
+  }
+  return null;
+}
+function buildStateEventsForPair(pairId, rows, nowIso, errorWaitHours = ERROR_WAIT_HOURS_DEFAULT) {
+  const nowMs = Date.parse(nowIso);
+  const errorWaitMs = errorWaitHours * 60 * 60 * 1e3;
+  const stateEvents = [];
+  let completeCount = 0;
+  let pendingDestCount = 0;
+  let errorPendingCount = 0;
+  let errorExpiredCount = 0;
+  for (const row of rows) {
+    const decision = decideStatusForRow(row, nowMs, errorWaitMs);
+    if (!decision) continue;
+    const { status, lastErrorAt } = decision;
+    if (status === "COMPLETE") completeCount++;
+    if (status === "PENDING_DEST") pendingDestCount++;
+    if (status === "ERROR_PENDING") errorPendingCount++;
+    if (status === "ERROR_EXPIRED") errorExpiredCount++;
+    const event = {
+      "event.provider": WORKFLOW_EVENT_PROVIDER,
+      "event.type": EVENT_TYPE_STATE,
+      sox_ic_pair: pairId,
+      sox_transaction_id: row.sox_transaction_id,
+      status,
+      firstSeenAt: row.firstTs,
+      lastUpdatedAt: nowIso,
+      lastErrorAt,
+      processedAt: nowIso
+    };
+    stateEvents.push(event);
+  }
+  const totals = {
+    transactionsSeen: rows.length,
+    completeCount,
+    pendingDestCount,
+    errorPendingCount,
+    errorExpiredCount
+  };
+  return { stateEvents, totals };
+}
+async function ingestStateEvents(stateEvents) {
+  if (!stateEvents || stateEvents.length === 0) return;
+  await import_client_classic_environment_v22.businessEventsClient.ingest({
+    body: stateEvents,
+    type: "application/json; charset=utf-8"
+  });
+}
+function buildTxIdInList(txIds) {
+  return txIds.map((id) => `"${id}"`).join(",");
+}
+
 // src/common/integration-validation.types.ts
 var httpSoxKeys = [
   "int11-2",
@@ -38247,7 +40497,6 @@ function validateIntegrationPair(params) {
     }
   }
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
-  console.log("Validation isValid:", { isValid, errors });
   return {
     sourceIntegrationId: srcId,
     destinationIntegrationId: destId,
@@ -38381,7 +40630,9 @@ var index_default = {
   processMissingTransaction,
   processReportData,
   IntegrationPairs,
-  SingleIntegrations
+  SingleIntegrations,
+  wfhelper: workflow_helper_exports
+  // <-- added
 };
 export {
   index_default as default,
@@ -38390,7 +40641,8 @@ export {
   processReportData,
   processSingleIntegration,
   validateIntegration,
-  validateIntegrationPair
+  validateIntegrationPair,
+  workflow_helper_exports as wfhelper
 };
 /*! Bundled license information:
 
@@ -38431,6 +40683,7 @@ export {
 @dynatrace-sdk/shared-errors/cjs/index.js:
 @dynatrace-sdk/shared-client-utils/cjs/index.js:
 @dynatrace-sdk/client-classic-environment-v2/cjs/index.js:
+@dynatrace-sdk/client-query/cjs/index.js:
   (**
    * @license
    * Copyright 2023-2025 Dynatrace LLC
