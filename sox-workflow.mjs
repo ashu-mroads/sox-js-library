@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6231ce0\n
+// sox-workflow build hash: 2116dd6\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40576,12 +40576,12 @@ function processMatchedPair({
   return ingestResult;
 }
 function processMatchedPairArray({
-  src,
-  dest,
+  srcIntegration,
+  destIntegration,
   dataArray
 }) {
   const eventMap = dataArray.map((transaction) => {
-    return processMatchedPair({ loopItemValue: transaction, srcIntegration: src, destIntegration: dest });
+    return processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration });
   });
   return sendBusinessEvent(eventMap);
 }
