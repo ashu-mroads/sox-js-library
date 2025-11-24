@@ -1,4 +1,4 @@
-// sox-workflow build hash: ef3fc3b\n
+// sox-workflow build hash: 6231ce0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36142,31 +36142,39 @@ function toCloudEvent(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
 }
-async function sendBusinessEvent(soxEvent) {
-  const { cloudEvent, sourceDataTruncated, destinationDataTruncated } = toCloudEvent(soxEvent);
-  try {
-    const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
-      body: cloudEvent,
-      type: "application/cloudevent+json"
-    });
-    const status = resp?.status ?? 200;
-    return {
-      success: true,
-      status,
-      cloudEvent,
-      message: "Business event ingested successfully",
-      sourceDataTruncated,
-      destinationDataTruncated
-    };
-  } catch (e) {
-    return {
-      success: false,
-      cloudEvent,
-      error: e,
-      message: "Failed to ingest business event",
-      sourceDataTruncated,
-      destinationDataTruncated
-    };
+function createBatches(data, sizeLimit = 5e6) {
+  const batches = [];
+  let currentBatch = [];
+  let currentSize = 0;
+  for (let i = 0; i < data.length; i++) {
+    const { cloudEvent } = toCloudEvent(data[i]);
+    const recordSize = JSON.stringify(cloudEvent).length;
+    if (currentSize + recordSize > sizeLimit && currentBatch.length > 0) {
+      batches.push(currentBatch);
+      currentBatch = [];
+      currentSize = 0;
+    }
+    currentBatch.push(cloudEvent);
+    currentSize += recordSize;
+  }
+  if (currentBatch.length > 0) {
+    batches.push(currentBatch);
+  }
+  return batches;
+}
+async function sendBusinessEvent(soxEvents) {
+  const cloudEventBatches = createBatches(soxEvents);
+  for (const cloudEventBatch of cloudEventBatches) {
+    try {
+      const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
+        body: cloudEventBatch,
+        type: "application/cloudevent-batch+json"
+      });
+      const status = resp?.status ?? 200;
+      return { status, resp };
+    } catch (err) {
+      console.log("error", err);
+    }
   }
 }
 function summarizeAnomalies(validation, response) {
@@ -36219,7 +36227,7 @@ function summarizeAnomalies(validation, response) {
   const anomalySummary = parts.join("; ");
   return { anomalyCategory, anomalyType, anomalySummary };
 }
-async function createSoxBusinessEvent(params) {
+function createSoxBusinessEvent(params) {
   let destEventTime;
   let destinationPayload;
   if ("destinationPayload" in params) {
@@ -36263,7 +36271,7 @@ async function createSoxBusinessEvent(params) {
     sourceData,
     destinationData
   };
-  return sendBusinessEvent(businessEvent);
+  return businessEvent;
 }
 
 // src/common/regex-constants.ts
@@ -40507,7 +40515,7 @@ function validateIntegrationPair(params) {
     errors
   };
 }
-async function processMatchedPair({
+function processMatchedPair({
   loopItemValue,
   srcIntegration,
   destIntegration
@@ -40557,7 +40565,7 @@ async function processMatchedPair({
       mappingErrorCount: validationResult.mappingComparison?.mismatches.length || 0
     })
   );
-  const ingestResult = await createSoxBusinessEvent({
+  const ingestResult = createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
@@ -40567,7 +40575,17 @@ async function processMatchedPair({
   });
   return ingestResult;
 }
-async function processSingleIntegration({ loopItemValue }) {
+function processMatchedPairArray({
+  src,
+  dest,
+  dataArray
+}) {
+  const eventMap = dataArray.map((transaction) => {
+    return processMatchedPair({ loopItemValue: transaction, srcIntegration: src, destIntegration: dest });
+  });
+  return sendBusinessEvent(eventMap);
+}
+function processSingleIntegration({ loopItemValue }) {
   const soxData = loopItemValue.data[0];
   if (typeof soxData !== "object") {
     throw new Error("processSingleIntegration: no valid content found (soxData = loopItemValue?.data[0]): " + JSON.stringify(soxData));
@@ -40579,7 +40597,7 @@ async function processSingleIntegration({ loopItemValue }) {
     sourceIntegrationId,
     payload: soxData
   });
-  const ingestResult = await createSoxBusinessEvent({
+  const ingestResult = createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
@@ -40587,7 +40605,7 @@ async function processSingleIntegration({ loopItemValue }) {
   });
   return ingestResult;
 }
-async function processMissingTransaction({ loopItemValue }) {
+function processMissingTransaction({ loopItemValue }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
     throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
@@ -40610,7 +40628,7 @@ async function processMissingTransaction({ loopItemValue }) {
     anomalyCategory: "Missing Transaction",
     anomalyType: "Missing Transaction Pair"
   });
-  const ingestResult = await createSoxBusinessEvent({
+  const ingestResult = createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
@@ -40637,6 +40655,7 @@ var index_default = {
 export {
   index_default as default,
   processMatchedPair,
+  processMatchedPairArray,
   processMissingTransaction,
   processReportData,
   processSingleIntegration,
