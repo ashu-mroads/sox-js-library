@@ -1,4 +1,4 @@
-// sox-workflow build hash: 2116dd6\n
+// sox-workflow build hash: abcdc3c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36207,7 +36207,7 @@ function summarizeAnomalies(validation, response) {
     return { anomalyCategory, anomalyType };
   }
   const parts = [];
-  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map:${mappingFailures.length};`;
+  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length};`;
   parts.push(countIssues);
   allFailures.forEach((f) => {
     parts.push(
@@ -36240,7 +36240,8 @@ function createSoxBusinessEvent(params) {
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload
+    sourcePayload,
+    executionId
   } = params;
   const { anomalyCategory, anomalyType, anomalySummary } = summarizeAnomalies(validationResult, sourcePayload);
   let sourceData;
@@ -36258,6 +36259,7 @@ function createSoxBusinessEvent(params) {
   const businessEvent = {
     timestamp: (/* @__PURE__ */ new Date()).toISOString(),
     eventId: crypto.randomUUID(),
+    executionId: executionId ?? "missing_execution_id",
     eventProvider: "SOX",
     eventType: validationResult.isValid ? "OK" : "ERROR",
     srcEventTime,
@@ -39069,38 +39071,38 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
-var ChunkSizes = { XSMALL: "10", SMALL: "500", MEDIUM: "1000", LARGE: "5000" };
+var ChunkSizes = { XSMALL: "100", SMALL: "5000", MEDIUM: "10000", LARGE: "50000" };
 var SingleIntegrations = [
   { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-09", source: INTEGRATIONS.INT10_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE }
 ];
 var IntegrationPairs = [
-  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.SMALL },
-  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.SMALL },
-  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31, chunkSize: ChunkSizes.SMALL },
+  { id: "IC-01", source: INTEGRATIONS.INT03_1, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-02", source: INTEGRATIONS.INT03_2, destination: INTEGRATIONS.INT04, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-03", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT31, chunkSize: ChunkSizes.LARGE },
   { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11, chunkSize: ChunkSizes.SMALL },
   { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1, chunkSize: ChunkSizes.XSMALL },
   { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2, chunkSize: ChunkSizes.LARGE },
   { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.SMALL },
   { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.MEDIUM }
+  { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE }
 ];
 var IntegrationResponseCodes = {
   SUCCESS: ["200", "200 OK", "204 NO_CONTENT"]
@@ -40518,7 +40520,8 @@ function validateIntegrationPair(params) {
 function processMatchedPair({
   loopItemValue,
   srcIntegration,
-  destIntegration
+  destIntegration,
+  execution_id
 }) {
   if (!srcIntegration || !destIntegration) {
     throw new Error("processMatchedPair: srcIntegration and destIntegration are required.");
@@ -40571,17 +40574,19 @@ function processMatchedPair({
     srcEventTime,
     destEventTime,
     sourcePayload,
-    destinationPayload
+    destinationPayload,
+    executionId: execution_id
   });
   return ingestResult;
 }
 function processMatchedPairArray({
   srcIntegration,
   destIntegration,
-  dataArray
+  dataArray,
+  execution_id
 }) {
   const eventMap = dataArray.map((transaction) => {
-    return processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration });
+    return processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, execution_id });
   });
   return sendBusinessEvent(eventMap);
 }
@@ -40593,6 +40598,7 @@ function processSingleIntegration({ loopItemValue }) {
   const sourceIntegrationId = soxData.sox_integration;
   const srcEventTime = soxData.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = soxData.sox_transaction_id;
+  const executionId = loopItemValue?.execution_id || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload: soxData
@@ -40601,7 +40607,8 @@ function processSingleIntegration({ loopItemValue }) {
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload: soxData
+    sourcePayload: soxData,
+    executionId
   });
   return ingestResult;
 }
@@ -40613,6 +40620,7 @@ function processMissingTransaction({ loopItemValue }) {
   const sourceIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
+  const executionId = loopItemValue?.execution_id || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload
@@ -40632,7 +40640,8 @@ function processMissingTransaction({ loopItemValue }) {
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload: payload
+    sourcePayload: payload,
+    executionId
   });
   return ingestResult;
 }
