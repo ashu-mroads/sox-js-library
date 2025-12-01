@@ -1,4 +1,4 @@
-// sox-workflow build hash: abcdc3c\n
+// sox-workflow build hash: eac5ad4\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39071,7 +39071,7 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
-var ChunkSizes = { XSMALL: "100", SMALL: "5000", MEDIUM: "10000", LARGE: "50000" };
+var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000" };
 var SingleIntegrations = [
   { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
