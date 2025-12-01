@@ -40187,8 +40187,7 @@ async function isWorkflowRunning() {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      const rawCount = records[0]?.count;
-      count = typeof rawCount === "number" ? rawCount : 0;
+      count = records[0]?.count;
     }
   } catch (ex) {
     console.log("getWorkflowExecutionCount", ex);
@@ -40215,8 +40214,7 @@ async function getWorkflowExecutionCount() {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      const rawCount = records[0]?.count;
-      count = typeof rawCount === "number" ? rawCount : 0;
+      count = records[0]?.count;
     }
   } catch (ex) {
     console.log("getWorkflowExecutionCount", ex);
@@ -40245,9 +40243,7 @@ async function getRemainingCount(source, destination, lastProcessed) {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      const rawCount = records[0]?.count;
-      console.log("rawCount type", { type: typeof rawCount, rawCount });
-      count = rawCount;
+      count = records[0]?.count;
     }
   } catch (ex) {
     console.log("getRemainingCount", ex);
