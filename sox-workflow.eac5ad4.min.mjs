@@ -32,7 +32,7 @@ var Gd=Object.create;var tt=Object.defineProperty;var kd=Object.getOwnPropertyDe
         | filter dt.system.bucket == "sox_logs"
         | filter sox_integration == "${t}" OR sox_integration == "${a}"      
         | summarize count = count(), by: { sox_integration }
-        | sort count desc`,h=0;try{let N=(await Sr(u))?.records??[];if(N.length>0){let E=N[0]?.count;h=typeof E=="number"?E:0}}catch(g){console.log("getRemainingCount",g)}return console.log(`getRemainingCount source: ${t} dest: ${a} lastProcessed: ${s} ::  ${h}`),h}async function Bd(t,a){let s=`
+        | sort count desc`,h=0;try{let N=(await Sr(u))?.records??[];if(N.length>0){let E=N[0]?.count;console.log("rawCount type",{type:typeof E,rawCount:E}),h=E}}catch(g){console.log("getRemainingCount",g)}return console.log(`getRemainingCount source: ${t} dest: ${a} lastProcessed: ${s} ::  ${h}`),h}async function Bd(t,a){let s=`
     fetch bizevents, from: -1d
     | filter dt.system.bucket == "sox_bizevents" 
     | filter event.provider == "sox" 

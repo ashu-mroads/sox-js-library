@@ -40246,7 +40246,8 @@ async function getRemainingCount(source, destination, lastProcessed) {
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
       const rawCount = records[0]?.count;
-      count = typeof rawCount === "number" ? rawCount : 0;
+      console.log("rawCount type", { type: typeof rawCount, rawCount });
+      count = rawCount;
     }
   } catch (ex) {
     console.log("getRemainingCount", ex);
