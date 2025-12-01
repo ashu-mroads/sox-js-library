@@ -40027,42 +40027,24 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
 // src/common/workflow-helper.ts
 var workflow_helper_exports = {};
 __export(workflow_helper_exports, {
-  DEFAULT_WINDOW_MINUTES: () => DEFAULT_WINDOW_MINUTES,
   DQL_MAX_POLLS: () => DQL_MAX_POLLS,
   DQL_REQUEST_TIMEOUT_MS: () => DQL_REQUEST_TIMEOUT_MS,
-  ERROR_WAIT_HOURS_DEFAULT: () => ERROR_WAIT_HOURS_DEFAULT,
-  ERROR_WAIT_MS_DEFAULT: () => ERROR_WAIT_MS_DEFAULT,
-  EVENT_TYPE_AUDIT: () => EVENT_TYPE_AUDIT,
-  EVENT_TYPE_STATE: () => EVENT_TYPE_STATE,
-  INDEX_MAX_TOTAL_LOGS: () => INDEX_MAX_TOTAL_LOGS,
-  INDEX_PAGE_SIZE: () => INDEX_PAGE_SIZE,
-  MAX_TX_PER_CHUNK: () => MAX_TX_PER_CHUNK,
-  SAFE_BYTES_PER_CHUNK: () => SAFE_BYTES_PER_CHUNK,
-  WORKFLOW_EVENT_PROVIDER: () => WORKFLOW_EVENT_PROVIDER,
-  buildChunksFromIndex: () => buildChunksFromIndex,
-  buildIndexForPair: () => buildIndexForPair,
-  buildPairStateFromWorkflowAudit: () => buildPairStateFromWorkflowAudit,
-  buildStateEventsForPair: () => buildStateEventsForPair,
-  buildTxIdInList: () => buildTxIdInList,
-  computeWindowForPair: () => computeWindowForPair,
-  decideStatusForRow: () => decideStatusForRow,
-  ingestStateEvents: () => ingestStateEvents,
+  TIMERANGE_MINS: () => TIMERANGE_MINS,
+  WF_ALLOWANCE: () => WF_ALLOWANCE,
+  WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
+  getInitializeOrLatestState: () => getInitializeOrLatestState,
+  getLatestState: () => getLatestState,
+  getPrevDaySourceCount: () => getPrevDaySourceCount,
+  getPreviousDayEventCount: () => getPreviousDayEventCount,
+  getRemainingCount: () => getRemainingCount,
+  getWorkflowExecutionCount: () => getWorkflowExecutionCount,
+  isWorkflowRunning: () => isWorkflowRunning,
   runDqlWithPolling: () => runDqlWithPolling
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
 var DQL_MAX_POLLS = 10;
 var DQL_REQUEST_TIMEOUT_MS = 1e4;
-var INDEX_PAGE_SIZE = 1e4;
-var INDEX_MAX_TOTAL_LOGS = 2e5;
-var SAFE_BYTES_PER_CHUNK = 3 * 1024 * 1024;
-var MAX_TX_PER_CHUNK = 100;
-var ERROR_WAIT_HOURS_DEFAULT = 24;
-var ERROR_WAIT_MS_DEFAULT = ERROR_WAIT_HOURS_DEFAULT * 60 * 60 * 1e3;
-var DEFAULT_WINDOW_MINUTES = 15;
-var WORKFLOW_EVENT_PROVIDER = "WORKFLOW";
-var EVENT_TYPE_STATE = "STATE";
-var EVENT_TYPE_AUDIT = "AUDIT";
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
@@ -40087,236 +40069,211 @@ async function runDqlWithPolling(query, opts) {
   }
   return lastPoll.result;
 }
-async function buildPairStateFromWorkflowAudit(icPairs) {
-  const query = `
-    fetch bizevents
-    | filter event.provider == "${WORKFLOW_EVENT_PROVIDER}"
-      and event.type == "${EVENT_TYPE_AUDIT}"
-    | summarize lastProcessedTo = max(window_to)
-      by: sox_ic_pair
-  `;
-  const result = await runDqlWithPolling(query);
-  const rows = result?.records ?? [];
-  const stateMap = {};
-  for (const row of rows) {
-    if (!row) continue;
-    const pairId = String(row.sox_ic_pair ?? "");
-    if (!pairId) continue;
-    const lastProcessedToRaw = row.lastProcessedTo;
-    const lastProcessedTo = lastProcessedToRaw === null || lastProcessedToRaw === void 0 ? null : String(lastProcessedToRaw);
-    stateMap[pairId] = { lastProcessedTo };
-  }
-  for (const pair of icPairs) {
-    if (!stateMap[pair.id]) {
-      stateMap[pair.id] = { lastProcessedTo: null };
-    }
-  }
-  return stateMap;
-}
-function computeWindowForPair(pairId, pairState, now = /* @__PURE__ */ new Date(), minutes = DEFAULT_WINDOW_MINUTES) {
-  const nowIso = now.toISOString();
-  const prev = pairState[pairId]?.lastProcessedTo;
-  const windowMs = minutes * 60 * 1e3;
-  let fromTs;
-  if (prev) {
-    fromTs = prev;
-  } else {
-    fromTs = new Date(now.getTime() - windowMs).toISOString();
-  }
-  const toTs = nowIso;
-  return { fromTs, toTs };
-}
-async function buildIndexForPair(pairId, sourceInt, destInt, fromTs, toTs, pageSize = INDEX_PAGE_SIZE, maxTotalLogs = INDEX_MAX_TOTAL_LOGS) {
-  const indexMap = {};
-  let cursorFrom = fromTs;
-  let totalLogs = 0;
-  for (; ; ) {
-    const pageQuery = `
-      fetch logs, bucket:{"sox_logs"},
-        from: toTimestamp("${cursorFrom}"),
-        to:   toTimestamp("${toTs}")
-      | filter sox_ic_pair == "${pairId}"
-      | fields
-          timestamp,
-          sox_transaction_id,
-          sox_integration,
-          contentSize = stringLength(content),
-          isError = (loglevel == "ERROR" or sox_error == true)
-      | sort timestamp
-      | limit ${pageSize}
-    `;
-    const result = await runDqlWithPolling(pageQuery);
-    const records = result?.records ?? [];
-    if (records.length === 0) {
-      break;
-    }
-    totalLogs += records.length;
-    let lastTimestamp = cursorFrom;
-    for (const r of records) {
-      if (!r) continue;
-      const txId = String(r.sox_transaction_id ?? "");
-      if (!txId) continue;
-      const ts = String(r.timestamp ?? cursorFrom);
-      const bytes = r.contentSize === void 0 || r.contentSize === null ? 0 : Number(r.contentSize);
-      const isError = Boolean(r.isError);
-      const integ = String(r.sox_integration ?? "");
-      if (!indexMap[txId]) {
-        indexMap[txId] = {
-          sox_transaction_id: txId,
-          hasSource: false,
-          hasDest: false,
-          hasError: false,
-          firstTs: ts,
-          lastTs: ts,
-          logCount: 0,
-          bytes: 0
-        };
-      }
-      const agg = indexMap[txId];
-      if (integ === sourceInt) agg.hasSource = true;
-      if (integ === destInt) agg.hasDest = true;
-      if (isError) agg.hasError = true;
-      const tsMs = Date.parse(ts);
-      const firstMs = Date.parse(agg.firstTs);
-      const lastMsAgg = Date.parse(agg.lastTs);
-      if (tsMs < firstMs) {
-        agg.firstTs = ts;
-      }
-      if (tsMs > lastMsAgg) {
-        agg.lastTs = ts;
-      }
-      agg.logCount += 1;
-      agg.bytes += bytes;
-      if (tsMs > Date.parse(lastTimestamp)) {
-        lastTimestamp = ts;
-      }
-    }
-    const lastMs = Date.parse(lastTimestamp);
-    cursorFrom = new Date(lastMs + 1).toISOString();
-    if (totalLogs > maxTotalLogs) {
-      console.log(
-        `Stopping index paging early for ${pairId} after ${totalLogs} logs`
-      );
-      break;
-    }
-  }
-  const indexRows = Object.values(indexMap);
-  return { indexRows, totalLogs };
-}
-function buildChunksFromIndex(indexRows, safeBytesPerChunk = SAFE_BYTES_PER_CHUNK, maxTxPerChunk = MAX_TX_PER_CHUNK) {
-  const rows = [...indexRows];
-  rows.sort((a, b) => Date.parse(a.firstTs) - Date.parse(b.firstTs));
-  const chunks = [];
-  let current = {
-    fromTs: "",
-    toTs: "",
-    txIds: [],
-    bytes: 0
+var TIMERANGE_MINS = 15;
+var WORKFLOW_HOURLY_LIMIT = 1e3;
+var WF_ALLOWANCE = 100;
+function getPreviousDayUtcRange() {
+  const now = /* @__PURE__ */ new Date();
+  const yesterday = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() - 1
+  ));
+  const start = new Date(Date.UTC(
+    yesterday.getUTCFullYear(),
+    yesterday.getUTCMonth(),
+    yesterday.getUTCDate(),
+    0,
+    0,
+    0,
+    0
+  ));
+  const end = new Date(Date.UTC(
+    yesterday.getUTCFullYear(),
+    yesterday.getUTCMonth(),
+    yesterday.getUTCDate(),
+    23,
+    59,
+    59,
+    999
+  ));
+  return {
+    start: start.toISOString(),
+    end: end.toISOString()
   };
-  for (const row of rows) {
-    const txBytes = row.bytes ?? 0;
-    const wouldExceedBytes = current.bytes + txBytes > safeBytesPerChunk && current.txIds.length > 0;
-    const wouldExceedTx = current.txIds.length >= maxTxPerChunk && current.txIds.length > 0;
-    if (wouldExceedBytes || wouldExceedTx) {
-      chunks.push(current);
-      current = { fromTs: "", toTs: "", txIds: [], bytes: 0 };
-    }
-    if (!current.fromTs) {
-      current.fromTs = row.firstTs;
-    }
-    current.toTs = row.lastTs;
-    current.bytes += txBytes;
-    current.txIds.push(row.sox_transaction_id);
-  }
-  if (current.txIds.length > 0) {
-    chunks.push(current);
-  }
-  return chunks;
 }
-function decideStatusForRow(row, nowMs, errorWaitMs = ERROR_WAIT_MS_DEFAULT) {
-  const {
-    hasSource,
-    hasDest,
-    hasError,
-    prevStatus,
-    prevLastErrorAt,
-    lastTs
-  } = row;
-  if (hasSource && hasDest) {
-    return { status: "COMPLETE", lastErrorAt: null };
-  }
-  if (hasError) {
-    const lastErrMs = prevLastErrorAt ? Date.parse(prevLastErrorAt) : Date.parse(lastTs);
-    const ageMs = nowMs - lastErrMs;
-    if (ageMs >= errorWaitMs) {
-      return { status: "ERROR_EXPIRED", lastErrorAt: lastTs };
-    }
-    return { status: "ERROR_PENDING", lastErrorAt: lastTs };
-  }
-  if (hasSource && !hasDest && !hasError) {
-    if (prevStatus === "COMPLETE" || prevStatus === "ERROR_EXPIRED") {
-      return { status: prevStatus, lastErrorAt: prevLastErrorAt ?? null };
-    }
-    if (prevStatus === "ERROR_PENDING") {
-      return {
-        status: "ERROR_PENDING",
-        lastErrorAt: prevLastErrorAt ?? null
-      };
-    }
-    return { status: "PENDING_DEST", lastErrorAt: prevLastErrorAt ?? null };
-  }
-  if (prevStatus) {
-    return { status: prevStatus, lastErrorAt: prevLastErrorAt ?? null };
-  }
-  return null;
-}
-function buildStateEventsForPair(pairId, rows, nowIso, errorWaitHours = ERROR_WAIT_HOURS_DEFAULT) {
-  const nowMs = Date.parse(nowIso);
-  const errorWaitMs = errorWaitHours * 60 * 60 * 1e3;
-  const stateEvents = [];
-  let completeCount = 0;
-  let pendingDestCount = 0;
-  let errorPendingCount = 0;
-  let errorExpiredCount = 0;
-  for (const row of rows) {
-    const decision = decideStatusForRow(row, nowMs, errorWaitMs);
-    if (!decision) continue;
-    const { status, lastErrorAt } = decision;
-    if (status === "COMPLETE") completeCount++;
-    if (status === "PENDING_DEST") pendingDestCount++;
-    if (status === "ERROR_PENDING") errorPendingCount++;
-    if (status === "ERROR_EXPIRED") errorExpiredCount++;
-    const event = {
-      "event.provider": WORKFLOW_EVENT_PROVIDER,
-      "event.type": EVENT_TYPE_STATE,
-      sox_ic_pair: pairId,
-      sox_transaction_id: row.sox_transaction_id,
-      status,
-      firstSeenAt: row.firstTs,
-      lastUpdatedAt: nowIso,
-      lastErrorAt,
-      processedAt: nowIso
-    };
-    stateEvents.push(event);
-  }
-  const totals = {
-    transactionsSeen: rows.length,
-    completeCount,
-    pendingDestCount,
-    errorPendingCount,
-    errorExpiredCount
+function createStateEvent(params) {
+  return {
+    "event.provider": "sox",
+    "event.source": "WORKFLOW",
+    "event.type": "STATE",
+    ...params
   };
-  return { stateEvents, totals };
 }
-async function ingestStateEvents(stateEvents) {
-  if (!stateEvents || stateEvents.length === 0) return;
-  await import_client_classic_environment_v22.businessEventsClient.ingest({
-    body: stateEvents,
-    type: "application/json; charset=utf-8"
+function initializeTime() {
+  const now = /* @__PURE__ */ new Date();
+  const from = new Date(now);
+  from.setHours(0, 0, 0, 0);
+  from.setDate(from.getDate() - 1);
+  return from.toISOString();
+}
+function getPrevDaySourceCount(prevDayEventCount, sourceId) {
+  const match = prevDayEventCount?.find(
+    (r) => r.sox_integration === sourceId
+  );
+  return match?.count ? Number(match.count) : 0;
+}
+async function logState(stateObj) {
+  try {
+    await import_client_classic_environment_v22.businessEventsClient.ingest({
+      body: stateObj,
+      type: "application/json; charset=utf-8"
+    });
+    console.log("State saved successfully", stateObj);
+  } catch (e) {
+    console.error("Failed to ingest event", e);
+  }
+}
+async function getInitializeOrLatestState(source, destination, executionId, eventCountForDay) {
+  const latestState = await getLatestState(source, destination);
+  const lastProcessedSourceTimestamp = latestState?.lastProcessedSourceTimestamp ?? initializeTime();
+  const lastProcessedTransactionId = latestState?.lastProcessedTransactionId ?? "";
+  const effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  const stateObj = createStateEvent({
+    source,
+    destination,
+    lastProcessedSourceTimestamp,
+    lastProcessedTransactionId,
+    eventCountForDay: effectiveEventCountForDay,
+    executionId
   });
+  if (!latestState) {
+    await logState(stateObj);
+    console.log("Logging state", stateObj);
+  } else {
+    console.log("Not logging state, returning existing state", stateObj);
+  }
+  return stateObj;
 }
-function buildTxIdInList(txIds) {
-  return txIds.map((id) => `"${id}"`).join(",");
+async function getPreviousDayEventCount() {
+  const { start, end } = getPreviousDayUtcRange();
+  const dql = `fetch logs, from: "${start}", to: "${end}"
+        | filter dt.system.bucket == "sox_logs"
+        | summarize count = count(), by: { sox_integration }
+        | sort sox_integration asc`;
+  try {
+    const dqlResult = await runDqlWithPolling(dql);
+    const records = dqlResult?.records ?? [];
+    return records ?? null;
+  } catch (ex) {
+    console.log("getPreviousDayEventCount", ex);
+  }
+}
+async function isWorkflowRunning() {
+  const dql = ` fetch dt.system.events, from: -1h
+    | filter event.kind == "WORKFLOW_EVENT"
+        and event.provider == "AUTOMATION_ENGINE"
+        and event.type == "TASK_EXECUTION"
+    | filter dt.automation_engine.state != "RUNNING"
+    | filter (
+          matchesPhrase(dt.automation_engine.workflow.title, "process_not_match_pair_integration_anomalies")
+          or matchesPhrase(dt.automation_engine.workflow.title, "process_pair_integration_anomalies")
+          or matchesPhrase(dt.automation_engine.workflow.title, "process_transaction_anomalies")
+      )
+    | summarize count = count(), by: { dt.automation_engine.workflow.title }
+    | summarize max_count = max(count)`;
+  let count = 0;
+  try {
+    const dqlResult = await runDqlWithPolling(dql);
+    const records = dqlResult?.records ?? [];
+    if (records.length > 0) {
+      const rawCount = records[0]?.count;
+      count = typeof rawCount === "number" ? rawCount : 0;
+    }
+  } catch (ex) {
+    console.log("getWorkflowExecutionCount", ex);
+    console.log("getWorkflowExecutionCount - DQL", dql);
+  }
+  console.log(`getWorkflowExecutionCount ${count}`);
+  return count;
+}
+async function getWorkflowExecutionCount() {
+  const dql = ` fetch dt.system.events, from: -1h
+    | filter event.kind == "WORKFLOW_EVENT"
+        and event.provider == "AUTOMATION_ENGINE"
+        and event.type == "TASK_EXECUTION"
+    | filter dt.automation_engine.state != "RUNNING"
+    | filter (
+          matchesPhrase(dt.automation_engine.workflow.title, "process_not_match_pair_integration_anomalies")
+          or matchesPhrase(dt.automation_engine.workflow.title, "process_pair_integration_anomalies")
+          or matchesPhrase(dt.automation_engine.workflow.title, "process_transaction_anomalies")
+      )
+    | summarize count = count(), by: { dt.automation_engine.workflow.title }
+    | summarize max_count = max(count)`;
+  let count = 0;
+  try {
+    const dqlResult = await runDqlWithPolling(dql);
+    const records = dqlResult?.records ?? [];
+    if (records.length > 0) {
+      const rawCount = records[0]?.count;
+      count = typeof rawCount === "number" ? rawCount : 0;
+    }
+  } catch (ex) {
+    console.log("getWorkflowExecutionCount", ex);
+    console.log("getWorkflowExecutionCount - DQL", dql);
+  }
+  console.log(`getWorkflowExecutionCount ${count}`);
+  return count;
+}
+async function getRemainingCount(source, destination, lastProcessed) {
+  const { start, end } = getPreviousDayUtcRange();
+  const endDate = new Date(end);
+  const fromDate = new Date(lastProcessed ?? start);
+  if (fromDate > endDate) {
+    console.log(
+      `lastProcessed (${fromDate.toISOString()}) is after end (${endDate.toISOString()}), returning 0`
+    );
+    return 0;
+  }
+  const dql = `fetch logs, from: "${lastProcessed}", to: "${end}"
+        | filter dt.system.bucket == "sox_logs"
+        | filter sox_integration == "${source}" OR sox_integration == "${destination}"      
+        | summarize count = count(), by: { sox_integration }
+        | sort count desc`;
+  let count = 0;
+  try {
+    const dqlResult = await runDqlWithPolling(dql);
+    const records = dqlResult?.records ?? [];
+    if (records.length > 0) {
+      const rawCount = records[0]?.count;
+      count = typeof rawCount === "number" ? rawCount : 0;
+    }
+  } catch (ex) {
+    console.log("getRemainingCount", ex);
+  }
+  console.log(`getRemainingCount source: ${source} dest: ${destination} lastProcessed: ${lastProcessed} ::  ${count}`);
+  return count;
+}
+async function getLatestState(sourceId, destId) {
+  const dql = `
+    fetch bizevents, from: -1d
+    | filter dt.system.bucket == "sox_bizevents" 
+    | filter event.provider == "sox" 
+    | filter event.source == "WORKFLOW"
+    | filter event.type == "STATE" 
+    | filter source == "${sourceId}" and destination == "${destId}"      
+    | sort lastProcessedSourceTimestamp desc
+    | limit 1
+    | fields
+        source,
+        destination,
+        lastProcessedSourceTimestamp,
+        lastProcessedTransactionId,
+        eventCountForDay
+  `;
+  const dqlResult = await runDqlWithPolling(dql);
+  const records = dqlResult?.records ?? [];
+  return records[0] ?? null;
 }
 
 // src/common/integration-validation.types.ts
