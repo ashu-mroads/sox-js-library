@@ -1,4 +1,4 @@
-// sox-workflow build hash: eac5ad4\n
+// sox-workflow build hash: e3fcb25\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39328,60 +39328,33 @@ var Validators = {
     }
     const flat = this._flattenToPathValueMap(payload);
     const normalize = (p) => p.replace(/<array\d+>/g, "<array>").replace(/^\./, "");
+    const normalizedFlat = /* @__PURE__ */ new Map();
+    for (const [actualPath, value] of Object.entries(flat)) {
+      const norm = normalize(actualPath);
+      if (!normalizedFlat.has(norm)) normalizedFlat.set(norm, []);
+      normalizedFlat.get(norm).push([actualPath, value]);
+    }
     for (const [rulePath, rx] of Object.entries(ruleMap)) {
       const isRequired = rx instanceof RegExp || !rx?.optional;
-      const matching = Object.entries(flat).filter(([actual]) => {
-        return normalize(actual) === rulePath;
-      });
-      if (matching.length === 0 && isRequired) {
-        errorMessages.push(`Missing field: ${rulePath}`);
-        failures.push({
-          rulePath,
-          actualPath: rulePath,
-          value: void 0,
-          anomalyCategory: "Field Level Anomaly",
-          anomalyType: "Missing Field"
-        });
-        errorMessages.push(`Missing value: ${rulePath}`);
-        failures.push({
-          rulePath,
-          actualPath: rulePath,
-          value: void 0,
-          anomalyCategory: "Field Level Anomaly",
-          anomalyType: "Missing Value"
-        });
+      const matches = normalizedFlat.get(rulePath) || [];
+      if (matches.length === 0 && isRequired) {
+        errorMessages.push(`Missing field: ${rulePath}`, `Missing value: ${rulePath}`);
+        failures.push(
+          { rulePath, actualPath: rulePath, value: void 0, anomalyCategory: "Field Level Anomaly", anomalyType: "Missing Field" },
+          { rulePath, actualPath: rulePath, value: void 0, anomalyCategory: "Field Level Anomaly", anomalyType: "Missing Value" }
+        );
         continue;
       }
-      matching.forEach(([actualPath, value]) => {
+      for (const [actualPath, value] of matches) {
+        const strValue = String(value);
         if (this.isEmpty(value) && isRequired) {
           errorMessages.push(`Empty value at ${actualPath} (rule: ${rulePath})`);
-          failures.push({
-            rulePath,
-            actualPath,
-            value,
-            anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Missing Value"
-          });
-        } else if (!(rx instanceof RegExp) && rx.regex && !rx.optional && !rx.regex.test(String(value))) {
+          failures.push({ rulePath, actualPath, value, anomalyCategory: "Field Level Anomaly", anomalyType: "Missing Value" });
+        } else if (rx instanceof RegExp && !rx.test(strValue) || !(rx instanceof RegExp) && rx.regex && !rx.optional && !rx.regex.test(strValue)) {
           errorMessages.push(`Invalid format at ${actualPath} value="${value}" (rule: ${rulePath})`);
-          failures.push({
-            rulePath,
-            actualPath,
-            value,
-            anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Invalid Field Format"
-          });
-        } else if (rx instanceof RegExp && !rx.test(String(value))) {
-          errorMessages.push(`Invalid format at ${actualPath} value="${value}" (rule: ${rulePath})`);
-          failures.push({
-            rulePath,
-            actualPath,
-            value,
-            anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Invalid Field Format"
-          });
+          failures.push({ rulePath, actualPath, value, anomalyCategory: "Field Level Anomaly", anomalyType: "Invalid Field Format" });
         }
-      });
+      }
     }
     return {
       isValid: errorMessages.length === 0,
@@ -40142,9 +40115,9 @@ async function getInitializeOrLatestState(source, destination, executionId, even
   const stateObj = createStateEvent({
     source,
     destination,
-    lastProcessedSourceTimestamp,
-    lastProcessedTransactionId,
-    eventCountForDay: effectiveEventCountForDay,
+    lastProcessedSourceTimestamp: String(lastProcessedSourceTimestamp),
+    lastProcessedTransactionId: String(lastProcessedSourceTimestamp),
+    eventCountForDay: Number(effectiveEventCountForDay) ?? 0,
     executionId
   });
   if (!latestState) {
@@ -40187,7 +40160,7 @@ async function isWorkflowRunning() {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      count = records[0]?.count;
+      count = Number(records[0]?.count ?? 0);
     }
   } catch (ex) {
     console.log("getWorkflowExecutionCount", ex);
@@ -40214,7 +40187,7 @@ async function getWorkflowExecutionCount() {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      count = records[0]?.count;
+      count = Number(records[0]?.count ?? 0);
     }
   } catch (ex) {
     console.log("getWorkflowExecutionCount", ex);
@@ -40243,7 +40216,7 @@ async function getRemainingCount(source, destination, lastProcessed) {
     const dqlResult = await runDqlWithPolling(dql);
     const records = dqlResult?.records ?? [];
     if (records.length > 0) {
-      count = records[0]?.count;
+      count = Number(records[0]?.count ?? 0);
     }
   } catch (ex) {
     console.log("getRemainingCount", ex);
@@ -40540,7 +40513,8 @@ function processMatchedPairArray({
   execution_id
 }) {
   const eventMap = dataArray.map((transaction) => {
-    return processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, execution_id });
+    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, execution_id });
+    return processPair;
   });
   return sendBusinessEvent(eventMap);
 }
