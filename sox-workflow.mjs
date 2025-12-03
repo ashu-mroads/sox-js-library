@@ -1,4 +1,4 @@
-// sox-workflow build hash: e3fcb25\n
+// sox-workflow build hash: 780e077\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36282,7 +36282,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-\.TZ%]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -36306,7 +36306,7 @@ var INT1531FieldRegexMap = int1531FieldRegexMapData;
 var int1532FieldRegexMapData = {
   "confirmationIds<array>.value": REGEX.ALPHANUMERIC,
   "propertyCode": REGEX.ALPHANUMERIC,
-  "guestInformation.altCustId": REGEX.ALPHANUMERIC
+  "guestInformation.altCustId": { regex: REGEX.ALPHANUMERIC, optional: true }
 };
 var INT1532FieldRegexMap = int1532FieldRegexMapData;
 
@@ -36463,7 +36463,7 @@ var INT16FieldRegexMap = {
   "request.request_body.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
   "request.request_body.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
-  "request.request_body.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
+  "request.request_body.staysDetails.totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
   "request.request_body.staysDetails.folioNumber": REGEX.ALPHANUMERIC
 };
 
@@ -38773,7 +38773,7 @@ var INT16_TO_INT17_FieldPathMap = {
   "request.request_body.staysDetails.reservationConfirmationNumber": "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber",
   "request.request_body.staysDetails.propertyCode": "request.request_body.stayRequestInput.staysDetails.propertyCode",
   "request.request_body.staysDetails.paymentTypeIdentifier": "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier",
-  "request.request_body.staysDetails.totalEligibleRevenue": "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue",
+  // 'request.request_body.staysDetails.totalEligibleRevenue': 'request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue',
   "request.request_body.staysDetails.folioNumber": "request.request_body.stayRequestInput.staysDetails.folioNumber"
   // 'request.request_body.staysDetails.pmsAccountSetupDate': 'request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate',
 };
@@ -38786,7 +38786,7 @@ var INT20_TO_INT16_FieldPathMap = {
   "resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
   "propertyCode": "request.request_body.staysDetails.propertyCode",
   "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": "request.request_body.staysDetails.paymentTypeIdentifier",
-  "totalEligibleRevenue": "request.request_body.staysDetails.totalEligibleRevenue",
+  // 'totalEligibleRevenue' : 'request.request_body.staysDetails.totalEligibleRevenue',
   "folioNumber": "request.request_body.staysDetails.folioNumber"
 };
 
