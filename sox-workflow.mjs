@@ -1,4 +1,4 @@
-// sox-workflow build hash: 780e077\n
+// sox-workflow build hash: f93dd67\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -37645,7 +37645,7 @@ var INT28FieldRegexMap = {
 // src/integration/int29.field.rules.ts
 var INT29FieldRegexMap = {
   "chargeCode": REGEX.ALPHANUMERIC,
-  "description": REGEX.ALPHANUMERIC,
+  "description": REGEX.EXTENDED_ALPHANUMERIC,
   "propertyCode": REGEX.ALPHANUMERIC
 };
 
@@ -39741,11 +39741,11 @@ function safeParse(str) {
   }
 }
 function handleDecimals(soxData, intId) {
-  const numberOfDecimals = 2;
-  const divisor = Math.pow(10, numberOfDecimals);
   const adjustSegmentValues = (segment) => {
     const keys = ["amtBfTx", "bsAmt", "amtAfTx"];
     keys.forEach((key) => {
+      const numberOfDecimals = segment?.rateAmount[key]?.numberOfDecimals || 2;
+      const divisor = Math.pow(10, numberOfDecimals);
       segment.rateAmount[key].value = (segment.rateAmount[key].value / divisor).toFixed(numberOfDecimals);
     });
     return segment;
