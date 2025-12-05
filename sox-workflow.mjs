@@ -1,4 +1,4 @@
-// sox-workflow build hash: 3bce678\n
+// sox-workflow build hash: 2b1ba06\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38043,9 +38043,9 @@ var INT26FieldRegexMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-28: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int25.field.rules.ts
@@ -38071,13 +38071,13 @@ var INT25FieldRegexMap = {
   // RES-21: Field Structure & Compare (Optional)
   "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": { regex: REGEX.BOOLEAN_STRING, optional: true },
   // RES-25: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
   // RES-26: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
   // RES-28: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int30.field.rules.ts
@@ -38127,9 +38127,9 @@ var INT30FieldRegexMap = {
   // RES-26: Field Structure & Compare (Optional)
   "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-28: Field Structure & Compare (Optional)
-  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int24-1.field.rules.ts
@@ -38850,14 +38850,14 @@ var INT25_TO_INT26_FieldPathMap = {
   "request.request_body.data.hotelReservation.segments<array>.offer.nightlyCorpMarketSegments<array>.value": "request.request_body.segments<array>.offer.nightlyCorpMarketSegments<array>.value",
   // RES-21: isDayUse -> dayUseInd
   "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.isDayUse": "request.request_body.segments<array>.offer.productUses<array>.dayUseInd",
-  // RES-25: productRates.dailyRates...bsAmt.value -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
-  // RES-26: packageRates.dailyRates...bsAmt.value -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
-  // RES-27: ...dailyBaseOccRateDetails.rateAmount.bsAmt -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
-  // RES-28: ...dailyTotalRate.bsAmt -> same path
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  // RES-25: productRates.dailyRates...bsAmt -> bsAmt.value
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-26: packageRates.dailyRates...bsAmt -> bsAmt.value
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-27: ...dailyBaseOccRateDetails.rateAmount.bsAmt -> bsAmt.value
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value",
+  // RES-28: ...dailyTotalRate.bsAmt -> bsAmt.value
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value"
 };
 
 // src/integration-pair/source.int26.dest.int30.map.rules.ts
@@ -38907,7 +38907,7 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRateDetails.rateAmount.bsAmt",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt",
   // RES-28: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
@@ -39127,7 +39127,7 @@ var Validators = {
    * - Objects/arrays compared via JSON structural serialization
    */
   _areValuesEqual(a, b) {
-    if (a === b) return true;
+    if (a == b) return true;
     if (this.isSuccessCode(a) && this.isSuccessCode(b)) {
       return true;
     }
@@ -39337,7 +39337,7 @@ var Validators = {
     for (const [rulePath, rx] of Object.entries(ruleMap)) {
       const isRequired = rx instanceof RegExp || !rx?.optional;
       const matches = normalizedFlat.get(rulePath) || [];
-      if (matches.length === 0 && isRequired) {
+      if (matches.length == 0 && isRequired) {
         errorMessages.push(`Missing field: ${rulePath}`, `Missing value: ${rulePath}`);
         failures.push(
           { rulePath, actualPath: rulePath, value: void 0, anomalyCategory: "Field Level Anomaly", anomalyType: "Missing Field" },
@@ -39749,27 +39749,39 @@ function safeParse(str) {
     return {};
   }
 }
+function adjustValuesForNumberOfDecimals(input) {
+  if (input === null || typeof input !== "object") {
+    return input;
+  }
+  if (Array.isArray(input)) {
+    return input.map((item) => adjustValuesForNumberOfDecimals(item));
+  }
+  const result = {};
+  for (const key in input) {
+    if (Object.prototype.hasOwnProperty.call(input, key)) {
+      result[key] = adjustValuesForNumberOfDecimals(input[key]);
+    }
+  }
+  const hasValue = Object.prototype.hasOwnProperty.call(input, "value");
+  const decKey = Object.prototype.hasOwnProperty.call(input, "numberOfDecimals") ? "numberOfDecimals" : Object.prototype.hasOwnProperty.call(input, "NumberOfDecimals") ? "NumberOfDecimals" : null;
+  if (hasValue && decKey) {
+    const decRaw = input[decKey];
+    const dec = Number(decRaw);
+    const valRaw = input.value;
+    const val = Number(valRaw);
+    if (!Number.isNaN(dec) && dec !== 0 && !Number.isNaN(val)) {
+      const divisor = Math.pow(10, dec);
+      result.value = val / divisor;
+    }
+  }
+  return result;
+}
 function handleDecimals(soxData, intId) {
-  const adjustSegmentValues = (segment) => {
-    const keys = ["amtBfTx", "bsAmt", "amtAfTx"];
-    keys.forEach((key) => {
-      const numberOfDecimals = segment?.rateAmount[key]?.numberOfDecimals || 2;
-      const divisor = Math.pow(10, numberOfDecimals);
-      segment.rateAmount[key].value = (segment.rateAmount[key].value / divisor).toFixed(numberOfDecimals);
-    });
-    return segment;
-  };
   const parsedContent = safeParse(soxData.content);
   if (intId === INTEGRATIONS.INT26) {
     const { request, success, response } = parsedContent;
-    const { totalOfActiveSegments } = request.request_body;
-    request.request_body.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
+    request.request_body = adjustValuesForNumberOfDecimals(request.request_body);
     soxData.content = JSON.stringify({ success, response, request });
-  } else if (intId === INTEGRATIONS.INT30) {
-    const { success, payload } = parsedContent;
-    const { totalOfActiveSegments } = payload?.hotelReservation;
-    payload.hotelReservation.totalOfActiveSegments = totalOfActiveSegments.map(adjustSegmentValues);
-    soxData.content = JSON.stringify({ success, payload });
   }
   return soxData;
 }
@@ -39970,22 +39982,13 @@ var INTEGRATION_PREPROCESSORS = {
       sortby: "confirmationNumber.value"
     });
   },
-  // NEW: Merge folio headers + transaction details for INT12_1 by folioId
-  // [INTEGRATIONS.INT12_1.toLowerCase()]: (records) => {
-  //   return mergeInt12FolioRecords(records);
-  // },
-  // [INTEGRATIONS.INT12_2.toLowerCase()]: (records) => {
-  //   return mergeInt12FolioRecords(records);
-  // },
   // INT26: decimals normalization on the selected record
-  [INTEGRATIONS.INT26.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT26.toLowerCase()]: (records, srcId, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    return selected ? handleDecimals(selected, INTEGRATIONS.INT26) : selected;
-  },
-  // INT30: decimals normalization on the selected record
-  [INTEGRATIONS.INT30.toLowerCase()]: (records) => {
-    const selected = pickMostRecent(records) ?? records?.[0];
-    return selected ? handleDecimals(selected, INTEGRATIONS.INT30) : selected;
+    if (selected && srcId === INTEGRATIONS.INT25.toLowerCase() && destId === INTEGRATIONS.INT26.toLowerCase()) {
+      return handleDecimals(selected, INTEGRATIONS.INT26);
+    }
+    return selected;
   },
   // INT31: merge multiple logs (header + detail); fallback to most recent
   [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
@@ -40000,9 +40003,8 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
   const destRecords = selectAll(arr, dKey);
   const sPre = INTEGRATION_PREPROCESSORS[sKey] ?? INTEGRATION_PREPROCESSORS.__default__;
   const dPre = INTEGRATION_PREPROCESSORS[dKey] ?? INTEGRATION_PREPROCESSORS.__default__;
-  const sourcePayload = sPre ? sPre(sourceRecords, dKey) : void 0;
-  const destinationPayload = dPre ? dPre(destRecords) : void 0;
-  const transactionId = sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || "";
+  const sourcePayload = sPre ? sPre(sourceRecords, sKey, dKey) : void 0;
+  const destinationPayload = dPre ? dPre(destRecords, sKey, dKey) : void 0;
   return { sourcePayload, destinationPayload };
 }
 
@@ -40442,6 +40444,7 @@ function validateIntegrationPair(params) {
       }
     }
   }
+  console.log("Validation intermediate results:", { errors, sourceValidation, destinationValidation, mappingComparison });
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
   return {
     sourceIntegrationId: srcId,
