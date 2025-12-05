@@ -1,4 +1,4 @@
-// sox-workflow build hash: 2b1ba06\n
+// sox-workflow build hash: de1dcd1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36583,7 +36583,6 @@ var INT193FieldRegexMap = {
 var INT20FieldRegexMap = {
   "resConfirmationNumber": REGEX.ALPHANUMERIC,
   "acid": REGEX.ALPHANUMERIC,
-  "propertyCode": { regex: REGEX.ALPHANUMERIC, optional: true },
   "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": { regex: REGEX.ALPHANUMERIC, optional: true },
   "totalEligibleRevenue": { regex: REGEX.NUMBER, optional: true },
   "folioNumber": { regex: REGEX.ALPHANUMERIC, optional: true }
@@ -38784,9 +38783,7 @@ var INT20_TO_INT16_FieldPathMap = {
   "acid": "request.acid",
   // Destination fields in INT20 are sourced from response.response_body.memberAccountEarnTransaction
   "resConfirmationNumber": "request.request_body.staysDetails.reservationConfirmationNumber",
-  "propertyCode": "request.request_body.staysDetails.propertyCode",
   "folio.folioTransactionDetails<array>.folioTransPaymentDetails<array>.pmsInstType": "request.request_body.staysDetails.paymentTypeIdentifier",
-  // 'totalEligibleRevenue' : 'request.request_body.staysDetails.totalEligibleRevenue',
   "folioNumber": "request.request_body.staysDetails.folioNumber"
 };
 
@@ -39956,7 +39953,7 @@ var INTEGRATION_PREPROCESSORS = {
   // INT15.*: filter ACRS confirmationIds on the selected record
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected && destId == INTEGRATIONS.INT19_1) selected.content = filterACRS(selected.content);
+    if (selected) selected.content = filterACRS(selected.content);
     return selected;
   },
   [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records, destId) => {
