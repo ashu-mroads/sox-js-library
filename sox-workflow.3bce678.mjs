@@ -1,4 +1,4 @@
-// sox-workflow build hash: f93dd67\n
+// sox-workflow build hash: 3bce678\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39618,8 +39618,17 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
     const path = dst && dst !== "-" ? `${src}\u2192${dst}` : `${src}`;
     return `${path} |Errors: ${err}/${tot} (${pct}%)`;
   };
+  const buildDashboardUrl = (baseUrl, alarmCode) => {
+    const hasParam = /([?&])vfilter_AlarmCode=([^&]*)/i.test(baseUrl);
+    if (hasParam) {
+      return baseUrl.replace(/([?&])vfilter_AlarmCode=([^&]*)/i, `$1vfilter_AlarmCode=${alarmCode}`);
+    }
+    const sep = baseUrl.includes("?") ? "&" : "?";
+    return `${baseUrl}${sep}vfilter_AlarmCode=${alarmCode}`;
+  };
   return Object.entries(soxAlarmMap).map(([code, meta]) => {
     const rowsForAlarm = grouped[code] || [];
+    const urlForAlarm = buildDashboardUrl(dynatraceDashboardUrl, code);
     if (code === "SOX001") {
       const isMismatch = (r) => r["Source Integration"]?.toLowerCase() === "log schema mismatch" || r["Destination Integration"]?.toLowerCase() === "log schema mismatch";
       const mismatchRows = rowsForAlarm.filter(isMismatch);
@@ -39643,7 +39652,7 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
       return {
         alarmCode: code,
         miTeam: meta.miTeam,
-        dynatraceDashboardUrl,
+        dynatraceDashboardUrl: urlForAlarm,
         alarmDescription: alarmDescription2,
         recordsText: recordsText2
       };
@@ -39654,7 +39663,7 @@ function mapRowsToSox(dtResult, rows, soxAlarmMap, dynatraceDashboardUrl) {
     return {
       alarmCode: code,
       miTeam: meta.miTeam,
-      dynatraceDashboardUrl,
+      dynatraceDashboardUrl: urlForAlarm,
       alarmDescription,
       recordsText
     };
@@ -40656,4 +40665,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.f93dd67.mjs.map
+//# sourceMappingURL=sox-workflow.3bce678.mjs.map
