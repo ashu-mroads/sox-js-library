@@ -1,4 +1,4 @@
-// sox-workflow build hash: de1dcd1\n
+// sox-workflow build hash: d4ff0d0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36472,7 +36472,7 @@ var INT17FieldRegexMap = {
   "request.request_body.acid": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
-  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.stayRequestInput.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_YYYY_MM_DD
@@ -36483,7 +36483,7 @@ var INT18FieldRegexMap = {
   "request.request_body.stayRequestInput.staysDetails.reservationConfirmationNumber": REGEX.ALPHANUMERIC,
   "request.request_body.acid": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.propertyCode": REGEX.ALPHANUMERIC,
-  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": REGEX.ALPHANUMERIC,
+  "request.request_body.stayRequestInput.staysDetails.paymentTypeIdentifier": { regex: REGEX.ALPHANUMERIC, optional: true },
   "request.request_body.stayRequestInput.staysDetails.totalEligibleRevenue": REGEX.NUMBER,
   "request.request_body.stayRequestInput.staysDetails.folioNumber": REGEX.ALPHANUMERIC,
   "request.request_body.stayRequestInput.staysDetails.pmsAccountSetupDate": REGEX.DATE_YYYY_MM_DD
@@ -38904,9 +38904,9 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt",
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt",
   // RES-28: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
@@ -39951,19 +39951,24 @@ var INTEGRATION_PREPROCESSORS = {
   // pick record with most recent sox_transaction_timestamp
   __default__: (records) => pickMostRecent(records),
   // INT15.*: filter ACRS confirmationIds on the selected record
-  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, destId) => {
+  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected) selected.content = filterACRS(selected.content);
     return selected;
   },
-  [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records, destId) => {
+  [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected && destId == INTEGRATIONS.INT19_2) selected.content = filterACRS(selected.content);
+    if (selected) selected.content = filterACRS(selected.content);
     return selected;
   },
-  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records, destId) => {
+  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected && destId == INTEGRATIONS.INT19_3) selected.content = filterACRS(selected.content);
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
     return selected;
   },
   // INT11.*: merge reservationList JSON array, sorted by confirmationNumber.value
@@ -40441,7 +40446,6 @@ function validateIntegrationPair(params) {
       }
     }
   }
-  console.log("Validation intermediate results:", { errors, sourceValidation, destinationValidation, mappingComparison });
   const isValid = errors.length === 0 && !!sourceValidation?.isValid && !!destinationValidation?.isValid && (mappingComparison ? mappingComparison.isValid : true);
   return {
     sourceIntegrationId: srcId,
