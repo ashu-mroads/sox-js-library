@@ -1,4 +1,4 @@
-// sox-workflow build hash: 29fdfcd\n
+// sox-workflow build hash: 7023d92\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36142,6 +36142,31 @@ function toCloudEvent(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
 }
+function toCloudEventSingleInt(sox) {
+  const time = toEventDate(sox.timestamp);
+  const { value: srcData, truncated: srcTrunc } = truncateUtf8(sox.sourceData);
+  const cloudEvent = {
+    specversion: "1.0",
+    id: sox.eventId || crypto.randomUUID(),
+    source: "sox",
+    type: sox.eventType,
+    time,
+    category: sox.eventType,
+    provider: sox.eventProvider,
+    datacontenttype: "application/json",
+    data: {
+      transactionId: sox.transactionId,
+      sourceIntId: sox.sourceIntId,
+      srcEventTime: sox.srcEventTime,
+      anomalyCategory: sox.anomalyCategory,
+      anomalyType: sox.anomalyType,
+      anomalySummary: sox.anomalySummary,
+      sourceData: srcData,
+      sourceDataTruncated: srcTrunc || void 0
+    }
+  };
+  return { cloudEvent, sourceDataTruncated: srcTrunc };
+}
 function createBatches(data, sizeLimit = 5e6) {
   const batches = [];
   let currentBatch = [];
@@ -36175,6 +36200,31 @@ async function sendBusinessEvent(soxEvents) {
     } catch (err) {
       console.log("error", err);
     }
+  }
+}
+async function sendBusinessEventSingleInt(soxEvent) {
+  const { cloudEvent, sourceDataTruncated } = toCloudEventSingleInt(soxEvent);
+  try {
+    const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
+      body: cloudEvent,
+      type: "application/cloudevent+json"
+    });
+    const status = resp?.status ?? 200;
+    return {
+      success: true,
+      status,
+      cloudEvent,
+      message: "Business event ingested successfully",
+      sourceDataTruncated
+    };
+  } catch (e) {
+    return {
+      success: false,
+      cloudEvent,
+      error: e,
+      message: "Failed to ingest business event",
+      sourceDataTruncated
+    };
   }
 }
 function summarizeAnomalies(validation, response) {
@@ -38042,9 +38092,9 @@ var INT26FieldRegexMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-28: Field Structure & Compare (Optional)
-  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value': { regex: REGEX.NUMBER, optional: true }
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int25.field.rules.ts
@@ -38126,9 +38176,9 @@ var INT30FieldRegexMap = {
   // RES-26: Field Structure & Compare (Optional)
   "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": { regex: REGEX.NUMBER, optional: true },
   // RES-28: Field Structure & Compare (Optional)
-  // 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt.value': { regex: REGEX.NUMBER, optional: true }
+  "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt.value": { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int24-1.field.rules.ts
@@ -38904,9 +38954,9 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt"
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt",
   // RES-28: Field Structure & Compare (Optional)
-  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": "hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt"
 };
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
@@ -40562,7 +40612,8 @@ function processSingleIntegration({ loopItemValue }) {
     sourcePayload: soxData,
     executionId
   });
-  return ingestResult;
+  const result = sendBusinessEventSingleInt(ingestResult);
+  return result;
 }
 function processMissingTransaction({ loopItemValue }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
@@ -40595,7 +40646,8 @@ function processMissingTransaction({ loopItemValue }) {
     sourcePayload: payload,
     executionId
   });
-  return ingestResult;
+  const result = sendBusinessEventSingleInt(ingestResult);
+  return result;
 }
 function processReportData(dtResult, dynatraceDashboardUrl) {
   return getReportAlarmData(dtResult, dynatraceDashboardUrl);
@@ -40680,4 +40732,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.29fdfcd.mjs.map
+//# sourceMappingURL=sox-workflow.7023d92.mjs.map
