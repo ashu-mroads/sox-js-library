@@ -1,4 +1,4 @@
-// sox-workflow build hash: d4ff0d0\n
+// sox-workflow build hash: ffb6d3a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36142,6 +36142,31 @@ function toCloudEvent(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
 }
+function toCloudEventSingleInt(sox) {
+  const time = toEventDate(sox.timestamp);
+  const { value: srcData, truncated: srcTrunc } = truncateUtf8(sox.sourceData);
+  const cloudEvent = {
+    specversion: "1.0",
+    id: sox.eventId || crypto.randomUUID(),
+    source: "sox",
+    type: sox.eventType,
+    time,
+    category: sox.eventType,
+    provider: sox.eventProvider,
+    datacontenttype: "application/json",
+    data: {
+      transactionId: sox.transactionId,
+      sourceIntId: sox.sourceIntId,
+      srcEventTime: sox.srcEventTime,
+      anomalyCategory: sox.anomalyCategory,
+      anomalyType: sox.anomalyType,
+      anomalySummary: sox.anomalySummary,
+      sourceData: srcData,
+      sourceDataTruncated: srcTrunc || void 0
+    }
+  };
+  return { cloudEvent, sourceDataTruncated: srcTrunc };
+}
 function createBatches(data, sizeLimit = 5e6) {
   const batches = [];
   let currentBatch = [];
@@ -36175,6 +36200,31 @@ async function sendBusinessEvent(soxEvents) {
     } catch (err) {
       console.log("error", err);
     }
+  }
+}
+async function sendBusinessEventSingleInt(soxEvent) {
+  const { cloudEvent, sourceDataTruncated } = toCloudEventSingleInt(soxEvent);
+  try {
+    const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
+      body: cloudEvent,
+      type: "application/cloudevent+json"
+    });
+    const status = resp?.status ?? 200;
+    return {
+      success: true,
+      status,
+      cloudEvent,
+      message: "Business event ingested successfully",
+      sourceDataTruncated
+    };
+  } catch (e) {
+    return {
+      success: false,
+      cloudEvent,
+      error: e,
+      message: "Failed to ingest business event",
+      sourceDataTruncated
+    };
   }
 }
 function summarizeAnomalies(validation, response) {
@@ -39724,7 +39774,8 @@ function mergeInt31Files(records) {
   for (const record of records) {
     const raw = record.content || record.parsed?.content;
     if (!raw) continue;
-    const { payload, success } = safeParse(raw);
+    const content2 = filterACRS(raw);
+    const { payload, success } = safeParse(content2);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainRecord = record;
       headerPayload = payload;
@@ -39967,6 +40018,11 @@ var INTEGRATION_PREPROCESSORS = {
     return selected;
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT03_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected) selected.content = filterACRS(selected.content);
     return selected;
@@ -40551,7 +40607,8 @@ function processSingleIntegration({ loopItemValue }) {
     sourcePayload: soxData,
     executionId
   });
-  return ingestResult;
+  const result = sendBusinessEventSingleInt(ingestResult);
+  return result;
 }
 function processMissingTransaction({ loopItemValue }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
@@ -40669,4 +40726,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.d4ff0d0.mjs.map
+//# sourceMappingURL=sox-workflow.ffb6d3a.mjs.map
