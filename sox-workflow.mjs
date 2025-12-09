@@ -1,4 +1,4 @@
-// sox-workflow build hash: a58c08c\n
+// sox-workflow build hash: e5168de\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36127,8 +36127,11 @@ function toCloudEvent(sox) {
     datacontenttype: "application/json",
     data: {
       transactionId: sox.transactionId,
+      sox_transaction_id: sox.transactionId,
       sourceIntId: sox.sourceIntId,
+      source: sox.sourceIntId,
       destIntId: sox.destIntId,
+      destination: sox.destIntId,
       srcEventTime: sox.srcEventTime,
       destEventTime: sox.destEventTime,
       anomalyCategory: sox.anomalyCategory,
@@ -36156,7 +36159,10 @@ function toCloudEventSingleInt(sox) {
     datacontenttype: "application/json",
     data: {
       transactionId: sox.transactionId,
+      sox_transaction_id: sox.transactionId,
       sourceIntId: sox.sourceIntId,
+      source: sox.sourceIntId,
+      destination: "N/A",
       srcEventTime: sox.srcEventTime,
       anomalyCategory: sox.anomalyCategory,
       anomalyType: sox.anomalyType,
@@ -39131,7 +39137,7 @@ var IntegrationPairs = [
   { id: "IC-04", source: INTEGRATIONS.INT11_2, destination: INTEGRATIONS.INT11, chunkSize: ChunkSizes.SMALL },
   { id: "IC-05", source: INTEGRATIONS.INT12_2, destination: INTEGRATIONS.INT12_1, chunkSize: ChunkSizes.XSMALL },
   { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT11_2, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT15_2_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.MEDIUM },
@@ -39142,14 +39148,13 @@ var IntegrationPairs = [
   { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.SMALL },
   { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-21", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-22", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-23", source: INTEGRATIONS.INT19_3, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE }
+  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE },
+  { id: "IC-29", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-30", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM }
 ];
 var IntegrationResponseCodes = {
   SUCCESS: ["200", "200 OK", "204 NO_CONTENT"]
