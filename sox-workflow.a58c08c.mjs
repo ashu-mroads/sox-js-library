@@ -1,4 +1,4 @@
-// sox-workflow build hash: 35c4e40\n
+// sox-workflow build hash: a58c08c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38124,9 +38124,9 @@ var INT25FieldRegexMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true },
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": { regex: REGEX.NUMBER, optional: true }
   // RES-28: Field Structure & Compare (Optional)
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": { regex: REGEX.NUMBER, optional: true }
+  // 'request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': { regex: REGEX.NUMBER, optional: true }
 };
 
 // src/integration/int30.field.rules.ts
@@ -38902,9 +38902,9 @@ var INT25_TO_INT26_FieldPathMap = {
   // RES-26: packageRates.dailyRates...bsAmt -> bsAmt.value
   "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: ...dailyBaseOccRateDetails.rateAmount.bsAmt -> bsAmt.value
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value",
+  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value"
   // RES-28: ...dailyTotalRate.bsAmt -> bsAmt.value
-  "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt": "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value"
+  // 'request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt.value'
 };
 
 // src/integration-pair/source.int26.dest.int30.map.rules.ts
@@ -38954,7 +38954,7 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-26: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value": "hotelReservation.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.rateDetails.rateAmount.bsAmt.value",
   // RES-27: Field Structure & Compare (Optional)
-  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt"
+  "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value"
   // RES-28: Field Structure & Compare (Optional)
   // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
 };
@@ -40727,4 +40727,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.35c4e40.mjs.map
+//# sourceMappingURL=sox-workflow.a58c08c.mjs.map
