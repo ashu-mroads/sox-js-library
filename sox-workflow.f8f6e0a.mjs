@@ -1,4 +1,4 @@
-// sox-workflow build hash: d4ff0d0\n
+// sox-workflow build hash: f8f6e0a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39724,7 +39724,8 @@ function mergeInt31Files(records) {
   for (const record of records) {
     const raw = record.content || record.parsed?.content;
     if (!raw) continue;
-    const { payload, success } = safeParse(raw);
+    const content2 = filterACRS(raw);
+    const { payload, success } = safeParse(content2);
     if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
       mainRecord = record;
       headerPayload = payload;
@@ -39967,6 +39968,11 @@ var INTEGRATION_PREPROCESSORS = {
     return selected;
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT03_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected) selected.content = filterACRS(selected.content);
     return selected;
@@ -40669,4 +40675,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.d4ff0d0.mjs.map
+//# sourceMappingURL=sox-workflow.f8f6e0a.mjs.map
