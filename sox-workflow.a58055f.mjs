@@ -1,4 +1,4 @@
-// sox-workflow build hash: 515df03\n
+// sox-workflow build hash: a58055f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40626,18 +40626,14 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
   executionId = executionId || "missing_execution_id";
-  const validationResult = validateIntegration({
+  const singleValidation = validateIntegration({
     sourceIntegrationId: payloadIntegrationId,
     payload
   });
-  validationResult.isValid = false;
-  validationResult.sourceIntegrationId = String(source).toLowerCase();
-  ;
-  validationResult.destinationIntegrationId = String(destination).toLowerCase();
-  if (!validationResult.sourceValidation)
-    validationResult.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
-  const failures = validationResult.sourceValidation?.failures;
-  failures.push({
+  if (!singleValidation.sourceValidation) {
+    singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+  }
+  singleValidation.sourceValidation.failures.push({
     rulePath: "",
     actualPath: "",
     value: payload?.content?.success,
@@ -40647,6 +40643,15 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
   const destKey = String(destination || "").toLowerCase();
+  const integrationValidation = {
+    sourceIntegrationId: srcKey,
+    destinationIntegrationId: destKey,
+    sourceValidation: payloadId === srcKey ? singleValidation.sourceValidation : void 0,
+    destinationValidation: payloadId === destKey ? singleValidation.sourceValidation : void 0,
+    mappingComparison: null,
+    isValid: false,
+    errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
+  };
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40657,14 +40662,76 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     sourcePayloadArg = payload;
   }
   const ingestResult = createSoxBusinessEvent({
-    validationResult,
+    validationResult: integrationValidation,
     transactionId,
     srcEventTime,
+    destEventTime: "",
     sourcePayload: sourcePayloadArg,
     destinationPayload: destinationPayloadArg,
     executionId
   });
-  const result = sendBusinessEventSingleInt(ingestResult);
+  const result = sendBusinessEvent([ingestResult]);
+  return result;
+}
+function processErrorTransaction({
+  loopItemValue,
+  source,
+  destination,
+  executionId
+}) {
+  const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
+  if (!payload || typeof payload !== "object") {
+    throw new Error("processErrorTransaction: no valid failure payload found (expected object).");
+  }
+  const payloadIntegrationId = payload.sox_integration;
+  const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
+  const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
+  executionId = executionId || "missing_execution_id";
+  const singleValidation = validateIntegration({
+    sourceIntegrationId: payloadIntegrationId,
+    payload
+  });
+  if (!singleValidation.sourceValidation) {
+    singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+  }
+  singleValidation.sourceValidation.failures.push({
+    rulePath: "",
+    actualPath: "",
+    value: payload?.content?.success,
+    anomalyCategory: "Integration Failure",
+    anomalyType: "Unsuccessful Response"
+  });
+  const payloadId = String(payloadIntegrationId || "").toLowerCase();
+  const srcKey = String(source || "").toLowerCase();
+  const destKey = String(destination || "").toLowerCase();
+  const integrationValidation = {
+    sourceIntegrationId: srcKey,
+    destinationIntegrationId: destKey,
+    sourceValidation: payloadId === srcKey ? singleValidation.sourceValidation : void 0,
+    destinationValidation: payloadId === destKey ? singleValidation.sourceValidation : void 0,
+    mappingComparison: null,
+    isValid: false,
+    errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
+  };
+  let sourcePayloadArg;
+  let destinationPayloadArg;
+  if (payloadId === srcKey) {
+    sourcePayloadArg = payload;
+  } else if (payloadId === destKey) {
+    destinationPayloadArg = payload;
+  } else {
+    sourcePayloadArg = payload;
+  }
+  const ingestResult = createSoxBusinessEvent({
+    validationResult: integrationValidation,
+    transactionId,
+    srcEventTime,
+    destEventTime: "",
+    sourcePayload: sourcePayloadArg,
+    destinationPayload: destinationPayloadArg,
+    executionId
+  });
+  const result = sendBusinessEvent([ingestResult]);
   return result;
 }
 function processReportData(dtResult, dynatraceDashboardUrl) {
@@ -40677,14 +40744,15 @@ var index_default = {
   processMatchedPair,
   processSingleIntegration,
   processMissingTransaction,
+  processErrorTransaction,
   processReportData,
   IntegrationPairs,
   SingleIntegrations,
   wfhelper: workflow_helper_exports
-  // <-- added
 };
 export {
   index_default as default,
+  processErrorTransaction,
   processMatchedPair,
   processMatchedPairArray,
   processMissingTransaction,
@@ -40750,4 +40818,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.515df03.mjs.map
+//# sourceMappingURL=sox-workflow.a58055f.mjs.map
