@@ -1,4 +1,4 @@
-// sox-workflow build hash: a65f5c2\n
+// sox-workflow build hash: 515df03\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40622,17 +40622,22 @@ function processMissingTransaction({ loopItemValue }) {
   if (!payload || typeof payload !== "object") {
     throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
   }
-  const sourceIntegrationId = payload.sox_integration;
+  const source = loopItemValue.source;
+  const destination = loopItemValue.destination;
+  const payloadIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
   const executionId = loopItemValue?.executionId || "missing_execution_id";
   const validationResult = validateIntegration({
-    sourceIntegrationId,
+    sourceIntegrationId: payloadIntegrationId,
     payload
   });
+  validationResult.isValid = false;
+  validationResult.sourceIntegrationId = String(source).toLowerCase();
+  ;
+  validationResult.destinationIntegrationId = String(destination).toLowerCase();
   if (!validationResult.sourceValidation)
     validationResult.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
-  validationResult.isValid = false;
   const failures = validationResult.sourceValidation?.failures;
   failures.push({
     rulePath: "",
@@ -40641,11 +40646,24 @@ function processMissingTransaction({ loopItemValue }) {
     anomalyCategory: "Missing Transaction",
     anomalyType: "Missing Transaction Pair"
   });
+  const payloadId = String(payloadIntegrationId || "").toLowerCase();
+  const srcKey = String(source || "").toLowerCase();
+  const destKey = String(destination || "").toLowerCase();
+  let sourcePayloadArg;
+  let destinationPayloadArg;
+  if (payloadId === srcKey) {
+    sourcePayloadArg = payload;
+  } else if (payloadId === destKey) {
+    destinationPayloadArg = payload;
+  } else {
+    sourcePayloadArg = payload;
+  }
   const ingestResult = createSoxBusinessEvent({
     validationResult,
     transactionId,
     srcEventTime,
-    sourcePayload: payload,
+    sourcePayload: sourcePayloadArg,
+    destinationPayload: destinationPayloadArg,
     executionId
   });
   const result = sendBusinessEventSingleInt(ingestResult);
