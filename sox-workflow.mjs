@@ -40594,7 +40594,7 @@ function processMatchedPairArray({
   });
   return sendBusinessEvent(eventMap);
 }
-function processSingleIntegration({ loopItemValue }) {
+function processSingleIntegration({ loopItemValue, executionId }) {
   const soxData = loopItemValue.data[0];
   if (typeof soxData !== "object") {
     throw new Error("processSingleIntegration: no valid content found (soxData = loopItemValue?.data[0]): " + JSON.stringify(soxData));
@@ -40602,7 +40602,7 @@ function processSingleIntegration({ loopItemValue }) {
   const sourceIntegrationId = soxData.sox_integration;
   const srcEventTime = soxData.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = soxData.sox_transaction_id;
-  const executionId = loopItemValue?.executionId || "missing_execution_id";
+  executionId = executionId || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload: soxData
@@ -40617,17 +40617,15 @@ function processSingleIntegration({ loopItemValue }) {
   const result = sendBusinessEventSingleInt(ingestResult);
   return result;
 }
-function processMissingTransaction({ loopItemValue }) {
+function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
     throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
   }
-  const source = loopItemValue.source;
-  const destination = loopItemValue.destination;
   const payloadIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
-  const executionId = loopItemValue?.executionId || "missing_execution_id";
+  executionId = executionId || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId: payloadIntegrationId,
     payload
