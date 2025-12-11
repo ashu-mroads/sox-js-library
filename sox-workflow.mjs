@@ -1,4 +1,4 @@
-// sox-workflow build hash: e5168de\n
+// sox-workflow build hash: a65f5c2\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36140,7 +36140,8 @@ function toCloudEvent(sox) {
       sourceData: srcData,
       destinationData: destData,
       sourceDataTruncated: srcTrunc,
-      destinationDataTruncated: destTrunc
+      destinationDataTruncated: destTrunc,
+      executionId: sox.executionId
     }
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
@@ -36168,7 +36169,8 @@ function toCloudEventSingleInt(sox) {
       anomalyType: sox.anomalyType,
       anomalySummary: sox.anomalySummary,
       sourceData: srcData,
-      sourceDataTruncated: srcTrunc || void 0
+      sourceDataTruncated: srcTrunc || void 0,
+      executionId: sox.executionId
     }
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc };
@@ -40522,7 +40524,7 @@ function processMatchedPair({
   loopItemValue,
   srcIntegration,
   destIntegration,
-  execution_id
+  executionId
 }) {
   if (!srcIntegration || !destIntegration) {
     throw new Error("processMatchedPair: srcIntegration and destIntegration are required.");
@@ -40576,7 +40578,7 @@ function processMatchedPair({
     destEventTime,
     sourcePayload,
     destinationPayload,
-    executionId: execution_id
+    executionId
   });
   return ingestResult;
 }
@@ -40584,10 +40586,10 @@ function processMatchedPairArray({
   srcIntegration,
   destIntegration,
   dataArray,
-  execution_id
+  executionId
 }) {
   const eventMap = dataArray.map((transaction) => {
-    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, execution_id });
+    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId });
     return processPair;
   });
   return sendBusinessEvent(eventMap);
@@ -40600,7 +40602,7 @@ function processSingleIntegration({ loopItemValue }) {
   const sourceIntegrationId = soxData.sox_integration;
   const srcEventTime = soxData.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = soxData.sox_transaction_id;
-  const executionId = loopItemValue?.execution_id || "missing_execution_id";
+  const executionId = loopItemValue?.executionId || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload: soxData
@@ -40623,7 +40625,7 @@ function processMissingTransaction({ loopItemValue }) {
   const sourceIntegrationId = payload.sox_integration;
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
-  const executionId = loopItemValue?.execution_id || "missing_execution_id";
+  const executionId = loopItemValue?.executionId || "missing_execution_id";
   const validationResult = validateIntegration({
     sourceIntegrationId,
     payload
