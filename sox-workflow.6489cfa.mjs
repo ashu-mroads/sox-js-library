@@ -1,4 +1,4 @@
-// sox-workflow build hash: a58055f\n
+// sox-workflow build hash: 6489cfa\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39909,6 +39909,46 @@ function sortArrayItems(items, sortby) {
     return av < bv ? -1 : 1;
   });
 }
+var INT20RULES = {
+  // INT20 -> INT16: adjust src (INT20) if src ID longer than dest ID
+  [`${INTEGRATIONS.INT20.toLowerCase()}->${INTEGRATIONS.INT16.toLowerCase()}`]: {
+    srcPath: "payload.resConfirmationNumber",
+    destPath: "request.request_body.staysDetails.reservationConfirmationNumber",
+    adjustTarget: "src"
+  }
+};
+function adjustInt20ConfirmationId(content) {
+  const { resConfirmationNumber } = content.payload;
+  content.payload.resConfirmationNumberOriginal = resConfirmationNumber;
+  content.payload.resConfirmationNumber = resConfirmationNumber.slice(0, -2);
+  return content;
+}
+var toObject = (content) => {
+  if (!content) return void 0;
+  if (isObject(content)) return content;
+  if (typeof content === "string") return safeParse(content);
+  return void 0;
+};
+var serializeBack = (selected, obj) => {
+  selected.content = JSON.stringify(obj);
+};
+var adjustIfNeeded = (rule, srcSelected, destSelected) => {
+  const srcObj = toObject(srcSelected?.content);
+  const destObj = toObject(destSelected?.content);
+  if (!srcObj || !destObj) return null;
+  const srcConfId = getByPath(srcObj, rule.srcPath);
+  const destConfId = getByPath(destObj, rule.destPath);
+  if (typeof srcConfId !== "string" || typeof destConfId !== "string") {
+    return null;
+  }
+  const srcLonger = srcConfId.length > destConfId.length;
+  if (srcLonger) {
+    const adjusted = adjustInt20ConfirmationId(srcObj);
+    serializeBack(srcSelected, adjusted);
+    return srcSelected;
+  }
+  return null;
+};
 function mergeJsonData(records, options = {}) {
   const { selectPath, sortby } = options;
   let firstParsedRoot;
@@ -40019,7 +40059,7 @@ var INTEGRATION_PREPROCESSORS = {
     if (selected) selected.content = filterACRS(selected.content);
     return selected;
   },
-  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records, srcId) => {
+  [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected && srcId === INTEGRATIONS.INT15_3_1.toLowerCase()) selected.content = filterACRS(selected.content);
     return selected;
@@ -40047,8 +40087,24 @@ var INTEGRATION_PREPROCESSORS = {
       sortby: "confirmationNumber.value"
     });
   },
+  [INTEGRATIONS.INT20.toLowerCase()]: (srcRecords, destRecords, srcId, destId) => {
+    const srcSelected = pickMostRecent(srcRecords);
+    const destSelected = pickMostRecent(destRecords);
+    let content = srcSelected;
+    if (srcId === INTEGRATIONS.INT20.toLowerCase() && destId === INTEGRATIONS.INT16.toLowerCase()) {
+      const key = `${srcId?.toLowerCase?.() ?? srcId}->${destId?.toLowerCase?.() ?? destId}`;
+      const rule = INT20RULES[key];
+      if (rule && srcSelected && destSelected) {
+        const adjusted = adjustIfNeeded(rule, srcSelected, destSelected);
+        if (adjusted) {
+          content = adjusted;
+        }
+      }
+    }
+    return content;
+  },
   // INT26: decimals normalization on the selected record
-  [INTEGRATIONS.INT26.toLowerCase()]: (records, srcId, destId) => {
+  [INTEGRATIONS.INT26.toLowerCase()]: (records, secondaryRecords, srcId, destId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected && srcId === INTEGRATIONS.INT25.toLowerCase() && destId === INTEGRATIONS.INT26.toLowerCase()) {
       return handleDecimals(selected, INTEGRATIONS.INT26);
@@ -40068,8 +40124,8 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
   const destRecords = selectAll(arr, dKey);
   const sPre = INTEGRATION_PREPROCESSORS[sKey] ?? INTEGRATION_PREPROCESSORS.__default__;
   const dPre = INTEGRATION_PREPROCESSORS[dKey] ?? INTEGRATION_PREPROCESSORS.__default__;
-  const sourcePayload = sPre ? sPre(sourceRecords, sKey, dKey) : void 0;
-  const destinationPayload = dPre ? dPre(destRecords, sKey, dKey) : void 0;
+  const sourcePayload = sPre ? sPre(sourceRecords, destRecords, sKey, dKey) : void 0;
+  const destinationPayload = dPre ? dPre(destRecords, sourceRecords, sKey, dKey) : void 0;
   return { sourcePayload, destinationPayload };
 }
 
@@ -40818,4 +40874,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.a58055f.mjs.map
+//# sourceMappingURL=sox-workflow.6489cfa.mjs.map
