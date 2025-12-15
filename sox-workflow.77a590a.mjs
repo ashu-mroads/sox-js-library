@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6489cfa\n
+// sox-workflow build hash: 77a590a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36265,21 +36265,23 @@ function summarizeAnomalies(validation, response) {
     return { anomalyCategory, anomalyType };
   }
   const parts = [];
-  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length};`;
+  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length}; 
+`;
   parts.push(countIssues);
   allFailures.forEach((f) => {
     parts.push(
-      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value}`
+      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value}; 
+`
     );
   });
   mappingFailures.forEach((m) => {
     parts.push(
-      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}`
+      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}; /n`
     );
   });
   if (allFailures.length === 1 && allFailures[0]?.anomalyCategory === "Integration Failure") {
     parts.push(
-      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}`
+      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}; /n`
     );
   }
   const anomalySummary = parts.join("; ");
@@ -40030,16 +40032,28 @@ function pickMostRecent(records) {
 function filterACRS(content) {
   if (content && isObject2(content) && isObject2(content.payload)) {
     const confirmationIds = content?.payload?.confirmationIds;
-    if (Array.isArray(confirmationIds)) {
+    if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "ACRS")) {
       const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
       content.payload.confirmationIds = stripped;
+    } else if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "PMS")) {
+      const stripped = confirmationIds.filter((c) => c?.provider === "PMS");
+      content.payload.confirmationIds = stripped;
+    } else {
+      content.isValid = true;
+      content.description = "Anomalies are not checked in Marsha transactions";
     }
   } else if (typeof content === "string") {
     const parsed = JSON.parse(content);
     const confirmationIds = parsed?.payload?.confirmationIds;
-    if (Array.isArray(confirmationIds)) {
+    if (Array.isArray(confirmationIds && confirmationIds.length > 1) && confirmationIds.some((c) => c?.provider === "Marsha")) {
       const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
       parsed.payload.confirmationIds = stripped;
+    } else if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "PMS")) {
+      const stripped = confirmationIds.filter((c) => c?.provider === "PMS");
+      parsed.payload.confirmationIds = stripped;
+    } else {
+      parsed.isValid = true;
+      parsed.description = "Anomalies are not checked in Marsha transactions";
     }
     content = JSON.stringify(parsed);
   }
@@ -40070,6 +40084,11 @@ var INTEGRATION_PREPROCESSORS = {
     return selected;
   },
   [INTEGRATIONS.INT03_1.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (selected) selected.content = filterACRS(selected.content);
+    return selected;
+  },
+  [INTEGRATIONS.INT03_2.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (selected) selected.content = filterACRS(selected.content);
     return selected;
@@ -40113,7 +40132,9 @@ var INTEGRATION_PREPROCESSORS = {
   },
   // INT31: merge multiple logs (header + detail); fallback to most recent
   [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
-    return mergeInt31Files(records);
+    const data = mergeInt31Files(records);
+    if (data) data.content = filterACRS(data.content);
+    return data;
   }
 };
 function applyIntegrationPreprocessors(srcId, destId, dataArr) {
@@ -40497,8 +40518,7 @@ function skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload) {
   const failedTrue = Validators._areValuesEqual(loyaltyCheckFailed, true) || Validators._areValuesEqual(loyaltyCheckFailed, "true");
   const is15_1_1_to_19_1 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_1_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_1);
   const is15_2_1_to_19_2 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_2_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_2);
-  const is15_3_1_to_19_3 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_3_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_3);
-  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2 || is15_3_1_to_19_3);
+  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2);
 }
 function validateIntegrationPair(params) {
   let {
@@ -40611,6 +40631,27 @@ function processMatchedPair({
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
+  if (sourcePayload.isValid === true && destinationPayload.isValid === true) {
+    const validationResult2 = {
+      sourceIntegrationId,
+      destinationIntegrationId,
+      sourceValidation: { isValid: true, errorMessages: [], failures: [] },
+      destinationValidation: { isValid: true, errorMessages: [], failures: [] },
+      mappingComparison: { isValid: true, errorMessages: [], missingSource: [], missingDestination: [], mismatches: [] },
+      isValid: true,
+      errors: []
+    };
+    const ingestResult2 = createSoxBusinessEvent({
+      validationResult: validationResult2,
+      transactionId,
+      srcEventTime,
+      destEventTime,
+      sourcePayload,
+      destinationPayload,
+      executionId
+    });
+    return ingestResult2;
+  }
   const validationResult = validateIntegrationPair({
     sourceIntegrationId,
     destinationIntegrationId,
@@ -40874,4 +40915,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.6489cfa.mjs.map
+//# sourceMappingURL=sox-workflow.77a590a.mjs.map
