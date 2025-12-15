@@ -1,4 +1,4 @@
-// sox-workflow build hash: 77a590a\n
+// sox-workflow build hash: 5c98cf1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40045,7 +40045,7 @@ function filterACRS(content) {
   } else if (typeof content === "string") {
     const parsed = JSON.parse(content);
     const confirmationIds = parsed?.payload?.confirmationIds;
-    if (Array.isArray(confirmationIds && confirmationIds.length > 1) && confirmationIds.some((c) => c?.provider === "Marsha")) {
+    if (Array.isArray(confirmationIds && confirmationIds.length > 1) && confirmationIds.some((c) => c?.provider === "ACRS")) {
       const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
       parsed.payload.confirmationIds = stripped;
     } else if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "PMS")) {
