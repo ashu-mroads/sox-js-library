@@ -1,4 +1,4 @@
-// sox-workflow build hash: da765b8\n
+// sox-workflow build hash: 1a29a00\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40518,7 +40518,8 @@ function skipOnLoyaltyValidationFailure(srcId, destId, destinationPayload) {
   const failedTrue = Validators._areValuesEqual(loyaltyCheckFailed, true) || Validators._areValuesEqual(loyaltyCheckFailed, "true");
   const is15_1_1_to_19_1 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_1_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_1);
   const is15_2_1_to_19_2 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_2_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_2);
-  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2);
+  const is15_3_1_to_19_3 = Validators._areValuesEqual(srcId, INTEGRATIONS.INT15_3_1) && Validators._areValuesEqual(destId, INTEGRATIONS.INT19_3);
+  return failedTrue && (is15_1_1_to_19_1 || is15_2_1_to_19_2 || is15_3_1_to_19_3);
 }
 function validateIntegrationPair(params) {
   let {
@@ -40915,4 +40916,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.da765b8.mjs.map
+//# sourceMappingURL=sox-workflow.1a29a00.mjs.map
