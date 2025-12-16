@@ -1,4 +1,4 @@
-// sox-workflow build hash: 5c98cf1\n
+// sox-workflow build hash: 93bbd90\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39156,7 +39156,6 @@ var IntegrationPairs = [
   { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE },
   { id: "IC-29", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-30", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM }
 ];
@@ -40915,4 +40914,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.5c98cf1.mjs.map
+//# sourceMappingURL=sox-workflow.93bbd90.mjs.map
