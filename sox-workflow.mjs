@@ -1,4 +1,4 @@
-// sox-workflow build hash: 1a29a00\n
+// sox-workflow build hash: 27f1ec9\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36276,15 +36276,17 @@ function summarizeAnomalies(validation, response) {
   });
   mappingFailures.forEach((m) => {
     parts.push(
-      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}; /n`
+      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}; 
+`
     );
   });
   if (allFailures.length === 1 && allFailures[0]?.anomalyCategory === "Integration Failure") {
     parts.push(
-      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}; /n`
+      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}; 
+`
     );
   }
-  const anomalySummary = parts.join("; ");
+  const anomalySummary = parts.join(" ");
   return { anomalyCategory, anomalyType, anomalySummary };
 }
 function createSoxBusinessEvent(params) {
@@ -39418,6 +39420,14 @@ var Validators = {
       failures
     };
   },
+  _destinationSearch(sourceValue, destEntries) {
+    for (const d of destEntries) {
+      if (this._areValuesEqual(sourceValue, d.value)) {
+        return true;
+      }
+    }
+    return false;
+  },
   comparePayloadsWithFieldMap(fieldPathMap, sourcePayload, destinationPayload, sourceRules, destRules) {
     const errorMessages = [];
     const missingSource = [];
@@ -39490,17 +39500,20 @@ var Validators = {
         const s = srcEntries[i];
         const d = destEntries[i];
         if (!this._areValuesEqual(s.value, d.value)) {
-          mismatches.push({
-            sourcePath: s.rawPath,
-            destinationPath: d.rawPath,
-            mappedSourceRule: srcRule,
-            mappedDestinationRule: destRule,
-            sourceValue: s.value,
-            destinationValue: d.value,
-            anomalyCategory: "Field Level Anomaly",
-            anomalyType: "Value Mismatch"
-          });
-          errorMessages.push(`Value mismatch ${s.rawPath} -> ${d.rawPath}`);
+          const found = this._destinationSearch(s.value, destEntries);
+          if (!found) {
+            mismatches.push({
+              sourcePath: s.rawPath,
+              destinationPath: d.rawPath,
+              mappedSourceRule: srcRule,
+              mappedDestinationRule: destRule,
+              sourceValue: s.value,
+              destinationValue: d.value,
+              anomalyCategory: "Field Level Anomaly",
+              anomalyType: "Value Mismatch"
+            });
+            errorMessages.push(`Value mismatch ${s.rawPath} -> ${d.rawPath}`);
+          }
         }
       }
     }
@@ -39775,25 +39788,42 @@ function formatSoxAnomalyReportPeriod(dtResult, alarmCode) {
 }
 
 // src/common/preprocessorutils.ts
-function mergeInt31Files(records) {
+var hasValidTs = (ts) => {
+  const t = new Date(ts);
+  return !Number.isNaN(t.getTime());
+};
+function getLatestHeaderAndDetailRecords(records) {
   let headerPayload = {};
   let detailPayload = {};
   let mainRecord = {};
   let recordSuccess = "1";
+  let headerTs = null;
+  let detailTs = null;
   for (const record of records) {
-    const raw = record.content || record.parsed?.content;
+    const timestampStr = record.sox_transaction_timestamp;
+    const ts = new Date(timestampStr);
+    if (!hasValidTs(timestampStr)) continue;
+    const raw = record.content ?? record.parsed?.content;
     if (!raw) continue;
-    const content2 = filterACRS(raw);
-    const { payload, success } = safeParse(content2);
-    if (payload?.propertyCode || payload?.folioNumber || payload?.creationTS) {
-      mainRecord = record;
-      headerPayload = payload;
-    }
+    const { payload, success } = safeParse(raw);
     if (payload?.folioTransDetailList) {
-      detailPayload = payload;
+      if (!detailTs || ts > detailTs) {
+        detailPayload = payload;
+        detailTs = ts;
+        recordSuccess = success;
+      }
+    } else {
+      if (!headerTs || ts > headerTs) {
+        mainRecord = record;
+        headerPayload = payload;
+        headerTs = ts;
+      }
     }
-    success == "0" && (recordSuccess = "0");
   }
+  return { headerPayload, detailPayload, mainRecord, recordSuccess };
+}
+function mergeInt31Files(records) {
+  let { headerPayload, detailPayload, mainRecord, recordSuccess } = getLatestHeaderAndDetailRecords(records);
   const mergedPayload = { ...headerPayload, ...detailPayload };
   const content = JSON.stringify({ success: recordSuccess, payload: mergedPayload });
   mainRecord = { ...mainRecord, content };
@@ -40002,9 +40032,6 @@ function mergeJsonData(records, options = {}) {
 }
 
 // src/common/preprocessors.ts
-function isObject2(v) {
-  return v && typeof v === "object" && !Array.isArray(v);
-}
 function selectAll(dataArr, key) {
   return dataArr.filter((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === key);
 }
@@ -40029,35 +40056,17 @@ function pickMostRecent(records) {
   }
   return best;
 }
-function filterACRS(content) {
-  if (content && isObject2(content) && isObject2(content.payload)) {
-    const confirmationIds = content?.payload?.confirmationIds;
-    if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "ACRS")) {
-      const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
-      content.payload.confirmationIds = stripped;
-    } else if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "PMS")) {
-      const stripped = confirmationIds.filter((c) => c?.provider === "PMS");
-      content.payload.confirmationIds = stripped;
-    } else {
-      content.isValid = true;
-      content.description = "Anomalies are not checked in Marsha transactions";
-    }
-  } else if (typeof content === "string") {
-    const parsed = JSON.parse(content);
-    const confirmationIds = parsed?.payload?.confirmationIds;
-    if (Array.isArray(confirmationIds && confirmationIds.length > 1) && confirmationIds.some((c) => c?.provider === "ACRS")) {
-      const stripped = confirmationIds.filter((c) => c?.provider === "ACRS");
-      parsed.payload.confirmationIds = stripped;
-    } else if (Array.isArray(confirmationIds) && confirmationIds.some((c) => c?.provider === "PMS")) {
-      const stripped = confirmationIds.filter((c) => c?.provider === "PMS");
-      parsed.payload.confirmationIds = stripped;
-    } else {
-      parsed.isValid = true;
-      parsed.description = "Anomalies are not checked in Marsha transactions";
-    }
-    content = JSON.stringify(parsed);
+function keepACRS(content) {
+  if (typeof content === "string") {
+    content = JSON.parse(content);
   }
-  return content;
+  if (content?.payload) {
+    const confirmationIds = content?.payload?.confirmationIds;
+    const ids = Array.isArray(confirmationIds) ? confirmationIds : [];
+    const filtered = ids.filter((c) => c?.provider === "ACRS");
+    content.payload.confirmationIds = filtered;
+  }
+  return JSON.stringify(content);
 }
 var INTEGRATION_PREPROCESSORS = {
   // pick record with most recent sox_transaction_timestamp
@@ -40065,32 +40074,17 @@ var INTEGRATION_PREPROCESSORS = {
   // INT15.*: filter ACRS confirmationIds on the selected record
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected) selected.content = keepACRS(selected.content);
     return selected;
   },
   [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected) selected.content = keepACRS(selected.content);
     return selected;
   },
   [INTEGRATIONS.INT15_3_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected && srcId === INTEGRATIONS.INT15_3_1.toLowerCase()) selected.content = filterACRS(selected.content);
-    return selected;
-  },
-  [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
-    const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
-    return selected;
-  },
-  [INTEGRATIONS.INT03_1.toLowerCase()]: (records) => {
-    const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
-    return selected;
-  },
-  [INTEGRATIONS.INT03_2.toLowerCase()]: (records) => {
-    const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = filterACRS(selected.content);
+    if (selected && srcId === INTEGRATIONS.INT15_3_1.toLowerCase()) selected.content = keepACRS(selected.content);
     return selected;
   },
   // INT11.*: merge reservationList JSON array, sorted by confirmationNumber.value
@@ -40133,7 +40127,6 @@ var INTEGRATION_PREPROCESSORS = {
   // INT31: merge multiple logs (header + detail); fallback to most recent
   [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
     const data = mergeInt31Files(records);
-    if (data) data.content = filterACRS(data.content);
     return data;
   }
 };
@@ -40532,8 +40525,8 @@ function validateIntegrationPair(params) {
   const destinationContent = destinationPayload?.content;
   sourcePayload.content = parsePayloadContent(sourceContent, "source");
   destinationPayload.content = parsePayloadContent(destinationContent, "destination");
-  const srcId = sourceIntegrationId.toLowerCase();
-  const destId = destinationIntegrationId.toLowerCase();
+  const srcId = sourceIntegrationId?.toLowerCase();
+  const destId = destinationIntegrationId?.toLowerCase();
   const errors = [];
   const srcWrapperValidator = WRAPPER_VALIDATOR_REGISTRY[srcId];
   if (srcWrapperValidator) {
