@@ -1,4 +1,4 @@
-// sox-workflow build hash: 27f1ec9\n
+// sox-workflow build hash: 6f37eaf\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39792,6 +39792,41 @@ var hasValidTs = (ts) => {
   const t = new Date(ts);
   return !Number.isNaN(t.getTime());
 };
+function toEpoch(ts) {
+  try {
+    if (ts instanceof Date) {
+      const t = ts.getTime();
+      return Number.isFinite(t) ? t : 0;
+    }
+    if (typeof ts === "string") {
+      const matchJsonNet = ts.match(/\/Date\((\d+)\)\//);
+      if (matchJsonNet) {
+        const num = Number(matchJsonNet[1]);
+        return Number.isFinite(num) ? num : 0;
+      }
+    }
+    if (typeof ts === "number" || typeof ts === "string" && /^\s*-?\d+(\.\d+)?\s*$/.test(ts)) {
+      const num = typeof ts === "number" ? ts : Number(ts.trim());
+      if (!Number.isFinite(num)) return 0;
+      const abs = Math.abs(num);
+      const ms = abs < 1e12 ? num * 1e3 : num;
+      return Math.round(ms);
+    }
+    if (typeof ts === "string") {
+      const raw = ts.trim();
+      let n = Date.parse(raw);
+      if (!Number.isNaN(n)) return n;
+      const isoLocal = raw.replace(" ", "T").replace(",", ".");
+      const hasTZ = /[zZ]|[+-]\d{2}:?\d{2}$/.test(isoLocal);
+      const isoCandidate = hasTZ ? isoLocal : isoLocal + "Z";
+      n = Date.parse(isoCandidate);
+      if (!Number.isNaN(n)) return n;
+    }
+    return 0;
+  } catch {
+    return 0;
+  }
+}
 function getLatestHeaderAndDetailRecords(records) {
   let headerPayload = {};
   let detailPayload = {};
@@ -39801,8 +39836,8 @@ function getLatestHeaderAndDetailRecords(records) {
   let detailTs = null;
   for (const record of records) {
     const timestampStr = record.sox_transaction_timestamp;
-    const ts = new Date(timestampStr);
-    if (!hasValidTs(timestampStr)) continue;
+    const ts = toEpoch(timestampStr);
+    if (!hasValidTs(ts)) continue;
     const raw = record.content ?? record.parsed?.content;
     if (!raw) continue;
     const { payload, success } = safeParse(raw);
@@ -40035,14 +40070,6 @@ function mergeJsonData(records, options = {}) {
 function selectAll(dataArr, key) {
   return dataArr.filter((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === key);
 }
-function toEpoch(ts) {
-  try {
-    const n = Date.parse(String(ts));
-    return Number.isNaN(n) ? 0 : n;
-  } catch (e) {
-    return 0;
-  }
-}
 function pickMostRecent(records) {
   if (!Array.isArray(records) || records.length === 0) return void 0;
   let best = records[0];
@@ -40072,9 +40099,9 @@ var INTEGRATION_PREPROCESSORS = {
   // pick record with most recent sox_transaction_timestamp
   __default__: (records) => pickMostRecent(records),
   // INT15.*: filter ACRS confirmationIds on the selected record
-  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (selected) selected.content = keepACRS(selected.content);
+    if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase()) selected.content = keepACRS(selected.content);
     return selected;
   },
   [INTEGRATIONS.INT15_2_1.toLowerCase()]: (records) => {
@@ -40909,4 +40936,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.27f1ec9.mjs.map
+//# sourceMappingURL=sox-workflow.6f37eaf.mjs.map
