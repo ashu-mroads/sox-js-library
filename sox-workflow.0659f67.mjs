@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6f37eaf\n
+// sox-workflow build hash: 0659f67\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39855,6 +39855,9 @@ function getLatestHeaderAndDetailRecords(records) {
       }
     }
   }
+  if (!mainRecord || isObject(mainRecord) && Object.keys(mainRecord).length === 0) {
+    mainRecord = records?.[0] ?? {};
+  }
   return { headerPayload, detailPayload, mainRecord, recordSuccess };
 }
 function mergeInt31Files(records) {
@@ -40936,4 +40939,4 @@ export {
    * limitations under the License.
    *)
 */
-//# sourceMappingURL=sox-workflow.6f37eaf.mjs.map
+//# sourceMappingURL=sox-workflow.0659f67.mjs.map

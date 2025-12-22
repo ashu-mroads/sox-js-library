@@ -1,4 +1,4 @@
-// sox-workflow build hash: 6f37eaf\n
+// sox-workflow build hash: 0659f67\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39854,6 +39854,9 @@ function getLatestHeaderAndDetailRecords(records) {
         headerTs = ts;
       }
     }
+  }
+  if (!mainRecord || isObject(mainRecord) && Object.keys(mainRecord).length === 0) {
+    mainRecord = records?.[0] ?? {};
   }
   return { headerPayload, detailPayload, mainRecord, recordSuccess };
 }
