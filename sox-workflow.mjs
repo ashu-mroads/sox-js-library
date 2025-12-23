@@ -1,4 +1,4 @@
-// sox-workflow build hash: 0659f67\n
+// sox-workflow build hash: 27020d0\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40738,6 +40738,49 @@ function processSingleIntegration({ loopItemValue, executionId }) {
   const result = sendBusinessEventSingleInt(ingestResult);
   return result;
 }
+function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
+  try {
+    const parsed = parsePayloadContent(payload?.content, "INT16 missing transaction");
+    const httpCode = parsed?.response?.http_response_code;
+    if (httpCode) {
+      const is406 = httpCode?.startsWith("406");
+      if (!is406) return null;
+    }
+    const srcKey = String(source || "").toLowerCase();
+    const destKey = String(destination || "").toLowerCase();
+    const payloadId = String(payload?.sox_integration || "").toLowerCase();
+    const integrationValidation = {
+      sourceIntegrationId: srcKey,
+      destinationIntegrationId: destKey,
+      sourceValidation: payloadId === srcKey ? { isValid: true, errorMessages: [], failures: [] } : void 0,
+      destinationValidation: payloadId === destKey ? { isValid: true, errorMessages: [], failures: [] } : void 0,
+      mappingComparison: null,
+      isValid: true,
+      errors: ["HTTP 406 is a Validation failure, not a SOX relevant anomaly"]
+    };
+    let sourcePayloadArg;
+    let destinationPayloadArg;
+    if (payloadId === srcKey) {
+      sourcePayloadArg = payload;
+    } else if (payloadId === destKey) {
+      destinationPayloadArg = payload;
+    } else {
+      sourcePayloadArg = payload;
+    }
+    const ingestResult = createSoxBusinessEvent({
+      validationResult: integrationValidation,
+      transactionId,
+      srcEventTime,
+      destEventTime: "",
+      sourcePayload: sourcePayloadArg,
+      destinationPayload: destinationPayloadArg,
+      executionId
+    });
+    return sendBusinessEvent([ingestResult]);
+  } catch {
+    return null;
+  }
+}
 function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
@@ -40747,6 +40790,18 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   const srcEventTime = payload.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const transactionId = loopItemValue?.sox_transaction_id || payload.sox_transaction_id || crypto.randomUUID();
   executionId = executionId || "missing_execution_id";
+  const isInt16ToInt17 = Validators._areValuesEqual(source, INTEGRATIONS.INT16) && Validators._areValuesEqual(destination, INTEGRATIONS.INT17);
+  if (isInt16ToInt17) {
+    const processed = handleInt16BusinessValidation(
+      payload,
+      source,
+      destination,
+      executionId,
+      transactionId,
+      srcEventTime
+    );
+    if (processed) return processed;
+  }
   const singleValidation = validateIntegration({
     sourceIntegrationId: payloadIntegrationId,
     payload
