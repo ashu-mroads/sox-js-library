@@ -1,4 +1,4 @@
-// sox-workflow build hash: 27020d0\n
+// sox-workflow build hash: 14f016f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36265,24 +36265,24 @@ function summarizeAnomalies(validation, response) {
     return { anomalyCategory, anomalyType };
   }
   const parts = [];
-  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length}; 
+  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length} 
 `;
   parts.push(countIssues);
   allFailures.forEach((f) => {
     parts.push(
-      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value}; 
+      `RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value} 
 `
     );
   });
   mappingFailures.forEach((m) => {
     parts.push(
-      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}; 
+      `MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule} 
 `
     );
   });
   if (allFailures.length === 1 && allFailures[0]?.anomalyCategory === "Integration Failure") {
     parts.push(
-      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}; 
+      `RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)} 
 `
     );
   }
@@ -38968,7 +38968,7 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-27: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value"
   // RES-28: Field Structure & Compare (Optional)
-  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
+  // 'request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
 };
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
