@@ -1,4 +1,4 @@
-// sox-workflow build hash: 14f016f\n
+// sox-workflow build hash: 52d9bfb\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38968,7 +38968,7 @@ var INT26_TO_INT30_FieldPathMap = {
   // RES-27: Field Structure & Compare (Optional)
   "request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value": "request.request_body.data.hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyBaseOccRate.rateDetails.rateAmount.bsAmt.value"
   // RES-28: Field Structure & Compare (Optional)
-  // 'request.request_body.segments<array>.offer.productUses<array>.packageRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
+  // 'request.request_body.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyRate.dailyTotalRate.bsAmt': 'hotelReservation.segments<array>.offer.productUses<array>.productRates.dailyRates<array>.dailyTotalRate.bsAmt'
 };
 
 // src/integration-pair/source.int27.dest.int28.map.rules.ts
@@ -40197,7 +40197,8 @@ var DQL_REQUEST_TIMEOUT_MS = 1e4;
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
-  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query } });
+  const GRAIL_QUERY_LIMIT = 1e5;
+  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query, maxResultRecords: GRAIL_QUERY_LIMIT } });
   if (start.state === "SUCCEEDED") {
     return start.result;
   }
