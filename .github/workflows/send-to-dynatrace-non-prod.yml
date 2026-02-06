@@ -9,7 +9,12 @@ on:
 
 jobs:
   ingest:
-    runs-on: general-use
+    # Use ONE of the following runs-on options:
+    # 1) If your runner shows labels: self-hosted, general-use
+    runs-on: [self-hosted, general-use]
+    # 2) If your runner only shows: general-use
+    # runs-on: general-use
+
     defaults:
       run:
         shell: bash
@@ -20,6 +25,12 @@ jobs:
       FILE_PATH: sox-workflow.irn08782.min.mjs
 
     steps:
+      - name: Start / Environment
+        run: |
+          echo "==> SHELL: $SHELL"
+          echo "==> Dynatrace endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
+          echo "==> Using runner labels from 'runs-on' above"
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -36,36 +47,49 @@ jobs:
           echo "==> First 10 lines:"
           head -n 10 "${FILE_PATH}" || true
 
-      - name: Ensure jq exists
-        run: |
-          if ! command -v jq >/dev/null 2>&1; then
-            echo "ERROR: 'jq' is required on this runner to build JSON safely."
-            echo "Please install jq on the self-hosted runner (Linux: sudo apt-get install -y jq),"
-            echo "or ask me for a Python-based variant after jq is installed."
-            exit 1
-          fi
-
-      - name: Build JSON payload (safe via jq)
+      - name: Build JSON payload (safe; streams file, no huge args)
         run: |
           set -Eeuo pipefail
-          CODE_JSON=$(jq -Rs . < "${FILE_PATH}")
-          jq -n \
-            --arg provider "github-enterprise" \
-            --arg type "com.sox.workflow.updated" \
-            --arg repo "${REPO}" \
-            --arg file "${FILE_PATH}" \
-            --arg sha "${GITHUB_SHA}" \
-            --arg run_id "${GITHUB_RUN_ID}" \
-            --argjson content "${CODE_JSON}" \
-            '{
-               "event.provider": $provider,
-               "event.type": $type,
-               "repo": $repo,
-               "file": $file,
-               "commit.sha": $sha,
-               "github.run_id": $run_id,
-               "content": $content
-             }' > event.json
+
+          if command -v jq >/dev/null 2>&1; then
+            echo "==> Building payload with jq (streaming file content)"
+            # -R (raw) reads text; -s (slurp) makes '.' equal the entire file as a single string.
+            jq -Rs \
+              --arg provider "github-enterprise" \
+              --arg type "com.sox.workflow.updated" \
+              --arg repo "${REPO}" \
+              --arg file "${FILE_PATH}" \
+              --arg sha "${GITHUB_SHA}" \
+              --arg run_id "${GITHUB_RUN_ID}" \
+              '{
+                 "event.provider": $provider,
+                 "event.type": $type,
+                 "repo": $repo,
+                 "file": $file,
+                 "commit.sha": $sha,
+                 "github.run_id": $run_id,
+                 "content": .
+               }' "${FILE_PATH}" > event.json
+          else
+            echo "==> jq not found; building payload with Python"
+            python3 - <<'PY' > event.json
+import json, os
+file_path = os.environ["FILE_PATH"]
+with open(file_path, "r", encoding="utf-8") as f:
+    code = f.read()
+payload = {
+  "event.provider": "github-enterprise",
+  "event.type": "com.sox.workflow.updated",
+  "repo": os.environ.get("REPO"),
+  "file": file_path,
+  "commit.sha": os.environ.get("GITHUB_SHA"),
+  "github.run_id": os.environ.get("GITHUB_RUN_ID"),
+  "content": code
+}
+with open("event.json", "w", encoding="utf-8") as out:
+  json.dump(payload, out, ensure_ascii=False)
+PY
+          fi
 
           echo "==> Payload size (bytes):"
           wc -c event.json || true
