@@ -40117,6 +40117,7 @@ function validateIntegrationPair(params) {
     };
   if (destinationRules) {
     destinationValidation = Validators.validatePayloadWithRules(destinationRules, destinationPayload);
+    console.log("Destination Validation Result:", destinationValidation);
     if (!destinationValidation.isValid)
       errors.push(`Destination payload rule validation failed (${destId})`);
   }

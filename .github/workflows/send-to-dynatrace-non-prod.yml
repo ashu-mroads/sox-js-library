@@ -1,0 +1,102 @@
+name: Send code to Dynatrace Business Event
+
+on:
+  push:
+    branches: [ "dev" ]
+    # Only run when the target file changes (optional but recommended)
+    paths:
+      - "sox-workflow.irn08782.min.mjs"
+  workflow_dispatch: {}
+
+jobs:
+  ingest:
+    name: Ingest GitHub file as Business Event
+    runs-on: ubuntu-latest
+
+    env:
+      DT_ENV: irn08782
+      # File details
+      REPO: finance/finance-sox-js-library
+      FILE_PATH: sox-workflow.irn08782min.mjs
+      RAW_URL: https://git.marriott.com/raw/finance/finance-sox-js-library/main/sox-workflow.irn08782.min.mjs
+
+    steps:
+      - name: Check out (for commit metadata)
+        uses: actions/checkout@v4
+
+      - name: Gather commit metadata
+        id: meta
+        run: |
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=format:'%an')" >> $GITHUB_OUTPUT
+          echo "author_email=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_OUTPUT
+          echo "committer=$(git log -1 --pretty=format:'%cn')" >> $GITHUB_OUTPUT
+          echo "commit_msg=$(git log -1 --pretty=format:'%s' | sed 's/\"/\\"/g')" >> $GITHUB_OUTPUT
+          echo "commit_time=$(git log -1 --pretty=format:'%cI')" >> $GITHUB_OUTPUT
+          echo "branch=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Download target file from GitHub raw
+        run: |
+          curl -fsSL "$RAW_URL" -o "$FILE_PATH"
+
+      - name: Escape file content for JSON (preserve as string)
+        id: content
+        run: |
+          # Escape backslashes, then quotes, then newlines → JSON-safe string
+          ESCAPED_CONTENT=$(sed 's/\\/\\\\/g; s/"/\\"/g; :a;N;$!ba;s/\n/\\n/g' "$FILE_PATH")
+          # Trim potential trailing newline artifacts
+          echo "json=$ESCAPED_CONTENT" >> $GITHUB_OUTPUT
+
+      - name: Build JSON payload
+        id: payload
+        run: |
+          cat > event.json <<'JSON'
+          {
+            "event.provider": "github",
+            "event.type": "com.sox.workflow.updated",
+            "repo": "${{ env.REPO }}",
+            "file": "${{ env.FILE_PATH }}",
+            "branch": "${{ steps.meta.outputs.branch }}",
+            "commit.sha": "${{ steps.meta.outputs.sha }}",
+            "commit.short_sha": "${{ steps.meta.outputs.short_sha }}",
+            "commit.author": "${{ steps.meta.outputs.author }}",
+            "commit.author_email": "${{ steps.meta.outputs.author_email }}",
+            "commit.committer": "${{ steps.meta.outputs.committer }}",
+            "commit.message": "${{ steps.meta.outputs.commit_msg }}",
+            "commit.time": "${{ steps.meta.outputs.commit_time }}",
+            "github.run_id": "${{ github.run_id }}",
+            "github.run_number": "${{ github.run_number }}",
+            "github.workflow": "${{ github.workflow }}",
+            "content": "__CODE_CONTENT__"
+          }
+          JSON
+
+          # Inject the escaped code content
+          sed -i "s|__CODE_CONTENT__|${{ steps.content.outputs.json }}|" event.json
+
+          echo "Payload built:"
+          wc -c event.json
+          head -c 500 event.json && echo -e "\n...\n"
+
+      - name: Send Business Event to Dynatrace
+        env:
+          DYNATRACE_BIZEVENTS_TOKEN: ${{ secrets.DYNATRACE_BIZEVENTS_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sS -o response.json -w "%{http_code}" \
+            -X POST "https://${{ env.DT_ENV }}.live.dynatrace.com/api/v2/bizevents/ingest" \
+            -H "Authorization: Api-Token ${DYNATRACE_BIZEVENTS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data @event.json | tee http_status.txt
+
+          STATUS=$(cat http_status.txt)
+          echo "HTTP status: $STATUS"
+          echo "Response:"
+          cat response.json || true
+
+          # Expect 202 for successful ingest (accepted)
+          if [ "$STATUS" != "202" ]; then
+            echo "Dynatrace ingest failed with HTTP $STATUS"
+            exit 1
+          fi
