@@ -8,6 +8,10 @@ on:
       - "sox-workflow.irn08782.min.mjs"
   workflow_dispatch: {}
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   ingest:
     runs-on: general-use
