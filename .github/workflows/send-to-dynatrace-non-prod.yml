@@ -7,15 +7,12 @@ on:
       - "sox-workflow.irn08782.min.mjs"
   workflow_dispatch: {}
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   ingest:
-    # Make sure the labels match your runner. If your runner only shows "general-use"
-    # without "self-hosted", use: runs-on: general-use
-    runs-on: [self-hosted, general-use]
+    runs-on: general-use
+    defaults:
+      run:
+        shell: bash
 
     env:
       DT_ENV: irn08782
@@ -23,57 +20,53 @@ jobs:
       FILE_PATH: sox-workflow.irn08782.min.mjs
 
     steps:
-      - name: Start / Environment
-        run: |
-          echo "==> SHELL: $SHELL"
-          echo "==> Using endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Verify file exists
+      - name: Verify file exists and preview
         run: |
-          echo "==> Listing repo root"
+          set -Eeuo pipefail
+          echo "==> Repo root:"
           ls -la
-          echo "==> Checking target file"
-          if [ -f "$FILE_PATH" ]; then
-            echo "Found $FILE_PATH"
-          else
-            echo "Missing $FILE_PATH"
+          echo "==> Checking file: ${FILE_PATH}"
+          if [ ! -f "${FILE_PATH}" ]; then
+            echo "Missing ${FILE_PATH}"
             exit 1
           fi
-          echo "==> File size (bytes):"
-          wc -c "$FILE_PATH"
-          echo "==> First 10 lines (preview)"
-          head -n 10 "$FILE_PATH" || true
+          echo "==> Size (bytes):"
+          wc -c "${FILE_PATH}"
+          echo "==> First 10 lines:"
+          head -n 10 "${FILE_PATH}" || true
 
-      - name: Build JSON payload (safe)
-        id: build
+      - name: Build JSON payload safely (jq or Python fallback)
         run: |
           set -Eeuo pipefail
 
-          # Turn the entire file into a proper JSON string.
+          # Convert file to a proper JSON string
           if command -v jq >/dev/null 2>&1; then
-            CODE_JSON=$(jq -Rs . < "$FILE_PATH")
+            CODE_JSON=$(jq -Rs . < "${FILE_PATH}")
+            USE_JQ=1
           else
-            echo "==> jq not found, using Python to JSON-escape the file"
+            echo "==> jq not found; using Python to JSON-escape the file"
             CODE_JSON=$(python3 - <<'PY'
-import json,sys
+import json, sys
 with open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8") as f:
     sys.stdout.write(json.dumps(f.read()))
 PY
 )
+            USE_JQ=0
           fi
 
-          # Build the payload. Prefer jq, fallback to Python if jq is missing.
-          if command -v jq >/dev/null 2>&1; then
-            jq -n --arg provider "github-enterprise" \
-                  --arg type "com.sox.workflow.updated" \
-                  --arg repo "$REPO" \
-                  --arg file "$FILE_PATH" \
-                  --arg sha "${GITHUB_SHA}" \
-                  --arg run_id "${GITHUB_RUN_ID}" \
-                  --argjson content "$CODE_JSON" \
+          # Build final payload object
+          if [ "${USE_JQ}" = "1" ]; then
+            jq -n \
+              --arg provider "github-enterprise" \
+              --arg type "com.sox.workflow.updated" \
+              --arg repo "${REPO}" \
+              --arg file "${FILE_PATH}" \
+              --arg sha "${GITHUB_SHA}" \
+              --arg run_id "${GITHUB_RUN_ID}" \
+              --argjson content "${CODE_JSON}" \
               '{
                  "event.provider": $provider,
                  "event.type": $type,
@@ -85,7 +78,7 @@ PY
                }' > event.json
           else
             python3 - <<'PY' > event.json
-import json,os
+import json, os
 with open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8") as f:
     code = f.read()
 payload = {
@@ -103,8 +96,8 @@ PY
 
           echo "==> Payload size (bytes):"
           wc -c event.json
-          echo "==> Payload preview (first 800 chars):"
-          head -c 800 event.json || true
+          echo "==> Payload preview (first 500 chars):"
+          head -c 500 event.json || true
           echo
 
       - name: Send to Dynatrace (expect HTTP 202)
@@ -112,7 +105,7 @@ PY
           DYNATRACE_BIZEVENTS_TOKEN: ${{ secrets.DYNATRACE_BIZEVENTS_TOKEN }}
         run: |
           set -Eeuo pipefail
-          echo "==> Posting to Dynatrace Business Events API"
+          echo "==> POST https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
           HTTP_STATUS=$(curl -sS \
             -X POST "https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest" \
             -H "Authorization: Api-Token ${DYNATRACE_BIZEVENTS_TOKEN}" \
@@ -122,16 +115,17 @@ PY
             -o response.json \
             -w "%{http_code}")
 
-          echo "==> HTTP status: $HTTP_STATUS"
+          echo "==> HTTP status: ${HTTP_STATUS}"
           echo "==> Response headers:"
           cat headers.txt || true
           echo "==> Response body:"
           cat response.json || true
 
-          if [ "$HTTP_STATUS" != "202" ]; then
+          if [ "${HTTP_STATUS}" != "202" ]; then
             echo "ERROR: Dynatrace ingest did not return 202. Failing the job."
             exit 1
           fi
 
       - name: Success
-        run: echo "==> Business Event ingest completed (202 Accepted)."
+        run: |
+          echo "==> Business Event ingest completed (202 Accepted)."
