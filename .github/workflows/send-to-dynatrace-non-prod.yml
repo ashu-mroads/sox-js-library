@@ -13,9 +13,9 @@ defaults:
 
 jobs:
   ingest:
-    # Make sure these labels match your runner. If your runner shows only "general-use",
-    # you can also try: runs-on: [general-use]. Most self-hosted runners include "self-hosted".
-    runs-on: [general-use]
+    # Make sure the labels match your runner. If your runner only shows "general-use"
+    # without "self-hosted", use: runs-on: general-use
+    runs-on: [self-hosted, general-use]
 
     env:
       DT_ENV: irn08782
@@ -26,8 +26,7 @@ jobs:
       - name: Start / Environment
         run: |
           echo "==> SHELL: $SHELL"
-          echo "==> Runner labels should include: self-hosted, general-use"
-          echo "==> Dynatrace endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
+          echo "==> Using endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -37,31 +36,36 @@ jobs:
           echo "==> Listing repo root"
           ls -la
           echo "==> Checking target file"
-          test -f "$FILE_PATH" && echo "Found $FILE_PATH" || (echo "Missing $FILE_PATH" && exit 1)
+          if [ -f "$FILE_PATH" ]; then
+            echo "Found $FILE_PATH"
+          else
+            echo "Missing $FILE_PATH"
+            exit 1
+          fi
           echo "==> File size (bytes):"
           wc -c "$FILE_PATH"
           echo "==> First 10 lines (preview)"
           head -n 10 "$FILE_PATH" || true
 
-      # Build JSON safely and portably. Prefer jq; fallback to Python if jq is unavailable.
       - name: Build JSON payload (safe)
         id: build
         run: |
           set -Eeuo pipefail
 
-          # Create content as a proper JSON string (no sed needed)
+          # Turn the entire file into a proper JSON string.
           if command -v jq >/dev/null 2>&1; then
             CODE_JSON=$(jq -Rs . < "$FILE_PATH")
           else
-            echo "==> jq not found, using Python fallback to JSON-escape"
+            echo "==> jq not found, using Python to JSON-escape the file"
             CODE_JSON=$(python3 - <<'PY'
 import json,sys
-sys.stdout.write(json.dumps(open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8").read()))
+with open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8") as f:
+    sys.stdout.write(json.dumps(f.read()))
 PY
 )
           fi
 
-          # Use jq to assemble the final object (or Python if jq isn't present)
+          # Build the payload. Prefer jq, fallback to Python if jq is missing.
           if command -v jq >/dev/null 2>&1; then
             jq -n --arg provider "github-enterprise" \
                   --arg type "com.sox.workflow.updated" \
@@ -80,8 +84,10 @@ PY
                  "content": $content
                }' > event.json
           else
-            python3 - <<'PY'
+            python3 - <<'PY' > event.json
 import json,os
+with open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8") as f:
+    code = f.read()
 payload = {
   "event.provider": "github-enterprise",
   "event.type": "com.sox.workflow.updated",
@@ -89,11 +95,10 @@ payload = {
   "file": os.environ.get("FILE_PATH"),
   "commit.sha": os.environ.get("GITHUB_SHA"),
   "github.run_id": os.environ.get("GITHUB_RUN_ID"),
-  "content": open("sox-workflow.irn08782.min.mjs","r",encoding="utf-8").read()
+  "content": code
 }
 print(json.dumps(payload, ensure_ascii=False))
 PY
- > event.json
           fi
 
           echo "==> Payload size (bytes):"
