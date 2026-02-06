@@ -5,7 +5,7 @@ on:
     branches: [ "dev" ]
     # Only run when the target file changes (optional but recommended)
     paths:
-      - "sox-workflow.irn08782.min.mjs"
+      - "sox-workflow.irn08782.mjs"
   workflow_dispatch: {}
 
 defaults:
@@ -18,7 +18,7 @@ jobs:
     env:
       DT_ENV: irn08782
       REPO: finance/finance-sox-js-library
-      FILE_PATH: sox-workflow.irn08782.min.mjs
+      FILE_PATH: sox-workflow.irn08782.mjs
 
     steps:
       - name: Checkout repo

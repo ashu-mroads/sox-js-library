@@ -1,4 +1,5 @@
 // sox-workflow env: dev code: irn08782 build hash: f21aca0\n
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
