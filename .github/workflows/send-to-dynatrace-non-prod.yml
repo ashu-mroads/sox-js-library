@@ -9,7 +9,7 @@ on:
 
 jobs:
   ingest:
-    runs-on: [self-hosted, general-use]
+    runs-on: general-use
     defaults:
       run:
         shell: bash
