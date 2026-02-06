@@ -9,11 +9,7 @@ on:
 
 jobs:
   ingest:
-    # Use ONE of the following runs-on options:
-    # 1) If your runner shows labels: self-hosted, general-use
     runs-on: [self-hosted, general-use]
-    # 2) If your runner only shows: general-use
-    # runs-on: general-use
 
     defaults:
       run:
@@ -29,7 +25,6 @@ jobs:
         run: |
           echo "==> SHELL: $SHELL"
           echo "==> Dynatrace endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
-          echo "==> Using runner labels from 'runs-on' above"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -53,7 +48,6 @@ jobs:
 
           if command -v jq >/dev/null 2>&1; then
             echo "==> Building payload with jq (streaming file content)"
-            # -R (raw) reads text; -s (slurp) makes '.' equal the entire file as a single string.
             jq -Rs \
               --arg provider "github-enterprise" \
               --arg type "com.sox.workflow.updated" \
