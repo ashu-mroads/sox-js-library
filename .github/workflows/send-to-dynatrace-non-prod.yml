@@ -10,7 +10,7 @@ on:
 
 jobs:
   ingest:
-    runs-on: ubuntu-latest
+    runs-on: general-use
     env:
       DT_ENV: irn08782
       REPO: finance/finance-sox-js-library
