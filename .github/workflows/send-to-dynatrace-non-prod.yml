@@ -1,9 +1,10 @@
 name: Validator
 on:
   workflow_dispatch:
+  
 jobs:
   ping:
-    runs-on: [self-hosted, general-use]
+    runs-on: general-use
     defaults:
       run:
         shell: bash
