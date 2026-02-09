@@ -74,9 +74,9 @@ jobs:
           DYNATRACE_BIZEVENTS_TOKEN: ${{ secrets.DYNATRACE_BIZEVENTS_TOKEN }}
         run: |
           set -Eeuo pipefail
-          echo "==> POST https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
+          echo "==> POST https://${DT_ENV}.live.dynatrace.com/platform/classic/environment-api/v2/bizevents/ingest"
           HTTP_STATUS=$(curl -sS \
-            -X POST "https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest" \
+            -X POST "https://${DT_ENV}.live.dynatrace.com/platform/classic/environment-api/v2/bizevents/ingest" \
             -H "Authorization: Bearer ${DYNATRACE_BIZEVENTS_TOKEN}" \
             -H "Content-Type: application/json" \
             -D headers.txt \
