@@ -50,18 +50,18 @@ jobs:
           python3 -c 'import os, json
           file_path = os.environ["FILE_PATH"]
           with open(file_path, "r", encoding="utf-8") as f:
-          code = f.read()
+            code = f.read()
           payload = {
-          "event.provider": "github-enterprise",
-          "event.type": "com.sox.workflow.updated",
-          "repo": os.environ.get("REPO"),
-          "file": file_path,
-          "commit.sha": os.environ.get("GITHUB_SHA"),
-          "github.run_id": os.environ.get("GITHUB_RUN_ID"),
-          "content": code
+            "event.provider": "github-enterprise",
+            "event.type": "com.sox.workflow.updated",
+            "repo": os.environ.get("REPO"),
+            "file": file_path,
+            "commit.sha": os.environ.get("GITHUB_SHA"),
+            "github.run_id": os.environ.get("GITHUB_RUN_ID"),
+            "content": code
           }
           with open("event.json", "w", encoding="utf-8") as out:
-          json.dump(payload, out, ensure_ascii=False)
+            json.dump(payload, out, ensure_ascii=False)
           '
           echo "==> Payload size (bytes):"
           wc -c event.json || true
