@@ -9,6 +9,8 @@ on:
 
 jobs:
   ingest:
+    # If your runner only has the "general-use" label (no "self-hosted"), change to:
+    # runs-on: general-use
     runs-on: [self-hosted, general-use]
 
     defaults:
@@ -42,49 +44,25 @@ jobs:
           echo "==> First 10 lines:"
           head -n 10 "${FILE_PATH}" || true
 
-      - name: Build JSON payload (safe; streams file, no huge args)
+      - name: Build JSON payload (Python one-liner; no heredoc/jq)
         run: |
           set -Eeuo pipefail
-
-          if command -v jq >/dev/null 2>&1; then
-            echo "==> Building payload with jq (streaming file content)"
-            jq -Rs \
-              --arg provider "github-enterprise" \
-              --arg type "com.sox.workflow.updated" \
-              --arg repo "${REPO}" \
-              --arg file "${FILE_PATH}" \
-              --arg sha "${GITHUB_SHA}" \
-              --arg run_id "${GITHUB_RUN_ID}" \
-              '{
-                 "event.provider": $provider,
-                 "event.type": $type,
-                 "repo": $repo,
-                 "file": $file,
-                 "commit.sha": $sha,
-                 "github.run_id": $run_id,
-                 "content": .
-               }' "${FILE_PATH}" > event.json
-          else
-            echo "==> jq not found; building payload with Python"
-            python3 - <<'PY' > event.json
-import json, os
-file_path = os.environ["FILE_PATH"]
-with open(file_path, "r", encoding="utf-8") as f:
-    code = f.read()
-payload = {
-  "event.provider": "github-enterprise",
-  "event.type": "com.sox.workflow.updated",
-  "repo": os.environ.get("REPO"),
-  "file": file_path,
-  "commit.sha": os.environ.get("GITHUB_SHA"),
-  "github.run_id": os.environ.get("GITHUB_RUN_ID"),
-  "content": code
-}
-with open("event.json", "w", encoding="utf-8") as out:
-  json.dump(payload, out, ensure_ascii=False)
-PY
-          fi
-
+          python3 -c 'import os, json
+          file_path = os.environ["FILE_PATH"]
+          with open(file_path, "r", encoding="utf-8") as f:
+          code = f.read()
+          payload = {
+          "event.provider": "github-enterprise",
+          "event.type": "com.sox.workflow.updated",
+          "repo": os.environ.get("REPO"),
+          "file": file_path,
+          "commit.sha": os.environ.get("GITHUB_SHA"),
+          "github.run_id": os.environ.get("GITHUB_RUN_ID"),
+          "content": code
+          }
+          with open("event.json", "w", encoding="utf-8") as out:
+          json.dump(payload, out, ensure_ascii=False)
+          '
           echo "==> Payload size (bytes):"
           wc -c event.json || true
           echo "==> Payload preview (first 500 chars):"
