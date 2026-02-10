@@ -1,0 +1,12 @@
+{
+  "env": "prod",
+  "code": "ibs60782",
+  "hash": "181bfa4",
+  "builtAt": "2026-02-10T16:45:27.485Z",
+  "files": {
+    "js": "sox-workflow.ibs60782.mjs",
+    "map": "sox-workflow.ibs60782.mjs.map",
+    "minJs": "sox-workflow.ibs60782.min.mjs",
+    "minMap": "sox-workflow.ibs60782.min.mjs.map"
+  }
+}
