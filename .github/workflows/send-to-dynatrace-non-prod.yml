@@ -26,7 +26,7 @@ jobs:
       - name: Start / Environment
         run: |
           echo "==> SHELL: $SHELL"
-          echo "==> Dynatrace endpoint: https://${DT_ENV}.live.dynatrace.com/api/v2/bizevents/ingest"
+          echo "==> Dynatrace endpoint: https://${DT_ENV}.apps.dynatrace.com/platform/classic/environment-api/v2/bizevents/ingest"
 
       - name: Checkout repo
         uses: actions/checkout@v4
