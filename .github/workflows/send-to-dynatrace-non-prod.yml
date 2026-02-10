@@ -10,7 +10,7 @@ on:
 jobs:
   ingest:
     # If your runner only has the "general-use" label (no "self-hosted"), change to:
-    # runs-on: general-use 
+    # runs-on: general-use
     runs-on: general-use
 
     defaults:
