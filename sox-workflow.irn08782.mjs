@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 49421a2\n
+// sox-workflow env: dev code: irn08782 build hash: adb7e08\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36274,19 +36274,19 @@ function summarizeAnomalies(validation, response) {
     return { anomalyCategory, anomalyType };
   }
   const parts = [];
-  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length}; 
+  const countIssues = `Src Failures:${srcFailures.length},Dest Failures: ${destFailures?.length},Map Failures:${mappingFailures.length} 
 `;
   parts.push(countIssues);
   allFailures.forEach((f) => {
-    parts.push(`RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value}; 
+    parts.push(`RULE|cat=${f.anomalyCategory}|type=${f.anomalyType}|path=${f.actualPath || ""}|value=${f.value} 
 `);
   });
   mappingFailures.forEach((m) => {
-    parts.push(`MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule}; 
+    parts.push(`MAP|cat=${m.anomalyCategory}|type=${m.anomalyType}|src=${m.sourcePath}|dest=${m.destinationPath}|srcVal=${m.sourceValue}|destVal=${m.destinationValue}|map=${m.mappedSourceRule}->${m.mappedDestinationRule} 
 `);
   });
   if (allFailures.length === 1 && allFailures[0]?.anomalyCategory === "Integration Failure") {
-    parts.push(`RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)}; 
+    parts.push(`RESPONSE|cat=${allFailures[0]?.anomalyCategory}|type=${allFailures[0]?.anomalyType}|responseValue=${JSON.stringify(response?.content?.response?.http_response_code)} 
 `);
   }
   const anomalySummary = parts.join(" ");
@@ -39412,7 +39412,7 @@ function getLatestHeaderAndDetailRecords(records) {
     const raw = record.content ?? record.parsed?.content;
     if (!raw)
       continue;
-    const { payload, success } = safeParse(raw);
+    const { payload, success } = parsePayloadContent(raw, "INT31 header/detail selection");
     if (payload?.folioTransDetailList) {
       if (!detailTs || ts > detailTs) {
         detailPayload = payload;
@@ -39438,13 +39438,6 @@ function mergeInt31Files(records) {
   const content = JSON.stringify({ success: recordSuccess, payload: mergedPayload });
   mainRecord = { ...mainRecord, content };
   return mainRecord;
-}
-function safeParse(str) {
-  try {
-    return JSON.parse(str);
-  } catch {
-    return {};
-  }
 }
 function adjustValuesForNumberOfDecimals(input) {
   if (input === null || typeof input !== "object") {
@@ -39474,7 +39467,7 @@ function adjustValuesForNumberOfDecimals(input) {
   return result;
 }
 function handleDecimals(soxData, intId) {
-  const parsedContent = safeParse(soxData.content);
+  const parsedContent = parsePayloadContent(soxData.content, "Decimals handling");
   if (intId === INTEGRATIONS.INT26) {
     const { request, success, response } = parsedContent;
     request.request_body = adjustValuesForNumberOfDecimals(request.request_body);
@@ -39577,7 +39570,7 @@ var toObject = (content) => {
   if (isObject(content))
     return content;
   if (typeof content === "string")
-    return safeParse(content);
+    return parsePayloadContent(content, "Rule application");
   return void 0;
 };
 var serializeBack = (selected, obj) => {
@@ -39675,7 +39668,7 @@ function pickMostRecent(records) {
 }
 function keepACRS(content) {
   if (typeof content === "string") {
-    content = JSON.parse(content);
+    content = parsePayloadContent(content, "ACRS");
   }
   if (content?.payload) {
     const confirmationIds = content?.payload?.confirmationIds;
@@ -39782,7 +39775,8 @@ var DQL_REQUEST_TIMEOUT_MS = 1e4;
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
-  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query } });
+  const GRAIL_QUERY_LIMIT = 1e5;
+  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query, maxResultRecords: GRAIL_QUERY_LIMIT } });
   if (start.state === "SUCCEEDED") {
     return start.result;
   }
@@ -40029,6 +40023,16 @@ var WRAPPER_VALIDATOR_REGISTRY = {
 };
 
 // dist/index.js
+function cleanContentParser(raw, label) {
+  const INVALID_JSON_ESCAPES = ["\\'"];
+  const invalidEscapeRegex = new RegExp(INVALID_JSON_ESCAPES.map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
+  try {
+    return raw.replace(invalidEscapeRegex, (m) => m.slice(1));
+  } catch (err) {
+    console.error(`Failed to clean ${label} content`, err);
+    return {};
+  }
+}
 function parsePayloadContent(raw, label) {
   if (typeof raw !== "string")
     return {};
@@ -40036,7 +40040,7 @@ function parsePayloadContent(raw, label) {
     return JSON.parse(raw);
   } catch (err) {
     console.error(`Failed to parse ${label}`, err);
-    return {};
+    return cleanContentParser(raw, label);
   }
 }
 function validateIntegration(params) {
@@ -40422,6 +40426,7 @@ var index_default = {
 };
 export {
   index_default as default,
+  parsePayloadContent,
   processErrorTransaction,
   processMatchedPair,
   processMatchedPairArray,
