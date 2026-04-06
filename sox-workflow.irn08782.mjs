@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: adb7e08\n
+// sox-workflow env: dev code: irn08782 build hash: c9a3ac1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40027,7 +40027,8 @@ function cleanContentParser(raw, label) {
   const INVALID_JSON_ESCAPES = ["\\'"];
   const invalidEscapeRegex = new RegExp(INVALID_JSON_ESCAPES.map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
   try {
-    return raw.replace(invalidEscapeRegex, (m) => m.slice(1));
+    const cleaned = raw.replace(invalidEscapeRegex, (m) => m.slice(1));
+    return JSON.parse(cleaned);
   } catch (err) {
     console.error(`Failed to clean ${label} content`, err);
     return {};
@@ -40425,6 +40426,7 @@ var index_default = {
   wfhelper: workflow_helper_exports
 };
 export {
+  cleanContentParser,
   index_default as default,
   parsePayloadContent,
   processErrorTransaction,
