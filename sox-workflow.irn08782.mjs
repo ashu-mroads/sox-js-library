@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: c9a3ac1\n
+// sox-workflow env: dev code: irn08782 build hash: 6402798\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39359,6 +39359,27 @@ var hasValidTs = (ts) => {
   const t = new Date(ts);
   return !Number.isNaN(t.getTime());
 };
+function cleanContentParser(raw, label) {
+  const INVALID_JSON_ESCAPES = ["\\'"];
+  const invalidEscapeRegex = new RegExp(INVALID_JSON_ESCAPES.map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
+  try {
+    const cleaned = raw.replace(invalidEscapeRegex, (m) => m.slice(1));
+    return JSON.parse(cleaned);
+  } catch (err) {
+    console.error(`Failed to clean ${label} content`, err);
+    return {};
+  }
+}
+function parsePayloadContent(raw, label) {
+  if (typeof raw !== "string")
+    return {};
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error(`Failed to parse ${label}`, err);
+    return cleanContentParser(raw, label);
+  }
+}
 function toEpoch(ts) {
   try {
     if (ts instanceof Date) {
@@ -40023,27 +40044,6 @@ var WRAPPER_VALIDATOR_REGISTRY = {
 };
 
 // dist/index.js
-function cleanContentParser(raw, label) {
-  const INVALID_JSON_ESCAPES = ["\\'"];
-  const invalidEscapeRegex = new RegExp(INVALID_JSON_ESCAPES.map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
-  try {
-    const cleaned = raw.replace(invalidEscapeRegex, (m) => m.slice(1));
-    return JSON.parse(cleaned);
-  } catch (err) {
-    console.error(`Failed to clean ${label} content`, err);
-    return {};
-  }
-}
-function parsePayloadContent(raw, label) {
-  if (typeof raw !== "string")
-    return {};
-  try {
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error(`Failed to parse ${label}`, err);
-    return cleanContentParser(raw, label);
-  }
-}
 function validateIntegration(params) {
   const { sourceIntegrationId, payload } = params;
   const id = sourceIntegrationId?.toLowerCase();
@@ -40426,9 +40426,7 @@ var index_default = {
   wfhelper: workflow_helper_exports
 };
 export {
-  cleanContentParser,
   index_default as default,
-  parsePayloadContent,
   processErrorTransaction,
   processMatchedPair,
   processMatchedPairArray,
