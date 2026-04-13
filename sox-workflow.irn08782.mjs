@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 6402798\n
+// sox-workflow env: dev code: irn08782 build hash: 3ec500d\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39380,6 +39380,11 @@ function parsePayloadContent(raw, label) {
     return cleanContentParser(raw, label);
   }
 }
+function isValidationException(content, path) {
+  const value = getByPath(content, path);
+  console.log("VALUE VALIDATION EXCEPTION CHECK", { value, check: value === "Validation Exception" });
+  return value === "Validation Exception";
+}
 function toEpoch(ts) {
   try {
     if (ts instanceof Date) {
@@ -39701,8 +39706,45 @@ function keepACRS(content) {
 }
 var INTEGRATION_PREPROCESSORS = {
   __default__: (records) => pickMostRecent(records),
+  [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    selected.content = parsePayloadContent(selected.content);
+    if (isValidationException(selected?.content, "payload.errorCode")) {
+      selected.content = JSON.stringify(selected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    selected.content = parsePayloadContent(selected.content);
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      selected.content = JSON.stringify(selected.content);
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...selected, isValid: true };
+    }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
       selected.content = keepACRS(selected.content);
     return selected;
@@ -39754,8 +39796,43 @@ var INTEGRATION_PREPROCESSORS = {
     }
     return selected;
   },
-  [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT27.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    selected.content = parsePayloadContent(selected.content);
+    if (isValidationException(selected?.content, "payload.errorCode")) {
+      selected.content = JSON.stringify(selected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT29.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     const data = mergeInt31Files(records);
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
+      return { ...data, isValid: true };
+    }
     return data;
   }
 };
