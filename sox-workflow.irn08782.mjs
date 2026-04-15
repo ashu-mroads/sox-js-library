@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 3ec500d\n
+// sox-workflow env: dev code: irn08782 build hash: b3ffc08\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39709,7 +39709,9 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (!secondarySelected)
+      return selected;
+    secondarySelected.content = parsePayloadContent(secondarySelected?.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
@@ -39719,6 +39721,8 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
     secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
@@ -39728,6 +39732,8 @@ var INTEGRATION_PREPROCESSORS = {
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
+    if (!selected)
+      return {};
     selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
       selected.content = JSON.stringify(selected.content);
@@ -39738,10 +39744,8 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    selected.content = parsePayloadContent(selected.content);
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      selected.content = JSON.stringify(selected.content);
+    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
@@ -39799,6 +39803,8 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT27.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
     secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
@@ -39808,6 +39814,8 @@ var INTEGRATION_PREPROCESSORS = {
   },
   [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
+    if (!selected)
+      return {};
     selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
       selected.content = JSON.stringify(selected.content);
@@ -39818,6 +39826,8 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT29.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
     secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
@@ -39826,10 +39836,10 @@ var INTEGRATION_PREPROCESSORS = {
     return selected;
   },
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
-    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     const data = mergeInt31Files(records);
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
       secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...data, isValid: true };
     }
