@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: b3ffc08\n
+// sox-workflow env: dev code: irn08782 build hash: cb003f3\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39380,6 +39380,18 @@ function parsePayloadContent(raw, label) {
     return cleanContentParser(raw, label);
   }
 }
+function containsValidationException(obj) {
+  if (obj == null) {
+    return false;
+  }
+  if (typeof obj === "string") {
+    return obj.includes("Validation Exception");
+  }
+  if (typeof obj === "object") {
+    return Object.values(obj).some((value) => containsValidationException(value));
+  }
+  return false;
+}
 function isValidationException(content, path) {
   const value = getByPath(content, path);
   console.log("VALUE VALIDATION EXCEPTION CHECK", { value, check: value === "Validation Exception" });
@@ -40379,6 +40391,7 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
   }
 }
 function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+  let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
     throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
@@ -40393,20 +40406,24 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     if (processed)
       return processed;
   }
-  const singleValidation = validateIntegration({
-    sourceIntegrationId: payloadIntegrationId,
-    payload
-  });
-  if (!singleValidation.sourceValidation) {
-    singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+  let singleValidation;
+  const isValidationException2 = containsValidationException(payload.content);
+  if (isValidationException2) {
+    anomalyisValid = true;
+    singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
+  } else {
+    singleValidation = validateIntegration({ sourceIntegrationId: payloadIntegrationId, payload });
+    singleValidation.sourceValidation.failures.push({
+      rulePath: "",
+      actualPath: "",
+      value: payload?.content?.success,
+      anomalyCategory: "Missing Transaction",
+      anomalyType: "Missing Transaction Pair"
+    });
+    if (!singleValidation.sourceValidation) {
+      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+    }
   }
-  singleValidation.sourceValidation.failures.push({
-    rulePath: "",
-    actualPath: "",
-    value: payload?.content?.success,
-    anomalyCategory: "Missing Transaction",
-    anomalyType: "Missing Transaction Pair"
-  });
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
   const destKey = String(destination || "").toLowerCase();
@@ -40416,9 +40433,12 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     sourceValidation: payloadId === srcKey ? singleValidation.sourceValidation : void 0,
     destinationValidation: payloadId === destKey ? singleValidation.sourceValidation : void 0,
     mappingComparison: null,
-    isValid: false,
+    isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
+  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+}
+function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40437,6 +40457,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     destinationPayload: destinationPayloadArg,
     executionId
   });
+  console.log("ingest result", ingestResult);
   const result = sendBusinessEvent([ingestResult]);
   return result;
 }
