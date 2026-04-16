@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 49a58fb\n
+// sox-workflow env: dev code: irn08782 build hash: 5b1d7d8\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38295,12 +38295,6 @@ var INT112_TO_INT11_FieldPathMap = {
 
 // dist/integration-pair/source.int12-2.dest.int12-1.map.rules.js
 var INT122_TO_INT121_FieldPathMap = {
-  "request.request_body.folioId": "request.request_body.folioId",
-  "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
-  "request.request_body.propertyCode": "request.request_body.propertyCode",
-  "request.request_body.resState": "request.request_body.resState",
-  "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
-  "request.request_body.resCloseDate": "request.request_body.resCloseDate",
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
   "response.response_body.nextId": "response.response_body.nextId",
