@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: cb003f3\n
+// sox-workflow env: dev code: irn08782 build hash: 49a58fb\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36341,7 +36341,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ$]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -38301,7 +38301,6 @@ var INT122_TO_INT121_FieldPathMap = {
   "request.request_body.resState": "request.request_body.resState",
   "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
   "request.request_body.resCloseDate": "request.request_body.resCloseDate",
-  "request.request_body.nextId": "request.request_body.nextId",
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
   "response.response_body.nextId": "response.response_body.nextId",
