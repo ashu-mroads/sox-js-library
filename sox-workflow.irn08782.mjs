@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 5b1d7d8\n
+// sox-workflow env: dev code: irn08782 build hash: 8e314db\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38297,7 +38297,6 @@ var INT112_TO_INT11_FieldPathMap = {
 var INT122_TO_INT121_FieldPathMap = {
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
-  "response.response_body.nextId": "response.response_body.nextId",
   "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
   "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
   "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
