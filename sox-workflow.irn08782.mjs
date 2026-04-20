@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 8e314db\n
+// sox-workflow env: dev code: irn08782 build hash: 580bd1a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38297,6 +38297,7 @@ var INT112_TO_INT11_FieldPathMap = {
 var INT122_TO_INT121_FieldPathMap = {
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
+  "response.response_body.nextId": "response.response_body.nextId",
   "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
   "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
   "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
@@ -39385,9 +39386,14 @@ function containsValidationException(obj) {
   return false;
 }
 function isValidationException(content, path) {
-  const value = getByPath(content, path);
-  console.log("VALUE VALIDATION EXCEPTION CHECK", { value, check: value === "Validation Exception" });
-  return value === "Validation Exception";
+  if (typeof content === "string") {
+    return content.includes("Validation Exception");
+  }
+  if (typeof content === "object") {
+    const value = getByPath(content, path);
+    return value === "Validation Exception";
+  }
+  return false;
 }
 function toEpoch(ts) {
   try {
@@ -39715,9 +39721,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected?.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39727,9 +39731,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39738,9 +39740,7 @@ var INTEGRATION_PREPROCESSORS = {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
       return {};
-    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
-      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39748,9 +39748,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
     if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
@@ -39809,9 +39807,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39820,9 +39816,7 @@ var INTEGRATION_PREPROCESSORS = {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
       return {};
-    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
-      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39832,9 +39826,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39842,9 +39834,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
     if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...data, isValid: true };
     }
     return data;
@@ -40249,9 +40239,11 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const destKey = String(destIntegration).toLowerCase();
   let sourcePayload = dataArr.find((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === srcKey);
   let destinationPayload = dataArr.find((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === destKey);
+  console.log("processMatchedPair: initial destinationPayload:", destinationPayload);
   const pre = applyIntegrationPreprocessors(srcKey, destKey, dataArr);
   sourcePayload = pre.sourcePayload ?? sourcePayload;
   destinationPayload = pre.destinationPayload ?? destinationPayload;
+  console.log("processMatchedPair: post-preprocessor destinationPayload:", destinationPayload);
   if (!sourcePayload) {
     throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
   }
