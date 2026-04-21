@@ -1,4 +1,4 @@
-// sox-workflow env: prod code: ibs60782 build hash: 181bfa4\n
+// sox-workflow env: prod code: ibs60782 build hash: 70b0798\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36341,7 +36341,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ$]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -38295,16 +38295,8 @@ var INT112_TO_INT11_FieldPathMap = {
 
 // dist/integration-pair/source.int12-2.dest.int12-1.map.rules.js
 var INT122_TO_INT121_FieldPathMap = {
-  "request.request_body.folioId": "request.request_body.folioId",
-  "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
-  "request.request_body.propertyCode": "request.request_body.propertyCode",
-  "request.request_body.resState": "request.request_body.resState",
-  "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
-  "request.request_body.resCloseDate": "request.request_body.resCloseDate",
-  "request.request_body.nextId": "request.request_body.nextId",
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
-  "response.response_body.nextId": "response.response_body.nextId",
   "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
   "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
   "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
@@ -39359,6 +39351,49 @@ var hasValidTs = (ts) => {
   const t = new Date(ts);
   return !Number.isNaN(t.getTime());
 };
+function cleanContentParser(raw, label) {
+  const INVALID_JSON_ESCAPES = ["\\'"];
+  const invalidEscapeRegex = new RegExp(INVALID_JSON_ESCAPES.map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
+  try {
+    const cleaned = raw.replace(invalidEscapeRegex, (m) => m.slice(1));
+    return JSON.parse(cleaned);
+  } catch (err) {
+    console.error(`Failed to clean ${label} content`, err);
+    return {};
+  }
+}
+function parsePayloadContent(raw, label) {
+  if (typeof raw !== "string")
+    return {};
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error(`Failed to parse ${label}`, err);
+    return cleanContentParser(raw, label);
+  }
+}
+function containsValidationException(obj) {
+  if (obj == null) {
+    return false;
+  }
+  if (typeof obj === "string") {
+    return obj.includes("Validation Exception");
+  }
+  if (typeof obj === "object") {
+    return Object.values(obj).some((value) => containsValidationException(value));
+  }
+  return false;
+}
+function isValidationException(content, path) {
+  if (typeof content === "string") {
+    return content.includes("Validation Exception");
+  }
+  if (typeof content === "object") {
+    const value = getByPath(content, path);
+    return value === "Validation Exception";
+  }
+  return false;
+}
 function toEpoch(ts) {
   try {
     if (ts instanceof Date) {
@@ -39412,7 +39447,7 @@ function getLatestHeaderAndDetailRecords(records) {
     const raw = record.content ?? record.parsed?.content;
     if (!raw)
       continue;
-    const { payload, success } = safeParse(raw);
+    const { payload, success } = parsePayloadContent(raw, "INT31 header/detail selection");
     if (payload?.folioTransDetailList) {
       if (!detailTs || ts > detailTs) {
         detailPayload = payload;
@@ -39438,13 +39473,6 @@ function mergeInt31Files(records) {
   const content = JSON.stringify({ success: recordSuccess, payload: mergedPayload });
   mainRecord = { ...mainRecord, content };
   return mainRecord;
-}
-function safeParse(str) {
-  try {
-    return JSON.parse(str);
-  } catch {
-    return {};
-  }
 }
 function adjustValuesForNumberOfDecimals(input) {
   if (input === null || typeof input !== "object") {
@@ -39474,7 +39502,7 @@ function adjustValuesForNumberOfDecimals(input) {
   return result;
 }
 function handleDecimals(soxData, intId) {
-  const parsedContent = safeParse(soxData.content);
+  const parsedContent = parsePayloadContent(soxData.content, "Decimals handling");
   if (intId === INTEGRATIONS.INT26) {
     const { request, success, response } = parsedContent;
     request.request_body = adjustValuesForNumberOfDecimals(request.request_body);
@@ -39577,7 +39605,7 @@ var toObject = (content) => {
   if (isObject(content))
     return content;
   if (typeof content === "string")
-    return safeParse(content);
+    return parsePayloadContent(content, "Rule application");
   return void 0;
 };
 var serializeBack = (selected, obj) => {
@@ -39675,7 +39703,7 @@ function pickMostRecent(records) {
 }
 function keepACRS(content) {
   if (typeof content === "string") {
-    content = JSON.parse(content);
+    content = parsePayloadContent(content, "ACRS");
   }
   if (content?.payload) {
     const confirmationIds = content?.payload?.confirmationIds;
@@ -39687,8 +39715,41 @@ function keepACRS(content) {
 }
 var INTEGRATION_PREPROCESSORS = {
   __default__: (records) => pickMostRecent(records),
+  [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (!selected)
+      return {};
+    if (isValidationException(selected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
       selected.content = keepACRS(selected.content);
     return selected;
@@ -39740,8 +39801,41 @@ var INTEGRATION_PREPROCESSORS = {
     }
     return selected;
   },
-  [INTEGRATIONS.INT31.toLowerCase()]: (records) => {
+  [INTEGRATIONS.INT27.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    if (!selected)
+      return {};
+    if (isValidationException(selected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT29.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickMostRecent(records) ?? records?.[0];
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (!secondarySelected)
+      return selected;
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...selected, isValid: true };
+    }
+    return selected;
+  },
+  [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
+    const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      return { ...data, isValid: true };
+    }
     return data;
   }
 };
@@ -40030,16 +40124,6 @@ var WRAPPER_VALIDATOR_REGISTRY = {
 };
 
 // dist/index.js
-function parsePayloadContent(raw, label) {
-  if (typeof raw !== "string")
-    return {};
-  try {
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error(`Failed to parse ${label}`, err);
-    return {};
-  }
-}
 function validateIntegration(params) {
   const { sourceIntegrationId, payload } = params;
   const id = sourceIntegrationId?.toLowerCase();
@@ -40288,6 +40372,7 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
   }
 }
 function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+  let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
     throw new Error("processMissingTransaction: no valid failure payload found (expected object).");
@@ -40302,20 +40387,24 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     if (processed)
       return processed;
   }
-  const singleValidation = validateIntegration({
-    sourceIntegrationId: payloadIntegrationId,
-    payload
-  });
-  if (!singleValidation.sourceValidation) {
-    singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+  let singleValidation;
+  const isValidationException2 = containsValidationException(payload.content);
+  if (isValidationException2) {
+    anomalyisValid = true;
+    singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
+  } else {
+    singleValidation = validateIntegration({ sourceIntegrationId: payloadIntegrationId, payload });
+    singleValidation.sourceValidation.failures.push({
+      rulePath: "",
+      actualPath: "",
+      value: payload?.content?.success,
+      anomalyCategory: "Missing Transaction",
+      anomalyType: "Missing Transaction Pair"
+    });
+    if (!singleValidation.sourceValidation) {
+      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+    }
   }
-  singleValidation.sourceValidation.failures.push({
-    rulePath: "",
-    actualPath: "",
-    value: payload?.content?.success,
-    anomalyCategory: "Missing Transaction",
-    anomalyType: "Missing Transaction Pair"
-  });
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
   const destKey = String(destination || "").toLowerCase();
@@ -40325,9 +40414,12 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     sourceValidation: payloadId === srcKey ? singleValidation.sourceValidation : void 0,
     destinationValidation: payloadId === destKey ? singleValidation.sourceValidation : void 0,
     mappingComparison: null,
-    isValid: false,
+    isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
+  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+}
+function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40346,6 +40438,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     destinationPayload: destinationPayloadArg,
     executionId
   });
+  console.log("ingest result", ingestResult);
   const result = sendBusinessEvent([ingestResult]);
   return result;
 }
