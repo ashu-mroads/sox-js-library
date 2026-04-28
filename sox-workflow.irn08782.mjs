@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 994468f\n
+// sox-workflow env: dev code: irn08782 build hash: 9ce8d4b\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39373,17 +39373,35 @@ function parsePayloadContent(raw, label) {
   }
 }
 function containsException(obj) {
-  const exceptions = ["Validation Exception", "Skipped Reservation"];
+  const exceptions = ["Validation Exception"];
   if (obj == null) {
     return false;
   }
   if (typeof obj === "string") {
-    return exceptions.includes(obj);
+    return exceptions.some((exception) => obj.includes(exception));
   }
   if (typeof obj === "object") {
     return Object.values(obj).some((value) => containsException(value));
   }
   return false;
+}
+function isSkippedReservation(content) {
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    return false;
+  }
+  const search = (value) => {
+    if (value === null || typeof value !== "object") {
+      return false;
+    }
+    if (value.skipped_reservation === "true" || value.skippedReservation === true) {
+      return true;
+    }
+    return Object.values(value).some(search);
+  };
+  return search(parsed);
 }
 function isValidationException(content, path) {
   if (typeof content === "string") {
@@ -40390,7 +40408,8 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   }
   let singleValidation;
   const isValid = containsException(payload.content);
-  if (isValid) {
+  const isSkipped = isSkippedReservation(payload.content);
+  if (isValid || isSkipped) {
     anomalyisValid = true;
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
