@@ -54,7 +54,7 @@ if errorlevel 1 (
 
 for /f "usebackq delims=" %%B in (`git rev-parse --abbrev-ref HEAD`) do set "BRANCH=%%B"
 echo Pushing branch %BRANCH% ...
-git push dev-origin "%BRANCH%"
+git push origin "%BRANCH%"
 if errorlevel 1 (
   echo Push failed.
   exit /b 1

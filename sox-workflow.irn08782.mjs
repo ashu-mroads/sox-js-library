@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: cb003f3\n
+// sox-workflow env: dev code: irn08782 build hash: 994468f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36341,7 +36341,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ$]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -38295,16 +38295,8 @@ var INT112_TO_INT11_FieldPathMap = {
 
 // dist/integration-pair/source.int12-2.dest.int12-1.map.rules.js
 var INT122_TO_INT121_FieldPathMap = {
-  "request.request_body.folioId": "request.request_body.folioId",
-  "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
-  "request.request_body.propertyCode": "request.request_body.propertyCode",
-  "request.request_body.resState": "request.request_body.resState",
-  "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
-  "request.request_body.resCloseDate": "request.request_body.resCloseDate",
-  "request.request_body.nextId": "request.request_body.nextId",
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
-  "response.response_body.nextId": "response.response_body.nextId",
   "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
   "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
   "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
@@ -39380,22 +39372,28 @@ function parsePayloadContent(raw, label) {
     return cleanContentParser(raw, label);
   }
 }
-function containsValidationException(obj) {
+function containsException(obj) {
+  const exceptions = ["Validation Exception", "Skipped Reservation"];
   if (obj == null) {
     return false;
   }
   if (typeof obj === "string") {
-    return obj.includes("Validation Exception");
+    return exceptions.includes(obj);
   }
   if (typeof obj === "object") {
-    return Object.values(obj).some((value) => containsValidationException(value));
+    return Object.values(obj).some((value) => containsException(value));
   }
   return false;
 }
 function isValidationException(content, path) {
-  const value = getByPath(content, path);
-  console.log("VALUE VALIDATION EXCEPTION CHECK", { value, check: value === "Validation Exception" });
-  return value === "Validation Exception";
+  if (typeof content === "string") {
+    return content.includes("Validation Exception");
+  }
+  if (typeof content === "object") {
+    const value = getByPath(content, path);
+    return value === "Validation Exception";
+  }
+  return false;
 }
 function toEpoch(ts) {
   try {
@@ -39723,9 +39721,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected?.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39735,9 +39731,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39746,9 +39740,7 @@ var INTEGRATION_PREPROCESSORS = {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
       return {};
-    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
-      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39756,9 +39748,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
     if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
@@ -39817,9 +39807,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39828,9 +39816,7 @@ var INTEGRATION_PREPROCESSORS = {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
       return {};
-    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
-      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39840,9 +39826,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    secondarySelected.content = parsePayloadContent(secondarySelected.content);
     if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39850,9 +39834,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
     if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
-      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...data, isValid: true };
     }
     return data;
@@ -40271,7 +40253,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  if (sourcePayload.isValid === true && destinationPayload.isValid === true) {
+  if (sourcePayload.isValid === true || destinationPayload.isValid === true) {
     const validationResult2 = {
       sourceIntegrationId,
       destinationIntegrationId,
@@ -40407,8 +40389,8 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       return processed;
   }
   let singleValidation;
-  const isValidationException2 = containsValidationException(payload.content);
-  if (isValidationException2) {
+  const isValid = containsException(payload.content);
+  if (isValid) {
     anomalyisValid = true;
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
