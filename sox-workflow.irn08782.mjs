@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 89a7a20\n
+// sox-workflow env: dev code: irn08782 build hash: d7b00b1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39737,9 +39737,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (!secondarySelected)
-      return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39747,17 +39745,13 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (!secondarySelected)
-      return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (!selected)
-      return {};
     if (isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
@@ -39766,7 +39760,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
@@ -39825,7 +39819,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39844,7 +39838,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39852,7 +39846,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(data, "payload.errorCode")) {
       return { ...data, isValid: true };
     }
     return data;
@@ -40271,7 +40265,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  if (sourcePayload.isValid === true || destinationPayload.isValid === true) {
+  if (sourcePayload.isValid || destinationPayload.isValid) {
     const validationResult2 = {
       sourceIntegrationId,
       destinationIntegrationId,
