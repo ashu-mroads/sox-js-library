@@ -1,4 +1,4 @@
-// sox-workflow env: prod code: ibs60782 build hash: 70b0798\n
+// sox-workflow env: prod code: ibs60782 build hash: 89a7a20\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39372,17 +39372,36 @@ function parsePayloadContent(raw, label) {
     return cleanContentParser(raw, label);
   }
 }
-function containsValidationException(obj) {
+function containsException(obj) {
+  const exceptions = ["Validation Exception"];
   if (obj == null) {
     return false;
   }
   if (typeof obj === "string") {
-    return obj.includes("Validation Exception");
+    return exceptions.some((exception) => obj.includes(exception));
   }
   if (typeof obj === "object") {
-    return Object.values(obj).some((value) => containsValidationException(value));
+    return Object.values(obj).some((value) => containsException(value));
   }
   return false;
+}
+function isSkippedReservation(content) {
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    return false;
+  }
+  const search = (value) => {
+    if (value === null || typeof value !== "object") {
+      return false;
+    }
+    if (value.skipped_reservation === "true" || value.skippedReservation === true) {
+      return true;
+    }
+    return Object.values(value).some(search);
+  };
+  return search(parsed);
 }
 function isValidationException(content, path) {
   if (typeof content === "string") {
@@ -40252,7 +40271,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  if (sourcePayload.isValid === true && destinationPayload.isValid === true) {
+  if (sourcePayload.isValid === true || destinationPayload.isValid === true) {
     const validationResult2 = {
       sourceIntegrationId,
       destinationIntegrationId,
@@ -40388,8 +40407,9 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       return processed;
   }
   let singleValidation;
-  const isValidationException2 = containsValidationException(payload.content);
-  if (isValidationException2) {
+  const isValid = containsException(payload.content);
+  const isSkipped = isSkippedReservation(payload.content);
+  if (isValid || isSkipped) {
     anomalyisValid = true;
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
