@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 4fe09b1\n
+// sox-workflow env: dev code: irn08782 build hash: 1894225\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40265,7 +40265,6 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  console.log("processIs valid", { sourcePayloadIsValid: sourcePayload.isValid, destinationPayloadIsValid: destinationPayload.isValid });
   if (sourcePayload.isValid || destinationPayload.isValid) {
     const validationResult2 = {
       sourceIntegrationId,
