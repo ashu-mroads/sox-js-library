@@ -36116,9 +36116,6 @@ function toEventDate(ts) {
   const d = new Date(ts);
   return isNaN(d.getTime()) ? /* @__PURE__ */ new Date() : d;
 }
-function toCloudEventTime(srcEventTime) {
-  return toEventDate(srcEventTime);
-}
 function toCloudEvent(sox) {
   const { value: srcData, truncated: srcTrunc } = truncateUtf8(sox.sourceData);
   const { value: destData, truncated: destTrunc } = truncateUtf8(sox.destinationData);
@@ -36127,7 +36124,7 @@ function toCloudEvent(sox) {
     id: sox.eventId || crypto.randomUUID(),
     source: "sox",
     type: sox.eventType,
-    time: toCloudEventTime(sox.srcEventTime),
+    time: toEventDate(sox.srcEventTime),
     category: sox.eventType,
     provider: sox.eventProvider,
     datacontenttype: "application/json",
@@ -36153,13 +36150,14 @@ function toCloudEvent(sox) {
   return { cloudEvent, sourceDataTruncated: srcTrunc, destinationDataTruncated: destTrunc };
 }
 function toCloudEventSingleInt(sox) {
+  const time = toEventDate(sox.srcEventTime);
   const { value: srcData, truncated: srcTrunc } = truncateUtf8(sox.sourceData);
   const cloudEvent = {
     specversion: "1.0",
     id: sox.eventId || crypto.randomUUID(),
     source: "sox",
     type: sox.eventType,
-    time: toCloudEventTime(sox.srcEventTime),
+    time,
     category: sox.eventType,
     provider: sox.eventProvider,
     datacontenttype: "application/json",
