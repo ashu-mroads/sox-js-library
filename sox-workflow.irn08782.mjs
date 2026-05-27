@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: ad88a4f\n
+// sox-workflow env: dev code: irn08782 build hash: 7a57696\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39888,8 +39888,8 @@ __export(workflow_helper_exports, {
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
-var DQL_MAX_POLLS = 100;
-var DQL_REQUEST_TIMEOUT_MS = 3e5;
+var DQL_MAX_POLLS = 600;
+var DQL_REQUEST_TIMEOUT_MS = 6e4;
 var DQL_MAX_RESULT_RECORDS = 2e5;
 var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
 var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
