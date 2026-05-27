@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 1894225\n
+// sox-workflow env: dev code: irn08782 build hash: ad88a4f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36341,7 +36341,7 @@ var REGEX = {
   UPPERCASE_LETTERS_ONLY: /^[A-Z]+$/,
   ALPHANUMERIC: /^[A-Za-z0-9 \-]+(?:\.[A-Za-z0-9 ]+)*$/,
   LETTERS_ONLY: /^[A-Za-z]+$/,
-  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ$]+$/,
+  EXTENDED_ALPHANUMERIC: /^[A-Za-z0-9 _:\-.,&()%\/\+TZ]+$/,
   DATE_YYYY_MM_DD: /^\d{4}-\d{2}-\d{2}$/,
   TIME_HH_MM_SS: /^\d{2}:\d{2}:\d{2}$/,
   BOOLEAN_STRING: /^(true|false)$/,
@@ -38295,8 +38295,16 @@ var INT112_TO_INT11_FieldPathMap = {
 
 // dist/integration-pair/source.int12-2.dest.int12-1.map.rules.js
 var INT122_TO_INT121_FieldPathMap = {
+  "request.request_body.folioId": "request.request_body.folioId",
+  "request.request_body.folioTypeCodes<array>": "request.request_body.folioTypeCodes<array>",
+  "request.request_body.propertyCode": "request.request_body.propertyCode",
+  "request.request_body.resState": "request.request_body.resState",
+  "request.request_body.filterAttributes<array>": "request.request_body.filterAttributes<array>",
+  "request.request_body.resCloseDate": "request.request_body.resCloseDate",
+  "request.request_body.nextId": "request.request_body.nextId",
   "response.http_response_code": "response.http_response_code",
   "response.response_error_message": "response.response_error_message",
+  "response.response_body.nextId": "response.response_body.nextId",
   "response.response_body.data<array>.confirmationIds<array>.value": "response.response_body.data<array>.confirmationIds<array>.value",
   "response.response_body.data<array>.folioNumber": "response.response_body.data<array>.folioNumber",
   "response.response_body.data<array>.folioId": "response.response_body.data<array>.folioId",
@@ -39372,46 +39380,22 @@ function parsePayloadContent(raw, label) {
     return cleanContentParser(raw, label);
   }
 }
-function containsException(obj) {
-  const exceptions = ["Validation Exception"];
+function containsValidationException(obj) {
   if (obj == null) {
     return false;
   }
   if (typeof obj === "string") {
-    return exceptions.some((exception) => obj.includes(exception));
+    return obj.includes("Validation Exception");
   }
   if (typeof obj === "object") {
-    return Object.values(obj).some((value) => containsException(value));
+    return Object.values(obj).some((value) => containsValidationException(value));
   }
   return false;
-}
-function isSkippedReservation(content) {
-  let parsed;
-  try {
-    parsed = JSON.parse(content);
-  } catch {
-    return false;
-  }
-  const search = (value) => {
-    if (value === null || typeof value !== "object") {
-      return false;
-    }
-    if (value.skipped_reservation === "true" || value.skippedReservation === true) {
-      return true;
-    }
-    return Object.values(value).some(search);
-  };
-  return search(parsed);
 }
 function isValidationException(content, path) {
-  if (typeof content === "string") {
-    return content.includes("Validation Exception");
-  }
-  if (typeof content === "object") {
-    const value = getByPath(content, path);
-    return value === "Validation Exception";
-  }
-  return false;
+  const value = getByPath(content, path);
+  console.log("VALUE VALIDATION EXCEPTION CHECK", { value, check: value === "Validation Exception" });
+  return value === "Validation Exception";
 }
 function toEpoch(ts) {
   try {
@@ -39737,7 +39721,11 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
+    if (!secondarySelected)
+      return selected;
+    secondarySelected.content = parsePayloadContent(secondarySelected?.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39745,14 +39733,22 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
+    if (!secondarySelected)
+      return selected;
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
+    if (!selected)
+      return {};
+    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
+      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39760,7 +39756,9 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
+    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
@@ -39819,7 +39817,9 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39828,7 +39828,9 @@ var INTEGRATION_PREPROCESSORS = {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
       return {};
+    selected.content = parsePayloadContent(selected.content);
     if (isValidationException(selected?.content, "payload.errorCode")) {
+      selected.content = JSON.stringify(selected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39838,7 +39840,9 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
+    secondarySelected.content = parsePayloadContent(secondarySelected.content);
+    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39846,7 +39850,9 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(data?.content, "payload.errorCode")) {
+    secondarySelected && (secondarySelected.content = parsePayloadContent(secondarySelected?.content));
+    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+      secondarySelected.content = JSON.stringify(secondarySelected.content);
       return { ...data, isValid: true };
     }
     return data;
@@ -39868,8 +39874,6 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
 // dist/common/workflow-helper.js
 var workflow_helper_exports = {};
 __export(workflow_helper_exports, {
-  DQL_MAX_POLLS: () => DQL_MAX_POLLS,
-  DQL_REQUEST_TIMEOUT_MS: () => DQL_REQUEST_TIMEOUT_MS,
   TIMERANGE_MINS: () => TIMERANGE_MINS,
   WF_ALLOWANCE: () => WF_ALLOWANCE,
   WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
@@ -39884,13 +39888,34 @@ __export(workflow_helper_exports, {
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
-var DQL_MAX_POLLS = 10;
-var DQL_REQUEST_TIMEOUT_MS = 1e4;
+var DQL_MAX_POLLS = 100;
+var DQL_REQUEST_TIMEOUT_MS = 3e5;
+var DQL_MAX_RESULT_RECORDS = 2e5;
+var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
+var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
-  const GRAIL_QUERY_LIMIT = 1e5;
-  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query, maxResultRecords: GRAIL_QUERY_LIMIT } });
+  const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
+  const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
+  const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
+  const start = await import_client_query.queryExecutionClient.queryExecute({
+    body: {
+      query,
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      requestTimeoutMilliseconds: requestTimeoutMs,
+      includeTypes: true,
+      ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
+    }
+  });
+  logDqlDiagnostics("queryExecute", start, {
+    maxResultRecords,
+    maxResultBytes,
+    defaultScanLimitGbytes,
+    requestTimeoutMs
+  });
   if (start.state === "SUCCEEDED") {
     return start.result;
   }
@@ -39903,11 +39928,42 @@ async function runDqlWithPolling(query, opts) {
       requestToken: start.requestToken,
       requestTimeoutMilliseconds: requestTimeoutMs
     });
+    logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      requestTimeoutMs
+    });
   }
   if (lastPoll.state !== "SUCCEEDED") {
     throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
   }
   return lastPoll.result;
+}
+function logDqlDiagnostics(step, response, limits) {
+  const result = response?.result;
+  const metadata = result?.metadata ?? response?.metadata ?? {};
+  const notifications = result?.notifications ?? metadata?.notifications ?? response?.notifications ?? [];
+  const returnedRecords = result?.records?.length ?? 0;
+  console.log(`DQL diagnostics: ${step}`);
+  console.log("state:", response?.state);
+  console.log("requestToken present:", Boolean(response?.requestToken));
+  console.log("returnedRecords:", returnedRecords);
+  console.log("limits:", JSON.stringify(limits, null, 2));
+  console.log("notifications:", JSON.stringify(notifications, null, 2));
+  if (returnedRecords >= limits.maxResultRecords) {
+    console.warn(`DQL returned ${returnedRecords} records, which reached maxResultRecords=${limits.maxResultRecords}. Results may be truncated.`);
+  }
+  try {
+    const approxBytes = Buffer.byteLength(JSON.stringify(result?.records ?? []), "utf8");
+    console.log("approxReturnedRecordBytes:", approxBytes);
+    if (approxBytes >= limits.maxResultBytes * 0.9) {
+      console.warn(`DQL returned payload is near maxResultBytes. approxBytes=${approxBytes}, maxResultBytes=${limits.maxResultBytes}`);
+    }
+  } catch {
+    console.log("Could not calculate approxReturnedRecordBytes");
+  }
+  console.log("metadata:", JSON.stringify(metadata, null, 2));
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
@@ -40265,7 +40321,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  if (sourcePayload.isValid || destinationPayload.isValid) {
+  if (sourcePayload.isValid === true && destinationPayload.isValid === true) {
     const validationResult2 = {
       sourceIntegrationId,
       destinationIntegrationId,
@@ -40401,9 +40457,8 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       return processed;
   }
   let singleValidation;
-  const isValid = containsException(payload.content);
-  const isSkipped = isSkippedReservation(payload.content);
-  if (isValid || isSkipped) {
+  const isValidationException2 = containsValidationException(payload.content);
+  if (isValidationException2) {
     anomalyisValid = true;
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
