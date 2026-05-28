@@ -36211,7 +36211,7 @@ async function sendBusinessEvent(soxEvents) {
       try {
         const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
           body: cloudEventBatch,
-          type: "application/cloudevents-batch+json"
+          type: "application/cloudevent-batch+json"
         });
         const status = resp?.status ?? 200;
         results.push({
