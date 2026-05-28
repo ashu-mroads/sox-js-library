@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 7a57696\n
+// sox-workflow env: dev code: irn08782 build hash: dcc6c8a\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36088,6 +36088,20 @@ var require_cjs6 = __commonJS({
 // dist/common/dynatrace.bizevents.js
 var import_client_classic_environment_v2 = __toESM(require_cjs5(), 1);
 var MAX_FIELD_BYTES = 31 * 1024;
+var MAX_BIZEVENT_REQUEST_BYTES = 45e5;
+var BIZEVENT_BATCH_CONTENT_TYPE = "application/cloudevents-batch+json";
+var BIZEVENT_SINGLE_CONTENT_TYPE = "application/cloudevent+json";
+function getErrorDetails(err) {
+  return {
+    message: err?.message,
+    name: err?.name,
+    status: err?.status ?? err?.statusCode ?? err?.response?.status,
+    responseBody: err?.response?.body ?? err?.body
+  };
+}
+function getPayloadBytes(body) {
+  return byteLen(JSON.stringify(body));
+}
 function byteLen(v) {
   if (typeof Buffer !== "undefined")
     return Buffer.byteLength(v, "utf8");
@@ -36179,62 +36193,140 @@ function toCloudEventSingleInt(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc };
 }
-function createBatches(data, sizeLimit = 5e6) {
+function createBatches(soxEvents, sizeLimit = MAX_BIZEVENT_REQUEST_BYTES) {
   const batches = [];
   let currentBatch = [];
-  let currentSize = 0;
-  for (let i = 0; i < data.length; i++) {
-    const { cloudEvent } = toCloudEvent(data[i]);
-    const recordSize = JSON.stringify(cloudEvent).length;
-    if (currentSize + recordSize > sizeLimit && currentBatch.length > 0) {
+  let currentSize = 2;
+  for (const soxEvent of soxEvents) {
+    const { cloudEvent } = toCloudEvent(soxEvent);
+    const eventSize = getPayloadBytes(cloudEvent) + 1;
+    if (eventSize > sizeLimit) {
+      throw new Error(`Single business event exceeds batch size limit. eventId=${cloudEvent.id}, bytes=${eventSize}, limit=${sizeLimit}`);
+    }
+    if (currentBatch.length > 0 && currentSize + eventSize > sizeLimit) {
       batches.push(currentBatch);
       currentBatch = [];
-      currentSize = 0;
+      currentSize = 2;
     }
     currentBatch.push(cloudEvent);
-    currentSize += recordSize;
+    currentSize += eventSize;
   }
   if (currentBatch.length > 0) {
     batches.push(currentBatch);
   }
   return batches;
 }
-async function sendBusinessEvent(soxEvents) {
-  const cloudEventBatches = createBatches(soxEvents);
-  for (const cloudEventBatch of cloudEventBatches) {
+async function ingestWithRetry(config, maxAttempts = 5) {
+  const payloadBytes = getPayloadBytes(config.body);
+  if (payloadBytes > 5e6) {
+    throw new Error(`Business event payload exceeds 5 MB API limit. bytes=${payloadBytes}`);
+  }
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
-        body: cloudEventBatch,
-        type: "application/cloudevent-batch+json"
-      });
+      const resp = await import_client_classic_environment_v2.businessEventsClient.ingest(config);
       const status = resp?.status ?? 200;
       return { status, resp };
     } catch (err) {
-      console.log("error", err);
+      lastError = err;
+      const status = err?.status ?? err?.statusCode ?? err?.response?.status;
+      const retryable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+      console.error("Business event ingest failed", {
+        attempt,
+        maxAttempts,
+        retryable,
+        payloadBytes,
+        ...getErrorDetails(err)
+      });
+      if (!retryable || attempt === maxAttempts) {
+        throw err;
+      }
+      const waitMs = Math.min(3e4, 1e3 * Math.pow(2, attempt - 1));
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
     }
   }
+  throw lastError;
+}
+async function sendBusinessEvent(soxEvents) {
+  const cloudEventBatches = createBatches(soxEvents);
+  const result = {
+    success: false,
+    attemptedEvents: soxEvents.length,
+    successfulEvents: 0,
+    failedEvents: 0,
+    batchCount: cloudEventBatches.length,
+    batches: []
+  };
+  for (let i = 0; i < cloudEventBatches.length; i++) {
+    const cloudEventBatch = cloudEventBatches[i];
+    const payloadBytes = getPayloadBytes(cloudEventBatch);
+    try {
+      const { status } = await ingestWithRetry({
+        body: cloudEventBatch,
+        type: BIZEVENT_BATCH_CONTENT_TYPE
+      });
+      result.successfulEvents += cloudEventBatch.length;
+      result.batches.push({
+        batchIndex: i,
+        eventCount: cloudEventBatch.length,
+        payloadBytes,
+        status,
+        success: true
+      });
+      console.log("Business event batch ingested", {
+        batchIndex: i,
+        eventCount: cloudEventBatch.length,
+        payloadBytes,
+        status
+      });
+    } catch (err) {
+      result.failedEvents += cloudEventBatch.length;
+      result.batches.push({
+        batchIndex: i,
+        eventCount: cloudEventBatch.length,
+        payloadBytes,
+        success: false,
+        error: getErrorDetails(err)
+      });
+      console.error("Business event batch failed", {
+        batchIndex: i,
+        eventCount: cloudEventBatch.length,
+        payloadBytes,
+        error: getErrorDetails(err)
+      });
+      throw new Error(`Business event batch ingest failed. batchIndex=${i}, eventCount=${cloudEventBatch.length}, payloadBytes=${payloadBytes}, error=${JSON.stringify(getErrorDetails(err))}`);
+    }
+  }
+  result.failedEvents = result.attemptedEvents - result.successfulEvents;
+  result.success = result.failedEvents === 0;
+  return result;
 }
 async function sendBusinessEventSingleInt(soxEvent) {
   const { cloudEvent, sourceDataTruncated } = toCloudEventSingleInt(soxEvent);
+  const payloadBytes = getPayloadBytes(cloudEvent);
   try {
-    const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
+    const { status } = await ingestWithRetry({
       body: cloudEvent,
-      type: "application/cloudevent+json"
+      type: BIZEVENT_SINGLE_CONTENT_TYPE
     });
-    const status = resp?.status ?? 200;
     return {
       success: true,
       status,
       cloudEvent,
-      message: "Business event ingested successfully",
+      message: `Business event ingested successfully. payloadBytes=${payloadBytes}`,
       sourceDataTruncated
     };
   } catch (e) {
+    console.error("Failed to ingest single integration business event", {
+      payloadBytes,
+      error: getErrorDetails(e),
+      eventId: cloudEvent.id
+    });
     return {
       success: false,
       cloudEvent,
       error: e,
-      message: "Failed to ingest business event",
+      message: `Failed to ingest business event. payloadBytes=${payloadBytes}`,
       sourceDataTruncated
     };
   }
@@ -39884,6 +39976,7 @@ __export(workflow_helper_exports, {
   getRemainingCount: () => getRemainingCount,
   getWorkflowExecutionCount: () => getWorkflowExecutionCount,
   isWorkflowRunning: () => isWorkflowRunning,
+  logBizeventIngestAudit: () => logBizeventIngestAudit,
   runDqlWithPolling: () => runDqlWithPolling
 });
 var import_client_query = __toESM(require_cjs6(), 1);
@@ -40144,6 +40237,18 @@ async function getLatestState(sourceId, destId) {
   const records = dqlResult?.records ?? [];
   return records[0] ?? null;
 }
+async function logBizeventIngestAudit(params) {
+  await import_client_classic_environment_v22.businessEventsClient.ingest({
+    type: "application/json; charset=utf-8",
+    body: {
+      "event.provider": "sox",
+      "event.source": "WORKFLOW",
+      "event.type": "BIZEVENT_INGEST_AUDIT",
+      ...params,
+      auditTimestamp: (/* @__PURE__ */ new Date()).toISOString()
+    }
+  });
+}
 
 // dist/common/integration-validation.types.js
 var httpSoxKeys = [
@@ -40366,14 +40471,14 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   });
   return ingestResult;
 }
-function processMatchedPairArray({ srcIntegration, destIntegration, dataArray, executionId }) {
+async function processMatchedPairArray({ srcIntegration, destIntegration, dataArray, executionId }) {
   const eventMap = dataArray.map((transaction) => {
     const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId });
     return processPair;
   });
-  return sendBusinessEvent(eventMap);
+  return await sendBusinessEvent(eventMap);
 }
-function processSingleIntegration({ loopItemValue, executionId }) {
+async function processSingleIntegration({ loopItemValue, executionId }) {
   const soxData = loopItemValue.data[0];
   if (typeof soxData !== "object") {
     throw new Error("processSingleIntegration: no valid content found (soxData = loopItemValue?.data[0]): " + JSON.stringify(soxData));
@@ -40393,10 +40498,18 @@ function processSingleIntegration({ loopItemValue, executionId }) {
     sourcePayload: soxData,
     executionId
   });
-  const result = sendBusinessEventSingleInt(ingestResult);
+  const result = await sendBusinessEventSingleInt(ingestResult);
+  if (!result.success) {
+    console.error("Failed to send business event for single integration:", {
+      sourceIntegrationId,
+      transactionId,
+      errors: validationResult.errors,
+      ingestError: result.error
+    });
+  }
   return result;
 }
-function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
+async function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
   try {
     const parsed = parsePayloadContent(payload?.content, "INT16 missing transaction");
     const httpCode = parsed?.response?.http_response_code;
@@ -40435,12 +40548,12 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
       destinationPayload: destinationPayloadArg,
       executionId
     });
-    return sendBusinessEvent([ingestResult]);
+    return await sendBusinessEvent([ingestResult]);
   } catch {
     return null;
   }
 }
-function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+async function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
   let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
@@ -40452,7 +40565,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   executionId = executionId || "missing_execution_id";
   const isInt16ToInt17 = Validators._areValuesEqual(source, INTEGRATIONS.INT16) && Validators._areValuesEqual(destination, INTEGRATIONS.INT17);
   if (isInt16ToInt17) {
-    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime);
+    const processed = await handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime);
     if (processed)
       return processed;
   }
@@ -40486,9 +40599,9 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
-  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+  return await buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
 }
-function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
+async function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40508,10 +40621,10 @@ function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidatio
     executionId
   });
   console.log("ingest result", ingestResult);
-  const result = sendBusinessEvent([ingestResult]);
+  const result = await sendBusinessEvent([ingestResult]);
   return result;
 }
-function processErrorTransaction({ loopItemValue, source, destination, executionId }) {
+async function processErrorTransaction({ loopItemValue, source, destination, executionId }) {
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
     throw new Error("processErrorTransaction: no valid failure payload found (expected object).");
@@ -40564,7 +40677,7 @@ function processErrorTransaction({ loopItemValue, source, destination, execution
     destinationPayload: destinationPayloadArg,
     executionId
   });
-  const result = sendBusinessEvent([ingestResult]);
+  const result = await sendBusinessEvent([ingestResult]);
   return result;
 }
 function processReportData(dtResult, dynatraceDashboardUrl) {

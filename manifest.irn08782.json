@@ -1,8 +1,8 @@
 {
   "env": "dev",
   "code": "irn08782",
-  "hash": "7a57696",
-  "builtAt": "2026-05-27T13:29:06.654Z",
+  "hash": "dcc6c8a",
+  "builtAt": "2026-05-28T11:49:34.608Z",
   "files": {
     "js": "sox-workflow.irn08782.mjs",
     "map": "sox-workflow.irn08782.mjs.map",
