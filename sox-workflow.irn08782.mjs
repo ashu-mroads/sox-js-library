@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 1894225\n
+// sox-workflow env: dev code: irn08782 build hash: 89c0b86\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39905,8 +39905,6 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
 // dist/common/workflow-helper.js
 var workflow_helper_exports = {};
 __export(workflow_helper_exports, {
-  DQL_MAX_POLLS: () => DQL_MAX_POLLS,
-  DQL_REQUEST_TIMEOUT_MS: () => DQL_REQUEST_TIMEOUT_MS,
   TIMERANGE_MINS: () => TIMERANGE_MINS,
   WF_ALLOWANCE: () => WF_ALLOWANCE,
   WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
@@ -39921,13 +39919,34 @@ __export(workflow_helper_exports, {
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
-var DQL_MAX_POLLS = 10;
-var DQL_REQUEST_TIMEOUT_MS = 1e4;
+var DQL_MAX_POLLS = 600;
+var DQL_REQUEST_TIMEOUT_MS = 6e4;
+var DQL_MAX_RESULT_RECORDS = 2e5;
+var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
+var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
-  const GRAIL_QUERY_LIMIT = 1e5;
-  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query, maxResultRecords: GRAIL_QUERY_LIMIT } });
+  const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
+  const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
+  const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
+  const start = await import_client_query.queryExecutionClient.queryExecute({
+    body: {
+      query,
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      requestTimeoutMilliseconds: requestTimeoutMs,
+      includeTypes: true,
+      ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
+    }
+  });
+  logDqlDiagnostics("queryExecute", start, {
+    maxResultRecords,
+    maxResultBytes,
+    defaultScanLimitGbytes,
+    requestTimeoutMs
+  });
   if (start.state === "SUCCEEDED") {
     return start.result;
   }
@@ -39940,11 +39959,42 @@ async function runDqlWithPolling(query, opts) {
       requestToken: start.requestToken,
       requestTimeoutMilliseconds: requestTimeoutMs
     });
+    logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      requestTimeoutMs
+    });
   }
   if (lastPoll.state !== "SUCCEEDED") {
     throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
   }
   return lastPoll.result;
+}
+function logDqlDiagnostics(step, response, limits) {
+  const result = response?.result;
+  const metadata = result?.metadata ?? response?.metadata ?? {};
+  const notifications = result?.notifications ?? metadata?.notifications ?? response?.notifications ?? [];
+  const returnedRecords = result?.records?.length ?? 0;
+  console.log(`DQL diagnostics: ${step}`);
+  console.log("state:", response?.state);
+  console.log("requestToken present:", Boolean(response?.requestToken));
+  console.log("returnedRecords:", returnedRecords);
+  console.log("limits:", JSON.stringify(limits, null, 2));
+  console.log("notifications:", JSON.stringify(notifications, null, 2));
+  if (returnedRecords >= limits.maxResultRecords) {
+    console.warn(`DQL returned ${returnedRecords} records, which reached maxResultRecords=${limits.maxResultRecords}. Results may be truncated.`);
+  }
+  try {
+    const approxBytes = Buffer.byteLength(JSON.stringify(result?.records ?? []), "utf8");
+    console.log("approxReturnedRecordBytes:", approxBytes);
+    if (approxBytes >= limits.maxResultBytes * 0.9) {
+      console.warn(`DQL returned payload is near maxResultBytes. approxBytes=${approxBytes}, maxResultBytes=${limits.maxResultBytes}`);
+    }
+  } catch {
+    console.log("Could not calculate approxReturnedRecordBytes");
+  }
+  console.log("metadata:", JSON.stringify(metadata, null, 2));
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
