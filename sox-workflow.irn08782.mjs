@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 89c0b86\n
+// sox-workflow env: dev code: irn08782 build hash: 69e827f\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39930,46 +39930,60 @@ async function runDqlWithPolling(query, opts) {
   const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
   const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
   const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
-  const start = await import_client_query.queryExecutionClient.queryExecute({
-    body: {
-      query,
-      maxResultRecords,
-      maxResultBytes,
-      defaultScanLimitGbytes,
-      requestTimeoutMilliseconds: requestTimeoutMs,
-      includeTypes: true,
-      ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
-    }
-  });
-  logDqlDiagnostics("queryExecute", start, {
-    maxResultRecords,
-    maxResultBytes,
-    defaultScanLimitGbytes,
-    requestTimeoutMs
-  });
-  if (start.state === "SUCCEEDED") {
-    return start.result;
-  }
-  if (!start.requestToken) {
-    throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
-  }
-  let lastPoll = start;
-  for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
-    lastPoll = await import_client_query.queryExecutionClient.queryPoll({
-      requestToken: start.requestToken,
-      requestTimeoutMilliseconds: requestTimeoutMs
+  try {
+    const start = await import_client_query.queryExecutionClient.queryExecute({
+      body: {
+        query,
+        maxResultRecords,
+        maxResultBytes,
+        defaultScanLimitGbytes,
+        requestTimeoutMilliseconds: requestTimeoutMs,
+        includeTypes: true,
+        ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
+      }
     });
-    logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
+    logDqlDiagnostics("queryExecute", start, {
       maxResultRecords,
       maxResultBytes,
       defaultScanLimitGbytes,
       requestTimeoutMs
     });
+    if (start.state === "SUCCEEDED") {
+      return start.result;
+    }
+    if (!start.requestToken) {
+      throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
+    }
+    let lastPoll = start;
+    for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
+      lastPoll = await import_client_query.queryExecutionClient.queryPoll({
+        requestToken: start.requestToken,
+        requestTimeoutMilliseconds: requestTimeoutMs
+      });
+      logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
+        maxResultRecords,
+        maxResultBytes,
+        defaultScanLimitGbytes,
+        requestTimeoutMs
+      });
+    }
+    if (lastPoll.state !== "SUCCEEDED") {
+      throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
+    }
+    return lastPoll.result;
+  } catch (error) {
+    console.error("DQL query failed", {
+      error,
+      query,
+      maxPolls,
+      requestTimeoutMs,
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds
+    });
+    throw error;
   }
-  if (lastPoll.state !== "SUCCEEDED") {
-    throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
-  }
-  return lastPoll.result;
 }
 function logDqlDiagnostics(step, response, limits) {
   const result = response?.result;
