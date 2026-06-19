@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: 69e827f\n
+// sox-workflow env: poc code: vbp76167 build hash: 1891c70\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39924,14 +39924,19 @@ var DQL_REQUEST_TIMEOUT_MS = 6e4;
 var DQL_MAX_RESULT_RECORDS = 2e5;
 var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
 var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
+var DQL_MAX_RETRIES = 4;
+var DQL_RETRY_DELAY_MS = 5e3;
+var DQL_RETRYABLE_STATUS_CODES = /* @__PURE__ */ new Set([429, 500, 502, 503, 504]);
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
+  const maxRetries = opts?.maxRetries ?? DQL_MAX_RETRIES;
+  const retryDelayMs = opts?.retryDelayMs ?? DQL_RETRY_DELAY_MS;
   const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
   const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
   const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
   try {
-    const start = await import_client_query.queryExecutionClient.queryExecute({
+    const start = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryExecute({
       body: {
         query,
         maxResultRecords,
@@ -39941,6 +39946,10 @@ async function runDqlWithPolling(query, opts) {
         includeTypes: true,
         ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
       }
+    }), {
+      operationName: "queryExecute",
+      maxRetries,
+      delayMs: retryDelayMs
     });
     logDqlDiagnostics("queryExecute", start, {
       maxResultRecords,
@@ -39954,11 +39963,16 @@ async function runDqlWithPolling(query, opts) {
     if (!start.requestToken) {
       throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
     }
+    const requestToken = start.requestToken;
     let lastPoll = start;
     for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
-      lastPoll = await import_client_query.queryExecutionClient.queryPoll({
-        requestToken: start.requestToken,
+      lastPoll = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryPoll({
+        requestToken,
         requestTimeoutMilliseconds: requestTimeoutMs
+      }), {
+        operationName: `queryPoll ${i + 1}`,
+        maxRetries,
+        delayMs: retryDelayMs
       });
       logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
         maxResultRecords,
@@ -39980,10 +39994,51 @@ async function runDqlWithPolling(query, opts) {
       maxResultRecords,
       maxResultBytes,
       defaultScanLimitGbytes,
-      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds
+      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds,
+      maxRetries,
+      retryDelayMs
     });
     throw error;
   }
+}
+async function withDynatraceRetry(operation, retryOptions) {
+  let lastError;
+  for (let attempt = 0; attempt <= retryOptions.maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableDynatraceError(error) || attempt >= retryOptions.maxRetries) {
+        throw error;
+      }
+      const delayMs = getRetryDelayMs(retryOptions);
+      console.warn(`Transient Dynatrace error during ${retryOptions.operationName}. Retrying attempt ${attempt + 1}/${retryOptions.maxRetries} in ${delayMs} ms.`, summarizeDynatraceError(error));
+      await sleep2(delayMs);
+    }
+  }
+  throw lastError;
+}
+function isRetryableDynatraceError(error) {
+  const status = getDynatraceStatusCode(error);
+  return status !== void 0 && DQL_RETRYABLE_STATUS_CODES.has(status);
+}
+function getDynatraceStatusCode(error) {
+  const status = Number(error?.error?.code);
+  return Number.isInteger(status) ? status : void 0;
+}
+function getRetryDelayMs(retryOptions) {
+  return retryOptions.delayMs;
+}
+function summarizeDynatraceError(error) {
+  return {
+    status: getDynatraceStatusCode(error),
+    message: error?.error?.message,
+    retryAfterSeconds: error?.error?.retryAfterSeconds,
+    details: error?.error?.details
+  };
+}
+function sleep2(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function logDqlDiagnostics(step, response, limits) {
   const result = response?.result;
