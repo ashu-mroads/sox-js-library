@@ -1,8 +1,8 @@
 {
   "env": "poc",
   "code": "vbp76167",
-  "hash": "bfdd1bd",
-  "builtAt": "2026-06-20T20:47:47.799Z",
+  "hash": "211a6f8",
+  "builtAt": "2026-06-22T11:57:28.241Z",
   "files": {
     "js": "sox-workflow.vbp76167.mjs",
     "map": "sox-workflow.vbp76167.mjs.map",

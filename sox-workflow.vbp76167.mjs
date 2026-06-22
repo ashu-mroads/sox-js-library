@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: bfdd1bd\n
+// sox-workflow env: poc code: vbp76167 build hash: 211a6f8\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36179,13 +36179,13 @@ function toCloudEventSingleInt(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc };
 }
-function createBatches(data, sizeLimit = 5e6) {
+function createBatches(data, sizeLimit = 45e5) {
   const batches = [];
   let currentBatch = [];
   let currentSize = 0;
   for (let i = 0; i < data.length; i++) {
     const { cloudEvent } = toCloudEvent(data[i]);
-    const recordSize = JSON.stringify(cloudEvent).length;
+    const recordSize = Buffer.byteLength(JSON.stringify(cloudEvent), "utf8");
     if (currentSize + recordSize > sizeLimit && currentBatch.length > 0) {
       batches.push(currentBatch);
       currentBatch = [];
@@ -39864,7 +39864,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
-      return {};
+      return void 0;
     if (isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
@@ -40112,13 +40112,14 @@ async function getInitializeOrLatestState(source, destination, executionId, even
   const latestState = await getLatestState(source, destination);
   const lastProcessedSourceTimestamp = latestState?.lastProcessedSourceTimestamp ?? initializeTime();
   const lastProcessedTransactionId = latestState?.lastProcessedTransactionId ?? "";
-  const effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  let effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  effectiveEventCountForDay = Number.isFinite(Number(effectiveEventCountForDay)) ? Number(effectiveEventCountForDay) : 0;
   const stateObj = createStateEvent({
     source,
     destination,
     lastProcessedSourceTimestamp: String(lastProcessedSourceTimestamp),
-    lastProcessedTransactionId: String(lastProcessedSourceTimestamp),
-    eventCountForDay: Number(effectiveEventCountForDay) ?? 0,
+    lastProcessedTransactionId: String(lastProcessedTransactionId),
+    eventCountForDay: effectiveEventCountForDay,
     executionId
   });
   if (!latestState) {
@@ -40564,6 +40565,10 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
     singleValidation = validateIntegration({ sourceIntegrationId: payloadIntegrationId, payload });
+    if (!singleValidation.sourceValidation) {
+      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+    }
+    singleValidation.sourceValidation.failures ??= [];
     singleValidation.sourceValidation.failures.push({
       rulePath: "",
       actualPath: "",
@@ -40571,9 +40576,6 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       anomalyCategory: "Missing Transaction",
       anomalyType: "Missing Transaction Pair"
     });
-    if (!singleValidation.sourceValidation) {
-      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
-    }
   }
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
