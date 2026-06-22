@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: 211a6f8\n
+// sox-workflow env: poc code: vbp76167 build hash: ae664b1\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40411,11 +40411,11 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const pre = applyIntegrationPreprocessors(srcKey, destKey, dataArr);
   sourcePayload = pre.sourcePayload ?? sourcePayload;
   destinationPayload = pre.destinationPayload ?? destinationPayload;
-  if (!sourcePayload) {
-    throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
-  }
-  if (!destinationPayload) {
-    throw new Error(`processMatchedPair: No payload found for destIntegration='${destIntegration}'`);
+  if (!sourcePayload || !destinationPayload) {
+    console.warn(`processMatchedPair: Preprocessing resulted in missing payload for src='${srcIntegration}' or dest='${destIntegration}'.`);
+    const result = processMissingTransaction({ loopItemValue, source: srcKey, destination: destKey, executionId, sendEvent: false });
+    console.log(`processMatchedPair: processMissingTransaction result: ${JSON.stringify(result)}`);
+    return result;
   }
   const sourceIntegrationId = sourcePayload.sox_integration;
   const destinationIntegrationId = destinationPayload.sox_integration;
@@ -40468,10 +40468,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   return ingestResult;
 }
 function processMatchedPairArray({ srcIntegration, destIntegration, dataArray, executionId }) {
-  const eventMap = dataArray.map((transaction) => {
-    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId });
-    return processPair;
-  });
+  const eventMap = dataArray.map((transaction) => processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId })).filter((event) => event !== null);
   return sendBusinessEvent(eventMap);
 }
 function processSingleIntegration({ loopItemValue, executionId }) {
@@ -40497,7 +40494,7 @@ function processSingleIntegration({ loopItemValue, executionId }) {
   const result = sendBusinessEventSingleInt(ingestResult);
   return result;
 }
-function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
+function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent = true) {
   try {
     const parsed = parsePayloadContent(payload?.content, "INT16 missing transaction");
     const httpCode = parsed?.response?.http_response_code;
@@ -40536,12 +40533,12 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
       destinationPayload: destinationPayloadArg,
       executionId
     });
-    return sendBusinessEvent([ingestResult]);
+    return sendEvent ? sendBusinessEvent([ingestResult]) : ingestResult;
   } catch {
     return null;
   }
 }
-function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+function processMissingTransaction({ loopItemValue, source, destination, executionId, sendEvent = true }) {
   let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
@@ -40553,7 +40550,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   executionId = executionId || "missing_execution_id";
   const isInt16ToInt17 = Validators._areValuesEqual(source, INTEGRATIONS.INT16) && Validators._areValuesEqual(destination, INTEGRATIONS.INT17);
   if (isInt16ToInt17) {
-    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime);
+    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent);
     if (processed)
       return processed;
   }
@@ -40589,9 +40586,9 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
-  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent);
 }
-function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
+function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent = true) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40611,6 +40608,8 @@ function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidatio
     executionId
   });
   console.log("ingest result", ingestResult);
+  if (!sendEvent)
+    return ingestResult;
   const result = sendBusinessEvent([ingestResult]);
   return result;
 }
