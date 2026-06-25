@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 69e827f\n
+// sox-workflow env: dev code: irn08782 build hash: c01a24c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36179,13 +36179,13 @@ function toCloudEventSingleInt(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc };
 }
-function createBatches(data, sizeLimit = 5e6) {
+function createBatches(data, sizeLimit = 45e5) {
   const batches = [];
   let currentBatch = [];
   let currentSize = 0;
   for (let i = 0; i < data.length; i++) {
     const { cloudEvent } = toCloudEvent(data[i]);
-    const recordSize = JSON.stringify(cloudEvent).length;
+    const recordSize = Buffer.byteLength(JSON.stringify(cloudEvent), "utf8");
     if (currentSize + recordSize > sizeLimit && currentBatch.length > 0) {
       batches.push(currentBatch);
       currentBatch = [];
@@ -38727,7 +38727,7 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
-var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000" };
+var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000", XLARGE: "50000" };
 var SingleIntegrations = [
   { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
@@ -38752,7 +38752,7 @@ var IntegrationPairs = [
   { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.SMALL },
   { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
   { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE },
@@ -39864,7 +39864,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
-      return {};
+      return void 0;
     if (isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
@@ -39924,14 +39924,19 @@ var DQL_REQUEST_TIMEOUT_MS = 6e4;
 var DQL_MAX_RESULT_RECORDS = 2e5;
 var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
 var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
+var DQL_MAX_RETRIES = 4;
+var DQL_RETRY_DELAY_MS = 5e3;
+var DQL_RETRYABLE_STATUS_CODES = /* @__PURE__ */ new Set([429, 500, 502, 503, 504]);
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
+  const maxRetries = opts?.maxRetries ?? DQL_MAX_RETRIES;
+  const retryDelayMs = opts?.retryDelayMs ?? DQL_RETRY_DELAY_MS;
   const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
   const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
   const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
   try {
-    const start = await import_client_query.queryExecutionClient.queryExecute({
+    const start = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryExecute({
       body: {
         query,
         maxResultRecords,
@@ -39941,6 +39946,10 @@ async function runDqlWithPolling(query, opts) {
         includeTypes: true,
         ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
       }
+    }), {
+      operationName: "queryExecute",
+      maxRetries,
+      delayMs: retryDelayMs
     });
     logDqlDiagnostics("queryExecute", start, {
       maxResultRecords,
@@ -39954,11 +39963,16 @@ async function runDqlWithPolling(query, opts) {
     if (!start.requestToken) {
       throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
     }
+    const requestToken = start.requestToken;
     let lastPoll = start;
     for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
-      lastPoll = await import_client_query.queryExecutionClient.queryPoll({
-        requestToken: start.requestToken,
+      lastPoll = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryPoll({
+        requestToken,
         requestTimeoutMilliseconds: requestTimeoutMs
+      }), {
+        operationName: `queryPoll ${i + 1}`,
+        maxRetries,
+        delayMs: retryDelayMs
       });
       logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
         maxResultRecords,
@@ -39980,10 +39994,51 @@ async function runDqlWithPolling(query, opts) {
       maxResultRecords,
       maxResultBytes,
       defaultScanLimitGbytes,
-      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds
+      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds,
+      maxRetries,
+      retryDelayMs
     });
     throw error;
   }
+}
+async function withDynatraceRetry(operation, retryOptions) {
+  let lastError;
+  for (let attempt = 0; attempt <= retryOptions.maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableDynatraceError(error) || attempt >= retryOptions.maxRetries) {
+        throw error;
+      }
+      const delayMs = getRetryDelayMs(retryOptions);
+      console.warn(`Transient Dynatrace error during ${retryOptions.operationName}. Retrying attempt ${attempt + 1}/${retryOptions.maxRetries} in ${delayMs} ms.`, summarizeDynatraceError(error));
+      await sleep2(delayMs);
+    }
+  }
+  throw lastError;
+}
+function isRetryableDynatraceError(error) {
+  const status = getDynatraceStatusCode(error);
+  return status !== void 0 && DQL_RETRYABLE_STATUS_CODES.has(status);
+}
+function getDynatraceStatusCode(error) {
+  const status = Number(error?.error?.code);
+  return Number.isInteger(status) ? status : void 0;
+}
+function getRetryDelayMs(retryOptions) {
+  return retryOptions.delayMs;
+}
+function summarizeDynatraceError(error) {
+  return {
+    status: getDynatraceStatusCode(error),
+    message: error?.error?.message,
+    retryAfterSeconds: error?.error?.retryAfterSeconds,
+    details: error?.error?.details
+  };
+}
+function sleep2(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function logDqlDiagnostics(step, response, limits) {
   const result = response?.result;
@@ -40057,13 +40112,14 @@ async function getInitializeOrLatestState(source, destination, executionId, even
   const latestState = await getLatestState(source, destination);
   const lastProcessedSourceTimestamp = latestState?.lastProcessedSourceTimestamp ?? initializeTime();
   const lastProcessedTransactionId = latestState?.lastProcessedTransactionId ?? "";
-  const effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  let effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  effectiveEventCountForDay = Number.isFinite(Number(effectiveEventCountForDay)) ? Number(effectiveEventCountForDay) : 0;
   const stateObj = createStateEvent({
     source,
     destination,
     lastProcessedSourceTimestamp: String(lastProcessedSourceTimestamp),
-    lastProcessedTransactionId: String(lastProcessedSourceTimestamp),
-    eventCountForDay: Number(effectiveEventCountForDay) ?? 0,
+    lastProcessedTransactionId: String(lastProcessedTransactionId),
+    eventCountForDay: effectiveEventCountForDay,
     executionId
   });
   if (!latestState) {
@@ -40355,11 +40411,11 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const pre = applyIntegrationPreprocessors(srcKey, destKey, dataArr);
   sourcePayload = pre.sourcePayload ?? sourcePayload;
   destinationPayload = pre.destinationPayload ?? destinationPayload;
-  if (!sourcePayload) {
-    throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
-  }
-  if (!destinationPayload) {
-    throw new Error(`processMatchedPair: No payload found for destIntegration='${destIntegration}'`);
+  if (!sourcePayload || !destinationPayload) {
+    console.warn(`processMatchedPair: Preprocessing resulted in missing payload for src='${srcIntegration}' or dest='${destIntegration}'.`);
+    const result = processMissingTransaction({ loopItemValue, source: srcKey, destination: destKey, executionId, sendEvent: false });
+    console.log(`processMatchedPair: processMissingTransaction result: ${JSON.stringify(result)}`);
+    return result;
   }
   const sourceIntegrationId = sourcePayload.sox_integration;
   const destinationIntegrationId = destinationPayload.sox_integration;
@@ -40412,10 +40468,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   return ingestResult;
 }
 function processMatchedPairArray({ srcIntegration, destIntegration, dataArray, executionId }) {
-  const eventMap = dataArray.map((transaction) => {
-    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId });
-    return processPair;
-  });
+  const eventMap = dataArray.map((transaction) => processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId })).filter((event) => event !== null);
   return sendBusinessEvent(eventMap);
 }
 function processSingleIntegration({ loopItemValue, executionId }) {
@@ -40441,7 +40494,7 @@ function processSingleIntegration({ loopItemValue, executionId }) {
   const result = sendBusinessEventSingleInt(ingestResult);
   return result;
 }
-function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
+function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent = true) {
   try {
     const parsed = parsePayloadContent(payload?.content, "INT16 missing transaction");
     const httpCode = parsed?.response?.http_response_code;
@@ -40480,12 +40533,12 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
       destinationPayload: destinationPayloadArg,
       executionId
     });
-    return sendBusinessEvent([ingestResult]);
+    return sendEvent ? sendBusinessEvent([ingestResult]) : ingestResult;
   } catch {
     return null;
   }
 }
-function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+function processMissingTransaction({ loopItemValue, source, destination, executionId, sendEvent = true }) {
   let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
@@ -40497,7 +40550,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   executionId = executionId || "missing_execution_id";
   const isInt16ToInt17 = Validators._areValuesEqual(source, INTEGRATIONS.INT16) && Validators._areValuesEqual(destination, INTEGRATIONS.INT17);
   if (isInt16ToInt17) {
-    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime);
+    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent);
     if (processed)
       return processed;
   }
@@ -40509,6 +40562,10 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
     singleValidation = validateIntegration({ sourceIntegrationId: payloadIntegrationId, payload });
+    if (!singleValidation.sourceValidation) {
+      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+    }
+    singleValidation.sourceValidation.failures ??= [];
     singleValidation.sourceValidation.failures.push({
       rulePath: "",
       actualPath: "",
@@ -40516,9 +40573,6 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       anomalyCategory: "Missing Transaction",
       anomalyType: "Missing Transaction Pair"
     });
-    if (!singleValidation.sourceValidation) {
-      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
-    }
   }
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
@@ -40532,9 +40586,9 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
-  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent);
 }
-function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
+function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent = true) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40554,6 +40608,8 @@ function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidatio
     executionId
   });
   console.log("ingest result", ingestResult);
+  if (!sendEvent)
+    return ingestResult;
   const result = sendBusinessEvent([ingestResult]);
   return result;
 }
