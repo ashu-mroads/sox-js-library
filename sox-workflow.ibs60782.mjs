@@ -1,4 +1,4 @@
-// sox-workflow env: prod code: ibs60782 build hash: 89a7a20\n
+// sox-workflow env: prod code: ibs60782 build hash: c01a24c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36179,13 +36179,13 @@ function toCloudEventSingleInt(sox) {
   };
   return { cloudEvent, sourceDataTruncated: srcTrunc };
 }
-function createBatches(data, sizeLimit = 5e6) {
+function createBatches(data, sizeLimit = 45e5) {
   const batches = [];
   let currentBatch = [];
   let currentSize = 0;
   for (let i = 0; i < data.length; i++) {
     const { cloudEvent } = toCloudEvent(data[i]);
-    const recordSize = JSON.stringify(cloudEvent).length;
+    const recordSize = Buffer.byteLength(JSON.stringify(cloudEvent), "utf8");
     if (currentSize + recordSize > sizeLimit && currentBatch.length > 0) {
       batches.push(currentBatch);
       currentBatch = [];
@@ -36199,20 +36199,57 @@ function createBatches(data, sizeLimit = 5e6) {
   }
   return batches;
 }
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 async function sendBusinessEvent(soxEvents) {
   const cloudEventBatches = createBatches(soxEvents);
+  const results = [];
   for (const cloudEventBatch of cloudEventBatches) {
-    try {
-      const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
-        body: cloudEventBatch,
-        type: "application/cloudevent-batch+json"
-      });
-      const status = resp?.status ?? 200;
-      return { status, resp };
-    } catch (err) {
-      console.log("error", err);
+    let lastError;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const resp = await import_client_classic_environment_v2.businessEventsClient.ingest({
+          body: cloudEventBatch,
+          type: "application/cloudevent-batch+json"
+        });
+        const status = resp?.status ?? 200;
+        results.push({
+          status,
+          resp,
+          attempt,
+          eventCount: cloudEventBatch.length
+        });
+        console.log("Business event batch ingested", {
+          status,
+          attempt,
+          eventCount: cloudEventBatch.length
+        });
+        lastError = null;
+        break;
+      } catch (err) {
+        lastError = err;
+        const status = err?.status ?? err?.statusCode ?? err?.response?.status;
+        console.log("Business event ingest failed", {
+          attempt,
+          status,
+          message: err?.message,
+          eventCount: cloudEventBatch.length
+        });
+        if (attempt < 3) {
+          await sleep(1e3 * attempt);
+        }
+      }
+    }
+    if (lastError) {
+      throw lastError;
     }
   }
+  return {
+    status: 200,
+    batchCount: cloudEventBatches.length,
+    results
+  };
 }
 async function sendBusinessEventSingleInt(soxEvent) {
   const { cloudEvent, sourceDataTruncated } = toCloudEventSingleInt(soxEvent);
@@ -38690,7 +38727,7 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
-var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000" };
+var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000", XLARGE: "50000" };
 var SingleIntegrations = [
   { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
@@ -38715,7 +38752,7 @@ var IntegrationPairs = [
   { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.SMALL },
   { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
   { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE },
@@ -39737,9 +39774,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_1.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (!secondarySelected)
-      return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39747,17 +39782,13 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT03_2.toLowerCase()]: (records, secondaryRecords) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (!secondarySelected)
-      return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
   },
   [INTEGRATIONS.INT04.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
-    if (!selected)
-      return {};
     if (isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
@@ -39766,7 +39797,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT15_1_1.toLowerCase()]: (records, secondaryRecords, srcId) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     if (selected && srcId === INTEGRATIONS.INT15_1_1.toLowerCase())
@@ -39825,7 +39856,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39833,7 +39864,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT28.toLowerCase()]: (records) => {
     const selected = pickMostRecent(records) ?? records?.[0];
     if (!selected)
-      return {};
+      return void 0;
     if (isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
@@ -39844,7 +39875,7 @@ var INTEGRATION_PREPROCESSORS = {
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
     if (!secondarySelected)
       return selected;
-    if (isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(selected?.content, "payload.errorCode")) {
       return { ...selected, isValid: true };
     }
     return selected;
@@ -39852,7 +39883,7 @@ var INTEGRATION_PREPROCESSORS = {
   [INTEGRATIONS.INT31.toLowerCase()]: (records, secondaryRecords) => {
     const data = mergeInt31Files(records);
     const secondarySelected = pickMostRecent(secondaryRecords) ?? secondaryRecords?.[0];
-    if (secondarySelected && isValidationException(secondarySelected?.content, "payload.errorCode")) {
+    if (isValidationException(secondarySelected?.content, "payload.errorCode") || isValidationException(data?.content, "payload.errorCode")) {
       return { ...data, isValid: true };
     }
     return data;
@@ -39874,8 +39905,6 @@ function applyIntegrationPreprocessors(srcId, destId, dataArr) {
 // dist/common/workflow-helper.js
 var workflow_helper_exports = {};
 __export(workflow_helper_exports, {
-  DQL_MAX_POLLS: () => DQL_MAX_POLLS,
-  DQL_REQUEST_TIMEOUT_MS: () => DQL_REQUEST_TIMEOUT_MS,
   TIMERANGE_MINS: () => TIMERANGE_MINS,
   WF_ALLOWANCE: () => WF_ALLOWANCE,
   WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
@@ -39890,30 +39919,151 @@ __export(workflow_helper_exports, {
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
-var DQL_MAX_POLLS = 10;
-var DQL_REQUEST_TIMEOUT_MS = 1e4;
+var DQL_MAX_POLLS = 600;
+var DQL_REQUEST_TIMEOUT_MS = 6e4;
+var DQL_MAX_RESULT_RECORDS = 2e5;
+var DQL_MAX_RESULT_BYTES = 100 * 1024 * 1024;
+var DQL_DEFAULT_SCAN_LIMIT_GBYTES = -1;
+var DQL_MAX_RETRIES = 4;
+var DQL_RETRY_DELAY_MS = 5e3;
+var DQL_RETRYABLE_STATUS_CODES = /* @__PURE__ */ new Set([429, 500, 502, 503, 504]);
 async function runDqlWithPolling(query, opts) {
   const maxPolls = opts?.maxPolls ?? DQL_MAX_POLLS;
   const requestTimeoutMs = opts?.requestTimeoutMs ?? DQL_REQUEST_TIMEOUT_MS;
-  const GRAIL_QUERY_LIMIT = 1e5;
-  const start = await import_client_query.queryExecutionClient.queryExecute({ body: { query, maxResultRecords: GRAIL_QUERY_LIMIT } });
-  if (start.state === "SUCCEEDED") {
-    return start.result;
-  }
-  if (!start.requestToken) {
-    throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
-  }
-  let lastPoll = start;
-  for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
-    lastPoll = await import_client_query.queryExecutionClient.queryPoll({
-      requestToken: start.requestToken,
-      requestTimeoutMilliseconds: requestTimeoutMs
+  const maxRetries = opts?.maxRetries ?? DQL_MAX_RETRIES;
+  const retryDelayMs = opts?.retryDelayMs ?? DQL_RETRY_DELAY_MS;
+  const maxResultRecords = opts?.maxResultRecords ?? DQL_MAX_RESULT_RECORDS;
+  const maxResultBytes = opts?.maxResultBytes ?? DQL_MAX_RESULT_BYTES;
+  const defaultScanLimitGbytes = opts?.defaultScanLimitGbytes ?? DQL_DEFAULT_SCAN_LIMIT_GBYTES;
+  try {
+    const start = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryExecute({
+      body: {
+        query,
+        maxResultRecords,
+        maxResultBytes,
+        defaultScanLimitGbytes,
+        requestTimeoutMilliseconds: requestTimeoutMs,
+        includeTypes: true,
+        ...opts?.fetchTimeoutSeconds ? { fetchTimeoutSeconds: opts.fetchTimeoutSeconds } : {}
+      }
+    }), {
+      operationName: "queryExecute",
+      maxRetries,
+      delayMs: retryDelayMs
     });
+    logDqlDiagnostics("queryExecute", start, {
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      requestTimeoutMs
+    });
+    if (start.state === "SUCCEEDED") {
+      return start.result;
+    }
+    if (!start.requestToken) {
+      throw new Error(`DQL did not succeed immediately and no requestToken was returned. State: ${start.state}`);
+    }
+    const requestToken = start.requestToken;
+    let lastPoll = start;
+    for (let i = 0; i < maxPolls && lastPoll.state === "RUNNING"; i++) {
+      lastPoll = await withDynatraceRetry(() => import_client_query.queryExecutionClient.queryPoll({
+        requestToken,
+        requestTimeoutMilliseconds: requestTimeoutMs
+      }), {
+        operationName: `queryPoll ${i + 1}`,
+        maxRetries,
+        delayMs: retryDelayMs
+      });
+      logDqlDiagnostics(`queryPoll ${i + 1}`, lastPoll, {
+        maxResultRecords,
+        maxResultBytes,
+        defaultScanLimitGbytes,
+        requestTimeoutMs
+      });
+    }
+    if (lastPoll.state !== "SUCCEEDED") {
+      throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
+    }
+    return lastPoll.result;
+  } catch (error) {
+    console.error("DQL query failed", {
+      error,
+      query,
+      maxPolls,
+      requestTimeoutMs,
+      maxResultRecords,
+      maxResultBytes,
+      defaultScanLimitGbytes,
+      fetchTimeoutSeconds: opts?.fetchTimeoutSeconds,
+      maxRetries,
+      retryDelayMs
+    });
+    throw error;
   }
-  if (lastPoll.state !== "SUCCEEDED") {
-    throw new Error(`DQL query did not succeed. Final state: ${lastPoll.state}`);
+}
+async function withDynatraceRetry(operation, retryOptions) {
+  let lastError;
+  for (let attempt = 0; attempt <= retryOptions.maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableDynatraceError(error) || attempt >= retryOptions.maxRetries) {
+        throw error;
+      }
+      const delayMs = getRetryDelayMs(retryOptions);
+      console.warn(`Transient Dynatrace error during ${retryOptions.operationName}. Retrying attempt ${attempt + 1}/${retryOptions.maxRetries} in ${delayMs} ms.`, summarizeDynatraceError(error));
+      await sleep2(delayMs);
+    }
   }
-  return lastPoll.result;
+  throw lastError;
+}
+function isRetryableDynatraceError(error) {
+  const status = getDynatraceStatusCode(error);
+  return status !== void 0 && DQL_RETRYABLE_STATUS_CODES.has(status);
+}
+function getDynatraceStatusCode(error) {
+  const status = Number(error?.error?.code);
+  return Number.isInteger(status) ? status : void 0;
+}
+function getRetryDelayMs(retryOptions) {
+  return retryOptions.delayMs;
+}
+function summarizeDynatraceError(error) {
+  return {
+    status: getDynatraceStatusCode(error),
+    message: error?.error?.message,
+    retryAfterSeconds: error?.error?.retryAfterSeconds,
+    details: error?.error?.details
+  };
+}
+function sleep2(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+function logDqlDiagnostics(step, response, limits) {
+  const result = response?.result;
+  const metadata = result?.metadata ?? response?.metadata ?? {};
+  const notifications = result?.notifications ?? metadata?.notifications ?? response?.notifications ?? [];
+  const returnedRecords = result?.records?.length ?? 0;
+  console.log(`DQL diagnostics: ${step}`);
+  console.log("state:", response?.state);
+  console.log("requestToken present:", Boolean(response?.requestToken));
+  console.log("returnedRecords:", returnedRecords);
+  console.log("limits:", JSON.stringify(limits, null, 2));
+  console.log("notifications:", JSON.stringify(notifications, null, 2));
+  if (returnedRecords >= limits.maxResultRecords) {
+    console.warn(`DQL returned ${returnedRecords} records, which reached maxResultRecords=${limits.maxResultRecords}. Results may be truncated.`);
+  }
+  try {
+    const approxBytes = Buffer.byteLength(JSON.stringify(result?.records ?? []), "utf8");
+    console.log("approxReturnedRecordBytes:", approxBytes);
+    if (approxBytes >= limits.maxResultBytes * 0.9) {
+      console.warn(`DQL returned payload is near maxResultBytes. approxBytes=${approxBytes}, maxResultBytes=${limits.maxResultBytes}`);
+    }
+  } catch {
+    console.log("Could not calculate approxReturnedRecordBytes");
+  }
+  console.log("metadata:", JSON.stringify(metadata, null, 2));
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
@@ -39962,13 +40112,14 @@ async function getInitializeOrLatestState(source, destination, executionId, even
   const latestState = await getLatestState(source, destination);
   const lastProcessedSourceTimestamp = latestState?.lastProcessedSourceTimestamp ?? initializeTime();
   const lastProcessedTransactionId = latestState?.lastProcessedTransactionId ?? "";
-  const effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  let effectiveEventCountForDay = latestState?.eventCountForDay ?? eventCountForDay;
+  effectiveEventCountForDay = Number.isFinite(Number(effectiveEventCountForDay)) ? Number(effectiveEventCountForDay) : 0;
   const stateObj = createStateEvent({
     source,
     destination,
     lastProcessedSourceTimestamp: String(lastProcessedSourceTimestamp),
-    lastProcessedTransactionId: String(lastProcessedSourceTimestamp),
-    eventCountForDay: Number(effectiveEventCountForDay) ?? 0,
+    lastProcessedTransactionId: String(lastProcessedTransactionId),
+    eventCountForDay: effectiveEventCountForDay,
     executionId
   });
   if (!latestState) {
@@ -40260,18 +40411,18 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   const pre = applyIntegrationPreprocessors(srcKey, destKey, dataArr);
   sourcePayload = pre.sourcePayload ?? sourcePayload;
   destinationPayload = pre.destinationPayload ?? destinationPayload;
-  if (!sourcePayload) {
-    throw new Error(`processMatchedPair: No payload found for srcIntegration='${srcIntegration}'`);
-  }
-  if (!destinationPayload) {
-    throw new Error(`processMatchedPair: No payload found for destIntegration='${destIntegration}'`);
+  if (!sourcePayload || !destinationPayload) {
+    console.warn(`processMatchedPair: Preprocessing resulted in missing payload for src='${srcIntegration}' or dest='${destIntegration}'.`);
+    const result = processMissingTransaction({ loopItemValue, source: srcKey, destination: destKey, executionId, sendEvent: false });
+    console.log(`processMatchedPair: processMissingTransaction result: ${JSON.stringify(result)}`);
+    return result;
   }
   const sourceIntegrationId = sourcePayload.sox_integration;
   const destinationIntegrationId = destinationPayload.sox_integration;
   const srcEventTime = sourcePayload?.sox_transaction_timestamp || (/* @__PURE__ */ new Date()).toISOString();
   const destEventTime = destinationPayload?.sox_transaction_timestamp || srcEventTime;
   const transactionId = loopItemValue?.sox_transaction_id || sourcePayload?.sox_transaction_id || destinationPayload?.sox_transaction_id || crypto.randomUUID();
-  if (sourcePayload.isValid === true || destinationPayload.isValid === true) {
+  if (sourcePayload.isValid || destinationPayload.isValid) {
     const validationResult2 = {
       sourceIntegrationId,
       destinationIntegrationId,
@@ -40317,10 +40468,7 @@ function processMatchedPair({ loopItemValue, srcIntegration, destIntegration, ex
   return ingestResult;
 }
 function processMatchedPairArray({ srcIntegration, destIntegration, dataArray, executionId }) {
-  const eventMap = dataArray.map((transaction) => {
-    const processPair = processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId });
-    return processPair;
-  });
+  const eventMap = dataArray.map((transaction) => processMatchedPair({ loopItemValue: transaction, srcIntegration, destIntegration, executionId })).filter((event) => event !== null);
   return sendBusinessEvent(eventMap);
 }
 function processSingleIntegration({ loopItemValue, executionId }) {
@@ -40346,7 +40494,7 @@ function processSingleIntegration({ loopItemValue, executionId }) {
   const result = sendBusinessEventSingleInt(ingestResult);
   return result;
 }
-function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime) {
+function handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent = true) {
   try {
     const parsed = parsePayloadContent(payload?.content, "INT16 missing transaction");
     const httpCode = parsed?.response?.http_response_code;
@@ -40385,12 +40533,12 @@ function handleInt16BusinessValidation(payload, source, destination, executionId
       destinationPayload: destinationPayloadArg,
       executionId
     });
-    return sendBusinessEvent([ingestResult]);
+    return sendEvent ? sendBusinessEvent([ingestResult]) : ingestResult;
   } catch {
     return null;
   }
 }
-function processMissingTransaction({ loopItemValue, source, destination, executionId }) {
+function processMissingTransaction({ loopItemValue, source, destination, executionId, sendEvent = true }) {
   let anomalyisValid = false;
   const payload = (Array.isArray(loopItemValue?.data) && loopItemValue.data.length > 0 ? loopItemValue.data[0] : loopItemValue?.payload) || loopItemValue;
   if (!payload || typeof payload !== "object") {
@@ -40402,7 +40550,7 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
   executionId = executionId || "missing_execution_id";
   const isInt16ToInt17 = Validators._areValuesEqual(source, INTEGRATIONS.INT16) && Validators._areValuesEqual(destination, INTEGRATIONS.INT17);
   if (isInt16ToInt17) {
-    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime);
+    const processed = handleInt16BusinessValidation(payload, source, destination, executionId, transactionId, srcEventTime, sendEvent);
     if (processed)
       return processed;
   }
@@ -40414,6 +40562,10 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     singleValidation = { sourceIntegrationId: payloadIntegrationId, sourceValidation: { isValid: true, errorMessages: [], failures: [] }, isValid: true, errors: [] };
   } else {
     singleValidation = validateIntegration({ sourceIntegrationId: payloadIntegrationId, payload });
+    if (!singleValidation.sourceValidation) {
+      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
+    }
+    singleValidation.sourceValidation.failures ??= [];
     singleValidation.sourceValidation.failures.push({
       rulePath: "",
       actualPath: "",
@@ -40421,9 +40573,6 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
       anomalyCategory: "Missing Transaction",
       anomalyType: "Missing Transaction Pair"
     });
-    if (!singleValidation.sourceValidation) {
-      singleValidation.sourceValidation = { isValid: false, errorMessages: [], failures: [] };
-    }
   }
   const payloadId = String(payloadIntegrationId || "").toLowerCase();
   const srcKey = String(source || "").toLowerCase();
@@ -40437,9 +40586,9 @@ function processMissingTransaction({ loopItemValue, source, destination, executi
     isValid: anomalyisValid,
     errors: Array.isArray(singleValidation.errors) ? [...singleValidation.errors] : []
   };
-  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId);
+  return buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent);
 }
-function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId) {
+function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidation, transactionId, srcEventTime, executionId, sendEvent = true) {
   let sourcePayloadArg;
   let destinationPayloadArg;
   if (payloadId === srcKey) {
@@ -40459,6 +40608,8 @@ function buildBizEvent(payloadId, srcKey, payload, destKey, integrationValidatio
     executionId
   });
   console.log("ingest result", ingestResult);
+  if (!sendEvent)
+    return ingestResult;
   const result = sendBusinessEvent([ingestResult]);
   return result;
 }
