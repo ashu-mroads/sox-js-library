@@ -39938,6 +39938,7 @@ __export(workflow_helper_exports, {
   WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
   addMinutesIso: () => addMinutesIso,
   assertValidTimeRange: () => assertValidTimeRange,
+  chunkArray: () => chunkArray,
   chunkSourceRecords: () => chunkSourceRecords,
   classifySourceDestinationSummaries: () => classifySourceDestinationSummaries,
   getInitializeOrLatestState: () => getInitializeOrLatestState,
@@ -40471,6 +40472,17 @@ function classifySourceDestinationSummaries(sourceRecords, destinationRecords) {
     }
   }
   return { matched, notMatched, notMatchedErrors };
+}
+function chunkArray(items, chunkSize) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return [];
+  }
+  const effectiveChunkSize = Number.isFinite(Number(chunkSize)) && Number(chunkSize) > 0 ? Math.floor(Number(chunkSize)) : 1e3;
+  const chunks = [];
+  for (let index = 0; index < items.length; index += effectiveChunkSize) {
+    chunks.push(items.slice(index, index + effectiveChunkSize));
+  }
+  return chunks;
 }
 
 // dist/common/integration-validation.types.js
