@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: c01a24c\n
+// sox-workflow env: poc code: vbp76167 build hash: 7ad0bdf\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40101,7 +40101,17 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
-  console.log("metadata:", JSON.stringify(metadata, null, 2));
+  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
+}
+function removeCanonicalQueryFromMetadata(metadata) {
+  if (!metadata?.grail || typeof metadata.grail !== "object") {
+    return metadata;
+  }
+  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
+  return {
+    ...metadata,
+    grail: grailWithoutCanonicalQuery
+  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
