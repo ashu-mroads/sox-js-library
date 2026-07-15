@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 732dee7\n
+// sox-workflow env: dev code: irn08782 build hash: b4c0b02\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38742,9 +38742,9 @@ var IntegrationPairs = [
   { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT15_2_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1, chunkSize: ChunkSizes.MEDIUM },
