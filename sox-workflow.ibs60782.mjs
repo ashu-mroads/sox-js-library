@@ -1,4 +1,4 @@
-// sox-workflow env: prod code: ibs60782 build hash: c01a24c\n
+// sox-workflow env: prod code: ibs60782 build hash: b4c0b02\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38727,7 +38727,7 @@ var INTEGRATIONS = {
   INT10_1: "INT10-1",
   NA: "N/A"
 };
-var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000", XLARGE: "50000" };
+var ChunkSizes = { XSMALL: "100", SMALL: "1000", MEDIUM: "5000", LARGE: "10000", XLARGE: "20000", XXLARGE: "50000" };
 var SingleIntegrations = [
   { id: "IC-07", source: INTEGRATIONS.INT08_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
   { id: "IC-08", source: INTEGRATIONS.INT09_1, destination: INTEGRATIONS.NA, chunkSize: ChunkSizes.LARGE },
@@ -38742,26 +38742,54 @@ var IntegrationPairs = [
   { id: "IC-06", source: INTEGRATIONS.INT04, destination: INTEGRATIONS.INT15_1_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-10", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT15_2_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-11", source: INTEGRATIONS.INT15_3_2, destination: INTEGRATIONS.INT15_3_1, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30, chunkSize: ChunkSizes.MEDIUM },
+  { id: "IC-12", source: INTEGRATIONS.INT27, destination: INTEGRATIONS.INT28, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-13", source: INTEGRATIONS.INT17, destination: INTEGRATIONS.INT18, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-14", source: INTEGRATIONS.INT28, destination: INTEGRATIONS.INT29, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-15", source: INTEGRATIONS.INT25, destination: INTEGRATIONS.INT26, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-16", source: INTEGRATIONS.INT26, destination: INTEGRATIONS.INT30, chunkSize: ChunkSizes.XLARGE },
   { id: "IC-17", source: INTEGRATIONS.INT32_2, destination: INTEGRATIONS.INT32_1, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-18", source: INTEGRATIONS.INT33_2, destination: INTEGRATIONS.INT33_1, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-19", source: INTEGRATIONS.INT15_2_2, destination: INTEGRATIONS.INT24_1, chunkSize: ChunkSizes.SMALL },
   { id: "IC-20", source: INTEGRATIONS.INT21, destination: INTEGRATIONS.INT22, chunkSize: ChunkSizes.MEDIUM },
   { id: "IC-24", source: INTEGRATIONS.INT16, destination: INTEGRATIONS.INT17, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-25", source: INTEGRATIONS.INT20, destination: INTEGRATIONS.INT16, chunkSize: ChunkSizes.XXLARGE },
   { id: "IC-26", source: INTEGRATIONS.INT15_1_1, destination: INTEGRATIONS.INT19_1, chunkSize: ChunkSizes.LARGE },
   { id: "IC-27", source: INTEGRATIONS.INT15_2_1, destination: INTEGRATIONS.INT19_2, chunkSize: ChunkSizes.LARGE },
   { id: "IC-28", source: INTEGRATIONS.INT15_3_1, destination: INTEGRATIONS.INT19_3, chunkSize: ChunkSizes.LARGE },
-  { id: "IC-29", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM },
-  { id: "IC-30", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.MEDIUM }
+  { id: "IC-29", source: INTEGRATIONS.INT19_1, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.XLARGE },
+  { id: "IC-30", source: INTEGRATIONS.INT19_2, destination: INTEGRATIONS.INT20, chunkSize: ChunkSizes.XLARGE }
 ];
 var IntegrationResponseCodes = {
   SUCCESS: ["200", "200 OK", "204 NO_CONTENT"]
 };
+var SOX_MATCHING_DEFAULTS = {
+  sourceLimit: 1e4,
+  transactionChunkSize: 1e3,
+  maxChunkSpanMinutes: 30,
+  normalWindowMinutes: 30,
+  maximumWindowMinutes: 24 * 60,
+  overlapMinutes: 2,
+  useAltTransactionId: false
+};
+var SOX_MATCHING_OVERRIDES = {
+  "INT19-1|INT20": {
+    normalWindowMinutes: 6 * 60,
+    maxChunkSpanMinutes: 60,
+    useAltTransactionId: true
+  },
+  "INT19-2|INT20": {
+    normalWindowMinutes: 6 * 60,
+    maxChunkSpanMinutes: 60,
+    useAltTransactionId: true
+  }
+};
+function getSoxMatchingProfile(source, destination) {
+  const pairKey = `${String(source ?? "").toUpperCase()}|${String(destination ?? "").toUpperCase()}`;
+  return {
+    ...SOX_MATCHING_DEFAULTS,
+    ...SOX_MATCHING_OVERRIDES[pairKey] ?? {}
+  };
+}
 
 // dist/common/validators.js
 var Validators = {
@@ -39908,14 +39936,25 @@ __export(workflow_helper_exports, {
   TIMERANGE_MINS: () => TIMERANGE_MINS,
   WF_ALLOWANCE: () => WF_ALLOWANCE,
   WORKFLOW_HOURLY_LIMIT: () => WORKFLOW_HOURLY_LIMIT,
+  addMinutesIso: () => addMinutesIso,
+  assertValidTimeRange: () => assertValidTimeRange,
+  chunkArray: () => chunkArray,
+  chunkSourceRecords: () => chunkSourceRecords,
+  classifySourceDestinationSummaries: () => classifySourceDestinationSummaries,
   getInitializeOrLatestState: () => getInitializeOrLatestState,
   getLatestState: () => getLatestState,
   getPrevDaySourceCount: () => getPrevDaySourceCount,
   getPreviousDayEventCount: () => getPreviousDayEventCount,
   getRemainingCount: () => getRemainingCount,
+  getTransactionIds: () => getTransactionIds,
   getWorkflowExecutionCount: () => getWorkflowExecutionCount,
   isWorkflowRunning: () => isWorkflowRunning,
-  runDqlWithPolling: () => runDqlWithPolling
+  mergeDestinationSummaries: () => mergeDestinationSummaries,
+  runDqlWithPolling: () => runDqlWithPolling,
+  subtractMinutesIso: () => subtractMinutesIso,
+  toDqlArray: () => toDqlArray,
+  toDqlStringLiteral: () => toDqlStringLiteral,
+  toPositiveInteger: () => toPositiveInteger
 });
 var import_client_query = __toESM(require_cjs6(), 1);
 var import_client_classic_environment_v22 = __toESM(require_cjs5(), 1);
@@ -40063,7 +40102,17 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
-  console.log("metadata:", JSON.stringify(metadata, null, 2));
+  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
+}
+function removeCanonicalQueryFromMetadata(metadata) {
+  if (!metadata?.grail || typeof metadata.grail !== "object") {
+    return metadata;
+  }
+  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
+  return {
+    ...metadata,
+    grail: grailWithoutCanonicalQuery
+  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
@@ -40244,6 +40293,196 @@ async function getLatestState(sourceId, destId) {
   const dqlResult = await runDqlWithPolling(dql);
   const records = dqlResult?.records ?? [];
   return records[0] ?? null;
+}
+function toPositiveInteger(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+}
+function assertValidTimeRange(startTimestamp, endTimestamp) {
+  const start = new Date(startTimestamp);
+  const end = new Date(endTimestamp);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    throw new Error(`Invalid timestamp range: start=${startTimestamp}, end=${endTimestamp}`);
+  }
+  if (end.getTime() <= start.getTime()) {
+    throw new Error(`endTimestamp must be greater than startTimestamp. start=${startTimestamp}, end=${endTimestamp}`);
+  }
+}
+function addMinutesIso(timestamp, minutes) {
+  const value = new Date(timestamp);
+  if (Number.isNaN(value.getTime())) {
+    throw new Error(`Invalid timestamp: ${timestamp}`);
+  }
+  return new Date(value.getTime() + minutes * 6e4).toISOString();
+}
+function subtractMinutesIso(timestamp, minutes) {
+  return addMinutesIso(timestamp, -minutes);
+}
+function getSummaryTimestampMs(record, field) {
+  const value = Date.parse(String(record?.[field] ?? ""));
+  return Number.isNaN(value) ? 0 : value;
+}
+function chunkSourceRecords(records, maxRecordsPerChunk, maxSpanMinutes) {
+  const maxRecords = toPositiveInteger(maxRecordsPerChunk, 1e3);
+  const maxSpanMs = toPositiveInteger(maxSpanMinutes, 30) * 6e4;
+  const sorted = (records ?? []).filter((record) => String(record?.sox_transaction_id ?? "").length > 0).slice().sort((a, b) => getSummaryTimestampMs(a, "start_timestamp") - getSummaryTimestampMs(b, "start_timestamp"));
+  const chunks = [];
+  let current = [];
+  const closeChunk = () => {
+    if (current.length === 0)
+      return;
+    const startTimes = current.map((record) => getSummaryTimestampMs(record, "start_timestamp")).filter((value) => value > 0);
+    const endTimes = current.map((record) => getSummaryTimestampMs(record, "end_timestamp")).filter((value) => value > 0);
+    if (startTimes.length === 0 || endTimes.length === 0) {
+      throw new Error("Unable to determine source chunk timestamp range");
+    }
+    chunks.push({
+      chunkIndex: chunks.length,
+      chunkStartTimestamp: new Date(Math.min(...startTimes)).toISOString(),
+      chunkMaxSourceTimestamp: new Date(Math.max(...endTimes)).toISOString(),
+      sourceRecords: current
+    });
+    current = [];
+  };
+  for (const record of sorted) {
+    if (current.length === 0) {
+      current.push(record);
+      continue;
+    }
+    const firstTimestamp = getSummaryTimestampMs(current[0], "start_timestamp");
+    const candidateTimestamp = getSummaryTimestampMs(record, "end_timestamp");
+    const exceedsCount = current.length >= maxRecords;
+    const exceedsSpan = firstTimestamp > 0 && candidateTimestamp > 0 && candidateTimestamp - firstTimestamp > maxSpanMs;
+    if (exceedsCount || exceedsSpan) {
+      closeChunk();
+    }
+    current.push(record);
+  }
+  closeChunk();
+  return chunks;
+}
+function getTransactionIds(records) {
+  return Array.from(new Set((records ?? []).map((record) => String(record?.sox_transaction_id ?? "").trim()).filter(Boolean)));
+}
+function toDqlStringLiteral(value) {
+  return `"${String(value ?? "").replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+function toDqlArray(values) {
+  return `array(${(values ?? []).map(toDqlStringLiteral).join(",")})`;
+}
+function normalizeStatus(value) {
+  return String(value ?? "").toLowerCase() === "successful" ? "successful" : "failed";
+}
+function normalizeSummary(record) {
+  return {
+    sox_transaction_id: String(record?.sox_transaction_id ?? ""),
+    status: normalizeStatus(record?.status),
+    start_timestamp: String(record?.start_timestamp ?? ""),
+    end_timestamp: String(record?.end_timestamp ?? ""),
+    size: Number(record?.size ?? 0)
+  };
+}
+function combineSummaryGroup(records) {
+  const valid = (records ?? []).map(normalizeSummary);
+  if (valid.length === 0) {
+    return null;
+  }
+  const startTimes = valid.map((record) => Date.parse(record.start_timestamp)).filter((value) => !Number.isNaN(value));
+  const endTimes = valid.map((record) => Date.parse(record.end_timestamp)).filter((value) => !Number.isNaN(value));
+  return {
+    sox_transaction_id: valid[0].sox_transaction_id,
+    start_timestamp: startTimes.length > 0 ? new Date(Math.min(...startTimes)).toISOString() : valid[0].start_timestamp,
+    end_timestamp: endTimes.length > 0 ? new Date(Math.max(...endTimes)).toISOString() : valid[0].end_timestamp,
+    size: valid.reduce((sum, record) => sum + Number(record.size ?? 0), 0)
+  };
+}
+function mergeDestinationSummaries(...recordGroups) {
+  const merged = /* @__PURE__ */ new Map();
+  for (const record of recordGroups.flat()) {
+    const normalized = normalizeSummary(record);
+    const transactionId = normalized.sox_transaction_id;
+    if (!transactionId)
+      continue;
+    const existing = merged.get(transactionId);
+    if (!existing) {
+      merged.set(transactionId, normalized);
+      continue;
+    }
+    const combined = combineSummaryGroup([existing, normalized]);
+    if (!combined)
+      continue;
+    merged.set(transactionId, {
+      ...combined,
+      status: normalizeStatus(existing.status) === "successful" || normalizeStatus(normalized.status) === "successful" ? "successful" : "failed",
+      size: Math.max(Number(existing.size ?? 0), Number(normalized.size ?? 0))
+    });
+  }
+  return Array.from(merged.values());
+}
+function classifySourceDestinationSummaries(sourceRecords, destinationRecords) {
+  const destinationById = /* @__PURE__ */ new Map();
+  for (const destinationRecord of mergeDestinationSummaries(destinationRecords ?? [])) {
+    destinationById.set(String(destinationRecord.sox_transaction_id), destinationRecord);
+  }
+  const matched = {
+    matched: "yes",
+    status: "successful",
+    data: []
+  };
+  const notMatched = {
+    matched: "no",
+    status: "successful",
+    data: []
+  };
+  const notMatchedErrors = {
+    matched: "mixed",
+    status: "failed",
+    data: []
+  };
+  for (const sourceValue of sourceRecords ?? []) {
+    const sourceRecord = normalizeSummary(sourceValue);
+    const destinationRecord = destinationById.get(sourceRecord.sox_transaction_id);
+    const successfulSides = [];
+    const failedSides = [];
+    if (normalizeStatus(sourceRecord.status) === "successful") {
+      successfulSides.push(sourceRecord);
+    } else {
+      failedSides.push(sourceRecord);
+    }
+    if (destinationRecord) {
+      if (normalizeStatus(destinationRecord.status) === "successful") {
+        successfulSides.push(destinationRecord);
+      } else {
+        failedSides.push(destinationRecord);
+      }
+    }
+    if (successfulSides.length >= 2) {
+      const combined = combineSummaryGroup(successfulSides);
+      if (combined)
+        matched.data.push(combined);
+    } else if (successfulSides.length === 1) {
+      const combined = combineSummaryGroup(successfulSides);
+      if (combined)
+        notMatched.data.push(combined);
+    }
+    if (failedSides.length > 0) {
+      const combined = combineSummaryGroup(failedSides);
+      if (combined)
+        notMatchedErrors.data.push(combined);
+    }
+  }
+  return { matched, notMatched, notMatchedErrors };
+}
+function chunkArray(items, chunkSize) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return [];
+  }
+  const effectiveChunkSize = Number.isFinite(Number(chunkSize)) && Number(chunkSize) > 0 ? Math.floor(Number(chunkSize)) : 1e3;
+  const chunks = [];
+  for (let index = 0; index < items.length; index += effectiveChunkSize) {
+    chunks.push(items.slice(index, index + effectiveChunkSize));
+  }
+  return chunks;
 }
 
 // dist/common/integration-validation.types.js
@@ -40683,10 +40922,14 @@ var index_default = {
   processReportData,
   IntegrationPairs,
   SingleIntegrations,
+  getSoxMatchingProfile,
+  SOX_MATCHING_DEFAULTS,
   wfhelper: workflow_helper_exports
 };
 export {
+  SOX_MATCHING_DEFAULTS,
   index_default as default,
+  getSoxMatchingProfile,
   processErrorTransaction,
   processMatchedPair,
   processMatchedPairArray,
