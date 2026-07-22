@@ -40102,17 +40102,6 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
-  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
-}
-function removeCanonicalQueryFromMetadata(metadata) {
-  if (!metadata?.grail || typeof metadata.grail !== "object") {
-    return metadata;
-  }
-  const { canonicalQuery, query, ...grailWithoutSensitiveQueryFields } = metadata.grail;
-  return {
-    ...metadata,
-    grail: grailWithoutSensitiveQueryFields
-  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
