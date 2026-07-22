@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: b4c0b02\n
+// sox-workflow env: poc code: vbp76167 build hash: 6848996\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40108,10 +40108,10 @@ function removeCanonicalQueryFromMetadata(metadata) {
   if (!metadata?.grail || typeof metadata.grail !== "object") {
     return metadata;
   }
-  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
+  const { canonicalQuery, query, ...grailWithoutSensitiveQueryFields } = metadata.grail;
   return {
     ...metadata,
-    grail: grailWithoutCanonicalQuery
+    grail: grailWithoutSensitiveQueryFields
   };
 }
 var TIMERANGE_MINS = 15;
