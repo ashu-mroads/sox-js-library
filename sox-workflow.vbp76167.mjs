@@ -1,4 +1,4 @@
-// sox-workflow env: poc code: vbp76167 build hash: 6848996\n
+// sox-workflow env: poc code: vbp76167 build hash: 7a423a7\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39768,8 +39768,37 @@ function mergeJsonData(records, options = {}) {
 }
 
 // dist/common/preprocessors.js
+function isObject2(v) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
 function selectAll(dataArr, key) {
   return dataArr.filter((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === key);
+}
+function isSuccessfulRecord(record) {
+  const content = record?.content;
+  if (isObject2(content)) {
+    return content.success === "1" || content.success === 1;
+  }
+  if (typeof content === "string") {
+    const parsed = parsePayloadContent(content, "success selection");
+    return parsed?.success === "1" || parsed?.success === 1;
+  }
+  return false;
+}
+function pickFirstSuccessful(records) {
+  if (!Array.isArray(records) || records.length === 0)
+    return void 0;
+  const sortedRecords = [...records].sort((a, b) => {
+    const aTs = toEpoch(a?.sox_transaction_timestamp);
+    const bTs = toEpoch(b?.sox_transaction_timestamp);
+    return aTs - bTs;
+  });
+  for (const record of sortedRecords) {
+    if (isSuccessfulRecord(record)) {
+      return record;
+    }
+  }
+  return sortedRecords[0];
 }
 function pickMostRecent(records) {
   if (!Array.isArray(records) || records.length === 0)
@@ -39915,6 +39944,18 @@ var INTEGRATION_PREPROCESSORS = {
       return { ...data, isValid: true };
     }
     return data;
+  },
+  [INTEGRATIONS.INT19_1.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
+  },
+  [INTEGRATIONS.INT19_2.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
+  },
+  [INTEGRATIONS.INT20.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
   }
 };
 function applyIntegrationPreprocessors(srcId, destId, dataArr) {
@@ -39950,6 +39991,7 @@ __export(workflow_helper_exports, {
   getWorkflowExecutionCount: () => getWorkflowExecutionCount,
   isWorkflowRunning: () => isWorkflowRunning,
   mergeDestinationSummaries: () => mergeDestinationSummaries,
+  normalizeTimestampToMilliseconds: () => normalizeTimestampToMilliseconds,
   runDqlWithPolling: () => runDqlWithPolling,
   subtractMinutesIso: () => subtractMinutesIso,
   toDqlArray: () => toDqlArray,
@@ -40102,6 +40144,17 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
+  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
+}
+function removeCanonicalQueryFromMetadata(metadata) {
+  if (!metadata?.grail || typeof metadata.grail !== "object") {
+    return metadata;
+  }
+  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
+  return {
+    ...metadata,
+    grail: grailWithoutCanonicalQuery
+  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
@@ -40287,14 +40340,25 @@ function toPositiveInteger(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
 }
+function normalizeTimestampToMilliseconds(timestamp) {
+  const value = new Date(timestamp);
+  const ms = value.getTime();
+  if (Number.isNaN(ms)) {
+    throw new Error(`Invalid timestamp: ${timestamp}`);
+  }
+  return ms;
+}
 function assertValidTimeRange(startTimestamp, endTimestamp) {
-  const start = new Date(startTimestamp);
-  const end = new Date(endTimestamp);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+  let startMs;
+  let endMs;
+  try {
+    startMs = normalizeTimestampToMilliseconds(startTimestamp);
+    endMs = normalizeTimestampToMilliseconds(endTimestamp);
+  } catch {
     throw new Error(`Invalid timestamp range: start=${startTimestamp}, end=${endTimestamp}`);
   }
-  if (end.getTime() <= start.getTime()) {
-    throw new Error(`endTimestamp must be greater than startTimestamp. start=${startTimestamp}, end=${endTimestamp}`);
+  if (endMs < startMs) {
+    throw new Error(`endTimestamp must be greater than or equal to startTimestamp. start=${startTimestamp}, end=${endTimestamp}`);
   }
 }
 function addMinutesIso(timestamp, minutes) {
