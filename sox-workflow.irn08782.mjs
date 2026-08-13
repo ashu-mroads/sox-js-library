@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 7a423a7\n
+// sox-workflow env: dev code: irn08782 build hash: d65ce4c\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38764,8 +38764,7 @@ var IntegrationResponseCodes = {
 };
 var SOX_MATCHING_DEFAULTS = {
   sourceLimit: 1e4,
-  transactionChunkSize: 1e3,
-  maxChunkSpanMinutes: 30,
+  transactionChunkSize: 2e3,
   normalWindowMinutes: 30,
   maximumWindowMinutes: 24 * 60,
   overlapMinutes: 2,
@@ -38774,12 +38773,10 @@ var SOX_MATCHING_DEFAULTS = {
 var SOX_MATCHING_OVERRIDES = {
   "INT19-1|INT20": {
     normalWindowMinutes: 6 * 60,
-    maxChunkSpanMinutes: 60,
     useAltTransactionId: true
   },
   "INT19-2|INT20": {
     normalWindowMinutes: 6 * 60,
-    maxChunkSpanMinutes: 60,
     useAltTransactionId: true
   }
 };
@@ -40144,17 +40141,6 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
-  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
-}
-function removeCanonicalQueryFromMetadata(metadata) {
-  if (!metadata?.grail || typeof metadata.grail !== "object") {
-    return metadata;
-  }
-  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
-  return {
-    ...metadata,
-    grail: grailWithoutCanonicalQuery
-  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
