@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: d65ce4c\n
+// sox-workflow env: dev code: irn08782 build hash: 24088e8\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38772,12 +38772,13 @@ var SOX_MATCHING_DEFAULTS = {
 };
 var SOX_MATCHING_OVERRIDES = {
   "INT19-1|INT20": {
-    normalWindowMinutes: 6 * 60,
     useAltTransactionId: true
   },
   "INT19-2|INT20": {
-    normalWindowMinutes: 6 * 60,
     useAltTransactionId: true
+  },
+  "INT15-2-2|INT24-1": {
+    normalWindowMinutes: 6 * 60
   }
 };
 function getSoxMatchingProfile(source, destination) {
