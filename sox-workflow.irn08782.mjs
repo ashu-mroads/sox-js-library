@@ -1,4 +1,4 @@
-// sox-workflow env: dev code: irn08782 build hash: 24088e8\n
+// sox-workflow env: dev code: irn08782 build hash: c753cd3\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -39985,6 +39985,7 @@ __export(workflow_helper_exports, {
   getPrevDaySourceCount: () => getPrevDaySourceCount,
   getPreviousDayEventCount: () => getPreviousDayEventCount,
   getRemainingCount: () => getRemainingCount,
+  getSourceMaxTimestampStatePickFirstTrx: () => getSourceMaxTimestampStatePickFirstTrx,
   getTransactionIds: () => getTransactionIds,
   getWorkflowExecutionCount: () => getWorkflowExecutionCount,
   isWorkflowRunning: () => isWorkflowRunning,
@@ -40523,6 +40524,16 @@ function chunkArray(items, chunkSize) {
     chunks.push(items.slice(index, index + effectiveChunkSize));
   }
   return chunks;
+}
+function getSourceMaxTimestampStatePickFirstTrx(records, sourceIntegration) {
+  const sourceItems = records.map((record) => record.data.filter((item) => item.sox_integration === sourceIntegration).sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp))[0]).filter(Boolean);
+  if (sourceItems.length === 0)
+    return null;
+  const maxItem = sourceItems.reduce((latest, current) => Date.parse(current.timestamp) > Date.parse(latest.timestamp) ? current : latest);
+  return {
+    timeString: new Date(maxItem.timestamp).toISOString(),
+    lastProcessedTransactionId: maxItem.sox_transaction_id
+  };
 }
 
 // dist/common/integration-validation.types.js
