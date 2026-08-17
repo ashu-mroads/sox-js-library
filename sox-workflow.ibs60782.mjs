@@ -1,4 +1,4 @@
-// sox-workflow env: prod code: ibs60782 build hash: b4c0b02\n
+// sox-workflow env: prod code: ibs60782 build hash: c753cd3\n
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -38764,8 +38764,7 @@ var IntegrationResponseCodes = {
 };
 var SOX_MATCHING_DEFAULTS = {
   sourceLimit: 1e4,
-  transactionChunkSize: 1e3,
-  maxChunkSpanMinutes: 30,
+  transactionChunkSize: 2e3,
   normalWindowMinutes: 30,
   maximumWindowMinutes: 24 * 60,
   overlapMinutes: 2,
@@ -38773,14 +38772,13 @@ var SOX_MATCHING_DEFAULTS = {
 };
 var SOX_MATCHING_OVERRIDES = {
   "INT19-1|INT20": {
-    normalWindowMinutes: 6 * 60,
-    maxChunkSpanMinutes: 60,
     useAltTransactionId: true
   },
   "INT19-2|INT20": {
-    normalWindowMinutes: 6 * 60,
-    maxChunkSpanMinutes: 60,
     useAltTransactionId: true
+  },
+  "INT15-2-2|INT24-1": {
+    normalWindowMinutes: 6 * 60
   }
 };
 function getSoxMatchingProfile(source, destination) {
@@ -39768,8 +39766,37 @@ function mergeJsonData(records, options = {}) {
 }
 
 // dist/common/preprocessors.js
+function isObject2(v) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
 function selectAll(dataArr, key) {
   return dataArr.filter((p) => p?.sox_integration && String(p.sox_integration).toLowerCase() === key);
+}
+function isSuccessfulRecord(record) {
+  const content = record?.content;
+  if (isObject2(content)) {
+    return content.success === "1" || content.success === 1;
+  }
+  if (typeof content === "string") {
+    const parsed = parsePayloadContent(content, "success selection");
+    return parsed?.success === "1" || parsed?.success === 1;
+  }
+  return false;
+}
+function pickFirstSuccessful(records) {
+  if (!Array.isArray(records) || records.length === 0)
+    return void 0;
+  const sortedRecords = [...records].sort((a, b) => {
+    const aTs = toEpoch(a?.sox_transaction_timestamp);
+    const bTs = toEpoch(b?.sox_transaction_timestamp);
+    return aTs - bTs;
+  });
+  for (const record of sortedRecords) {
+    if (isSuccessfulRecord(record)) {
+      return record;
+    }
+  }
+  return sortedRecords[0];
 }
 function pickMostRecent(records) {
   if (!Array.isArray(records) || records.length === 0)
@@ -39915,6 +39942,18 @@ var INTEGRATION_PREPROCESSORS = {
       return { ...data, isValid: true };
     }
     return data;
+  },
+  [INTEGRATIONS.INT19_1.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
+  },
+  [INTEGRATIONS.INT19_2.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
+  },
+  [INTEGRATIONS.INT20.toLowerCase()]: (records, secondaryRecords) => {
+    const selected = pickFirstSuccessful(records);
+    return selected;
   }
 };
 function applyIntegrationPreprocessors(srcId, destId, dataArr) {
@@ -39946,10 +39985,12 @@ __export(workflow_helper_exports, {
   getPrevDaySourceCount: () => getPrevDaySourceCount,
   getPreviousDayEventCount: () => getPreviousDayEventCount,
   getRemainingCount: () => getRemainingCount,
+  getSourceMaxTimestampStatePickFirstTrx: () => getSourceMaxTimestampStatePickFirstTrx,
   getTransactionIds: () => getTransactionIds,
   getWorkflowExecutionCount: () => getWorkflowExecutionCount,
   isWorkflowRunning: () => isWorkflowRunning,
   mergeDestinationSummaries: () => mergeDestinationSummaries,
+  normalizeTimestampToMilliseconds: () => normalizeTimestampToMilliseconds,
   runDqlWithPolling: () => runDqlWithPolling,
   subtractMinutesIso: () => subtractMinutesIso,
   toDqlArray: () => toDqlArray,
@@ -40102,17 +40143,6 @@ function logDqlDiagnostics(step, response, limits) {
   } catch {
     console.log("Could not calculate approxReturnedRecordBytes");
   }
-  console.log("metadata:", JSON.stringify(removeCanonicalQueryFromMetadata(metadata), null, 2));
-}
-function removeCanonicalQueryFromMetadata(metadata) {
-  if (!metadata?.grail || typeof metadata.grail !== "object") {
-    return metadata;
-  }
-  const { canonicalQuery, ...grailWithoutCanonicalQuery } = metadata.grail;
-  return {
-    ...metadata,
-    grail: grailWithoutCanonicalQuery
-  };
 }
 var TIMERANGE_MINS = 15;
 var WORKFLOW_HOURLY_LIMIT = 1e3;
@@ -40298,14 +40328,25 @@ function toPositiveInteger(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
 }
+function normalizeTimestampToMilliseconds(timestamp) {
+  const value = new Date(timestamp);
+  const ms = value.getTime();
+  if (Number.isNaN(ms)) {
+    throw new Error(`Invalid timestamp: ${timestamp}`);
+  }
+  return ms;
+}
 function assertValidTimeRange(startTimestamp, endTimestamp) {
-  const start = new Date(startTimestamp);
-  const end = new Date(endTimestamp);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+  let startMs;
+  let endMs;
+  try {
+    startMs = normalizeTimestampToMilliseconds(startTimestamp);
+    endMs = normalizeTimestampToMilliseconds(endTimestamp);
+  } catch {
     throw new Error(`Invalid timestamp range: start=${startTimestamp}, end=${endTimestamp}`);
   }
-  if (end.getTime() <= start.getTime()) {
-    throw new Error(`endTimestamp must be greater than startTimestamp. start=${startTimestamp}, end=${endTimestamp}`);
+  if (endMs < startMs) {
+    throw new Error(`endTimestamp must be greater than or equal to startTimestamp. start=${startTimestamp}, end=${endTimestamp}`);
   }
 }
 function addMinutesIso(timestamp, minutes) {
@@ -40483,6 +40524,16 @@ function chunkArray(items, chunkSize) {
     chunks.push(items.slice(index, index + effectiveChunkSize));
   }
   return chunks;
+}
+function getSourceMaxTimestampStatePickFirstTrx(records, sourceIntegration) {
+  const sourceItems = records.map((record) => record.data.filter((item) => item.sox_integration === sourceIntegration).sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp))[0]).filter(Boolean);
+  if (sourceItems.length === 0)
+    return null;
+  const maxItem = sourceItems.reduce((latest, current) => Date.parse(current.timestamp) > Date.parse(latest.timestamp) ? current : latest);
+  return {
+    timeString: new Date(maxItem.timestamp).toISOString(),
+    lastProcessedTransactionId: maxItem.sox_transaction_id
+  };
 }
 
 // dist/common/integration-validation.types.js
